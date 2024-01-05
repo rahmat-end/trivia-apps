@@ -11,12 +11,47 @@ import React from "react";
 import { StatusBar } from "expo-status-bar";
 import EditSvg from "../../assets/login/EditSvg";
 import Button from "../Components/Button";
-import PlaySvg from "../../assets/login/PlaySvg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ChangeAvatarModal from "../Components/modal/ChangeAvatarModal";
+import axios from "axios";
 
 const StartGame = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [data, setData] = useState([]);
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjozMX0sImlhdCI6MTcwMzgyMTM3NX0.ZmsXJQptajNEMiO3px5H5scgyB68E-8gpsGo0FPWK-U"
+    const getUser = async ()=>{
+      try {
+        const headers: any = {
+          'Authorization': `Bearer ${token}`
+        }
+        
+        const res = await axios.get('http://localhost:3000/api/v1/users', {headers:headers})
+        console.log("ini coba di hp",res.data.data)
+        setData(res.data.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    const getUserApi = async ()=>{
+      try {
+        
+        const res = await axios.get('https://www.emsifa.com/api-wilayah-indonesia/api/regencies/53.json')
+        console.log(res.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    useEffect(()=>{
+      getUser()
+      console.log(data)
+    },[])
+
+    useEffect(()=>{
+      getUserApi()
+    },[])
+
 
 
 

@@ -11,7 +11,7 @@ var DB *gorm.DB
 
 func DatabaseInit() {
 	var err error
-	dsn := "host=localhost user=postgres password=root dbname=trivia_app port=5432 sslmode=disable TimeZone=Asia/Jakarta"
+	dsn := "host=localhost user=postgres password=payno17 dbname=trivia_app port=5432 sslmode=disable TimeZone=Asia/Jakarta"
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
