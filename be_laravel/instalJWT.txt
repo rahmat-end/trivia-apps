@@ -1,0 +1,7 @@
+instal composer jwt
+setting ikut dari google
+
+atur config/app
+atur config/auth
+
+model/user
