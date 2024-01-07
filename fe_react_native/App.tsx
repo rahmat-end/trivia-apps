@@ -28,9 +28,9 @@ export default function App() {
   return (
     <>
     {/* <SplashScreen/>  */}
-    {/* <Login/> */}
+    <Login/>
     {/* <ChooseAvatar/>  */}
-    <StartGame/>
+    {/* <StartGame/> */}
     </>
   );
 }

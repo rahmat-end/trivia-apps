@@ -14,9 +14,9 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'user_id';
     public $incrementing = false;
-
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -38,25 +38,6 @@ class User extends Authenticatable implements JWTSubject
         'avatar',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
 
     protected static function boot()
     {
@@ -86,5 +67,15 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function updateUser(array $data)
+    {
+        return $this->update($data);
+    }
+
+    public function buyAvatars()
+    {
+        return $this->hasMany(UserBuyAvatar::class);
     }
 }

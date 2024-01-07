@@ -6,11 +6,35 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import GoogleSvg from "../../assets/login/GoogleSvg";
+import axios from "axios";
 
 const Login = () => {
+
+  // const test = async () => {
+  //   try {
+  //     const res = await axios.get("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json")
+  //     console.log(res.data)
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
+  const handleLogin = async () => {
+    try {
+      const res = await axios.get("http://localhost:8001/api/google/redirect")
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    // test()
+    // handleLogin()
+  }, [])
+
   return (
     <ImageBackground
       source={require("../../assets/image/SplashScreen/splashScreenCrop.png")}
@@ -29,9 +53,10 @@ const Login = () => {
           />
         </View>
         <View>
-          <TouchableOpacity 
-          onPress={()=>console.log("hello")}
-          style={styles.loginButton}>
+          <a href="handleLogin">ini tag a</a>
+          <TouchableOpacity
+            onPress={() => handleLogin()}
+            style={styles.loginButton}>
             <GoogleSvg />
             <Text style={styles.loginText}>sign in with google</Text>
           </TouchableOpacity>
@@ -69,14 +94,14 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     // backgroundColor: "#0080ff",
-    backgroundColor:"#318CE7",
+    backgroundColor: "#318CE7",
     width: 300,
     paddingVertical: 12,
     marginTop: 70,
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
-    flexDirection:"row",
+    flexDirection: "row",
     gap: 10
   },
   //   loginContainer:{
@@ -90,7 +115,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontFamily: "Acme-Regular",
-    
+
   },
   test: {
     position: "relative",
