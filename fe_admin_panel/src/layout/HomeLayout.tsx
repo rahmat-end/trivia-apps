@@ -1,91 +1,96 @@
 /** @format */
 
-import { Box, Flex, Link, Spacer } from "@chakra-ui/react";
+import { Box, Flex, Spacer } from "@chakra-ui/react";
+import { FaSearch } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
 import SidebarDrawer from "../components/SidebarDrawer";
-import { FaSearch } from "react-icons/fa";
+import RightBar from "../components/RightBar";
+import Bothbar from "../components/Bothbar";
 
 const HomeLayout = () => {
   return (
     <Box
-      h={"100vh"}
+      minH={"100vw"}
       bgImage={
-        "https://images.unsplash.com/photo-1490810194309-344b3661ba39?q=80&w=2896&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-      }>
+        "https://i.pinimg.com/originals/86/87/ed/8687eddeeb660a2b0b9fba7cc43d2459.jpg"
+      }
+      bgSize='cover'
+      overflowY='auto'>
       <Flex
         bg='gray.800'
-        p='2'
-        align='center'>
-        <Box>
+        p={[2, 2, 2, 2, 2, 4]} // Adjust padding for different screen sizes
+        align='center'
+        direction={["column", "row"]}
+        display={["flex", "flex"]}>
+        <Box
+          w={["100%", "20%"]}
+          display={["none", "none", "flex", "flex"]}
+          flex={"1"}>
           <Sidebar />
         </Box>
-        <Spacer />
 
         <Box
           bgColor='transparent'
-          display={"flex"}
-          alignItems={"center"}
-          justifyContent={"flex-start"}
-          color={"white"}
+          display='flex'
+          alignItems='center'
+          color='white'
           py={2}
           px={5}
-          w={"50%"}
-          gap={3}
-          // px={200}
-          borderRadius={"full"}
-          border={"1px solid white"}>
+          ml={[0, 0, 0, 0, 0, 4]} // Adjust margin for different screen sizes
+          gap={1}
+          borderRadius='full'
+          border='1px solid white'>
           <FaSearch
-            flex={0}
+            flex={"1"}
             color='white'
-            display={"flex"}
+            display='flex'
           />
           <input
             type='text'
             placeholder='Search....'
-            className='w-full border-none focus:outline-none '
+            className='w-full border-none focus:outline-none'
             style={{ backgroundColor: "transparent" }}
             color='white'
-            width={"100%"}
           />
         </Box>
         <Spacer />
 
-        <Box>
-          <Link
-            mx='2'
-            color='white'
-            marginLeft={"10"}>
-            Start Game
-          </Link>
-          <Link
-            mx='2'
-            color='white'
-            marginLeft={"10"}>
-            Game Settings
-          </Link>
-
-          <Link
-            mx='2'
-            color='white'
-            marginLeft={"10"}>
-            Leaderboard
-          </Link>
+        <Box display='flex'>
+          <RightBar />
         </Box>
       </Flex>
       <Box
-        display={"flex"}
-        justifyContent={"center"}
-        alignItems={"center"}>
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+        mt={[4, 4, 4, 4, 4, 8]} // Adjust margin-top for different screen sizes
+      >
         <Box
-          margin={"5"}
-          w={"60%"}
+          w={["100%", "60%"]}
+          h={"20%"}
+          p={3}
+          bg={"transparent"}
+          borderRadius={"lg"}
+          boxShadow={"lg"}
+          color={"white"}>
+          <SidebarDrawer />
+        </Box>
+      </Box>
+      <Box
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+        mt={[4, 4, 4, 4, 4, 8]} // Adjust margin-top for different screen sizes
+      >
+        <Box
+          w={["100%", "60%"]}
           h={"20%"}
           p={5}
           bg={"transparent"}
           borderRadius={"lg"}
           boxShadow={"lg"}
           color={"white"}>
-          <SidebarDrawer />
+          <Bothbar />
         </Box>
       </Box>
     </Box>

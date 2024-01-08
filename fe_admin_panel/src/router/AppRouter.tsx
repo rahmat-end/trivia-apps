@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "../pages/home";
 import Login from "../pages/LoginPages";
 import Register from "../pages/RegisterPages";
+import Dashboard from "../pages/DahsboardPages";
 
 const AppRouter: React.FC = () => {
   return (
@@ -22,6 +23,10 @@ const AppRouter: React.FC = () => {
         <Route
           path='/register'
           element={<Register />}
+        />
+        <Route
+          path='/dahsboard'
+          element={<Dashboard />}
         />
       </Routes>
     </Router>
