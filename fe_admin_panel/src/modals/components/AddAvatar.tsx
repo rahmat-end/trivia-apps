@@ -13,7 +13,7 @@ import {
   Button,
   Box,
 } from "@chakra-ui/react";
-// import { useAddUser } from "../hooks/useAddUser";
+import { useAddAvatar } from "../hooks/useAddAvatar";
 
 interface AddUserModalProps {
   isOpen: boolean;
@@ -28,24 +28,10 @@ interface AddUserModalProps {
 const AddUserModal: React.FC<AddUserModalProps> = ({
   isOpen,
   onClose,
-  newUserData,
-  setNewUserData,
+
   handleSubmit,
 }) => {
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0];
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewUserData((prevUserData) => ({
-          ...prevUserData,
-          avatarUrl: reader.result as string,
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  const { handleChange } = useAddAvatar();
 
   return (
     <Modal
@@ -56,7 +42,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
         <ModalHeader>Add Avatar</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Input
+          {/* <Input
             type='text'
             placeholder='Avatar Name *'
             name="username"
@@ -64,14 +50,12 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
             onChange={(e) =>
               setNewUserData({ ...newUserData, username: e.target.value })
             }
-          />
+          /> */}
           <Input
             type='file'
             accept='image/*'
-            onChange={(e) => handleImageUpload(e)}
-            name="avatar"
-            placeholder='Avatar Pengguna'
-            value={newUserData.avatarUrl}
+            onChange={(e) => handleChange(e)}
+            name='avatar'
             mt={4}
             alignItems={"center"}
             display={"flex"}

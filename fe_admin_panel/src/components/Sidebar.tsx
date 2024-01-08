@@ -29,7 +29,7 @@ import {
   FaDailymotion,
 } from "react-icons/fa";
 import logo from "../assets/image/logo.png";
-import AddUserModal from "../modals/components/AddUserModals";
+import AddUserModal from "../modals/components/AddAvatar";
 import AddQuestionModal from "../modals/components/AddQuestionModal";
 import AddDiamondsModal from "../modals/components/AddDiamonds";
 
@@ -38,7 +38,7 @@ const Sidebar: React.FC = () => {
 
   const [isQuestionModalOpen, setQuestionModalOpen] = React.useState(false);
 
-  const [newQuestionData, setNewQuestionData] = React.useState({
+  const [newQuestion, setNewQuestion] = React.useState({
     question: "",
     answer: "",
   });
@@ -62,8 +62,11 @@ const Sidebar: React.FC = () => {
 
   return (
     <>
-      <Flex  align={"center"} justifyContent={"space-between"} p={2}
-      gap={20}>
+      <Flex
+        align={"center"}
+        justifyContent={"space-between"}
+        p={2}
+        gap={20}>
         <Image
           src={logo}
           alt=''
@@ -74,16 +77,15 @@ const Sidebar: React.FC = () => {
           justifyContent={"start"}
           display={["none", "flex"]}
           flexDirection={"row"}
-
-          
         />
-        <Spacer/>
+        <Spacer />
         <button
           onClick={onOpen}
           className='flexDirection-end'>
-          <Flex align='end'
+          <Flex
+            align='end'
             justifyContent='end'
-              display={["flex"]}>
+            display={["flex"]}>
             <FaBars
               size='2em'
               color='white'
@@ -103,15 +105,11 @@ const Sidebar: React.FC = () => {
       <AddQuestionModal
         isOpen={isQuestionModalOpen}
         onClose={() => setQuestionModalOpen(false)}
-        newQuestionData={newQuestionData}
-        setNewQuestionData={setNewQuestionData}
       />
 
       <AddDiamondsModal
         isOpen={isDiamondsModalOpen}
         onClose={() => setDiamondsModalOpen(false)}
-        newDiamondsData={newDiamondsData}
-        setNewDiamondsData={setNewDiamondsData}
       />
 
       <Drawer
@@ -121,7 +119,7 @@ const Sidebar: React.FC = () => {
         placement='left'>
         <DrawerOverlay />
         <DrawerContent
-          bg='black'
+          bg={"gray.800"}
           color={"white"}>
           <DrawerCloseButton />
 

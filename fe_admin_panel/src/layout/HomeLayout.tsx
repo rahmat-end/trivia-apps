@@ -1,16 +1,17 @@
 /** @format */
 
-import { Box, Flex, Spacer } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
 import SidebarDrawer from "../components/SidebarDrawer";
 import RightBar from "../components/RightBar";
 import Bothbar from "../components/Bothbar";
+import AvatarCard from "../components/AvatarCard";
 
 const HomeLayout = () => {
   return (
     <Box
-      minH={"100vw"}
+      minH={"100vh"}
       bgImage={
         "https://i.pinimg.com/originals/86/87/ed/8687eddeeb660a2b0b9fba7cc43d2459.jpg"
       }
@@ -18,12 +19,11 @@ const HomeLayout = () => {
       overflowY='auto'>
       <Flex
         bg='gray.800'
-        p={[2, 2, 2, 2, 2, 4]} // Adjust padding for different screen sizes
         align='center'
         direction={["column", "row"]}
         display={["flex", "flex"]}>
         <Box
-          w={["100%", "20%"]}
+          w={["100%"]}
           display={["none", "none", "flex", "flex"]}
           flex={"1"}>
           <Sidebar />
@@ -36,12 +36,11 @@ const HomeLayout = () => {
           color='white'
           py={2}
           px={5}
-          ml={[0, 0, 0, 0, 0, 4]} // Adjust margin for different screen sizes
           gap={1}
           borderRadius='full'
           border='1px solid white'>
           <FaSearch
-            flex={"1"}
+            flex={"2"}
             color='white'
             display='flex'
           />
@@ -53,46 +52,56 @@ const HomeLayout = () => {
             color='white'
           />
         </Box>
-        <Spacer />
 
-        <Box display='flex'>
+        <Box
+          display='flex'
+          alignItems='center'
+          justifyContent={"flex-end"}
+          flex={"1"}
+          marginRight={"70px"}>
           <RightBar />
         </Box>
       </Flex>
-      <Box
-        display='flex'
-        justifyContent='center'
-        alignItems='center'
-        mt={[4, 4, 4, 4, 4, 8]} // Adjust margin-top for different screen sizes
-      >
+
+      <Flex>
         <Box
-          w={["100%", "60%"]}
-          h={"20%"}
-          p={3}
-          bg={"transparent"}
-          borderRadius={"lg"}
-          boxShadow={"lg"}
-          color={"white"}>
-          <SidebarDrawer />
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          flexDirection={"column"}
+          flex={"1"}>
+          <Box
+            display={"flex"}
+            flexDirection={"column"}>
+            <Box
+              w={"100%"}
+              p={5}
+              bg={"transparent"}
+              borderRadius={"lg"}
+              boxShadow={"lg"}
+              color={"white"}>
+              <SidebarDrawer />
+            </Box>
+          </Box>
+          <Box
+            display='flex'
+            justifyContent='center'
+            alignItems='center'>
+            <Box
+              w={"100%"}
+              p={5}
+              bg={"transparent"}
+              borderRadius={"lg"}
+              boxShadow={"lg"}
+              color={"white"}>
+              <Bothbar />
+            </Box>
+          </Box>
         </Box>
-      </Box>
-      <Box
-        display='flex'
-        justifyContent='center'
-        alignItems='center'
-        mt={[4, 4, 4, 4, 4, 8]} // Adjust margin-top for different screen sizes
-      >
-        <Box
-          w={["100%", "60%"]}
-          h={"20%"}
-          p={5}
-          bg={"transparent"}
-          borderRadius={"lg"}
-          boxShadow={"lg"}
-          color={"white"}>
-          <Bothbar />
+        <Box flex={"1"}>
+          <AvatarCard />
         </Box>
-      </Box>
+      </Flex>
     </Box>
   );
 };

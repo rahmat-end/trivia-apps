@@ -42,7 +42,6 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
           avatarUrl: reader.result as string,
         }));
       };
-      
     }
   };
   const { question, handleChange } = Question();
@@ -56,15 +55,13 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
         <ModalHeader>Add Question</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-        
-
           <Input
             type='Text'
             accept='text/*'
             placeholder='question'
             value={question.question}
-            name="question"
-            onChange={(e) => handleChange(e)} 
+            name='question'
+            onChange={(e) => handleChange(e)}
             mt={4}
             alignItems={"center"}
             display={"flex"}
@@ -73,7 +70,7 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
           <Input
             type='file'
             accept='image/*'
-            placeholder='Profile'
+            name='image'
             onChange={(e) => handleImageUpload(e)}
             mt={4}
             alignItems={"center"}
@@ -83,8 +80,9 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
             type='Text'
             accept='text/*'
             placeholder='answer 1'
+            value={question.answer}
             onChange={(e) => handleChange(e)}
-            name="answer1"
+            name='answer'
             mt={4}
             alignItems={"center"}
             display={"flex"}
@@ -92,8 +90,9 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
           <Input
             type='Text'
             accept='text/*'
-            placeholder='answer 2'
-            name="answer2"
+            placeholder='answer2'
+            value={question.answer}
+            name='answer2'
             onChange={(e) => handleChange(e)}
             mt={4}
             alignItems={"center"}
@@ -103,7 +102,8 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
             type='Text'
             accept='text/*'
             placeholder='answer 3'
-            name="answer3"
+            value={question.answer}
+            name='answer3'
             onChange={(e) => handleChange(e)}
             mt={4}
             alignItems={"center"}
@@ -113,8 +113,9 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
             type='Text'
             accept='text/*'
             onChange={(e) => handleChange(e)}
+            value={question.answer}
             placeholder='answer 4'
-            name="answer4"
+            name='answer4'
             mt={4}
             alignItems={"center"}
             display={"flex"}
@@ -126,6 +127,8 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
             display={"flex"}>
             <Button
               onClick={handleSubmit}
+              type='submit'
+              name='Question'
               colorScheme='blue'
               alignItems={"center"}
               justifyContent={"end"}>

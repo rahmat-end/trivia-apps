@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Box, Flex, Image, Button, Text } from "@chakra-ui/react";
 import Logo from "../assets/image/logo.png";
 
-
 const SidebarDrawer = () => {
   return (
     <>
@@ -12,7 +11,9 @@ const SidebarDrawer = () => {
         flexDirection={{ base: "row", md: "column" }}
         bgColor={"gray.800"}
         className='rounded-tl-[130px] rounded-br-[180px]'
-        p={5}>
+        p={5}
+        borderRight={"10px ridge #dcfcfe"}
+        borderTop={"5px ridge #dcfcfe"}>
         <Box
           flexDirection={{ base: "column", md: "row" }}
           display={"flex"}

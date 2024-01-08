@@ -1,64 +1,42 @@
 /** @format */
 
-import { useState, ChangeEvent } from "react";
-// import { LoginType } from "@/types";
-// import { API } from "@/utils/api";
-// import { toast } from "react-toastify";
-// import getError from "@/utils/getError";
+import React from "react";
+import { useState } from "react";
+import { useMutation } from "react-query";
+import axios from "axios";
 
-export function useLogin() {
-  const [form, setForm] = useState<LoginType>({
-    emailOrUsername: "",
+type useLogin = {
+
+  email: string;
+  password: string;
+};
+
+export const useLogin = () => {
+  const [dataLogin, setDataLogin] = useState<useLogin>({
+   
+    email: "",
     password: "",
   });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-  const [isLoginSuccess, setIsLoginSuccess] = useState<boolean>(false);
 
-  function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setDataLogin({
+      ...dataLogin,
+      [name]: value,
     });
-  }
-
-  async function handleLogin() {
-    try {
-      setIsLoading(true);
-
-      const response = await API.post("/login", form);
-      console.log(response);
-      toast.success(response.data.message, {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      localStorage.setItem("jwtToken", response.data.token);
-
-      setIsError(false);
-      setError("");
-      setIsLoginSuccess(true);
-    } catch (error) {
-      setIsError(true);
-      setError(getError(error));
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  return {
-    form,
-    handleChange,
-    handleLogin,
-    isLoading,
-    isError,
-    error,
-    isLoginSuccess,
   };
-}
+  const { mutate: handleSubmit } = useMutation(async () => {
+    try {
+      const res = await axios.post(
+        "http://127.0.0.1:8001/api/auth/login",
+        dataLogin
+      );
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(dataLogin);
+  });
+
+  return { dataLogin, handleChange, handleSubmit };
+};

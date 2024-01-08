@@ -13,6 +13,8 @@ const SidebarDrawer = () => {
         flexDirection={"row"}
         bgColor={"gray.800"}
         className='rounded-tl-[200px] rounded-br-[120px]'
+        borderRight={"10px ridge #dcfcfe"}
+        borderTop={"5px ridge #dcfcfe"}
         p={50}>
         <Box
           flexDirection={"row"}
@@ -37,7 +39,7 @@ const SidebarDrawer = () => {
                 a
               </Text>
             </Box>
-            <Box>   </Box>
+            <Box> </Box>
           </Flex>
           <Box
             w={"50%"}
