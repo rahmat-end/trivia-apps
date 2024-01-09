@@ -1,12 +1,12 @@
 /** @format */
 
 import { Box, Flex } from "@chakra-ui/react";
-import { FaSearch } from "react-icons/fa";
+import Search from "../serch/components/serch";
 import Sidebar from "../components/Sidebar";
 import SidebarDrawer from "../components/SidebarDrawer";
 import RightBar from "../components/RightBar";
 import Bothbar from "../components/Bothbar";
-import AvatarCard from "../components/AvatarCard";
+import AvatarCard from "../avatar/components/AvatarCard";
 
 const HomeLayout = () => {
   return (
@@ -25,32 +25,18 @@ const HomeLayout = () => {
         <Box
           w={["100%"]}
           display={["none", "none", "flex", "flex"]}
-          flex={"1"}>
+          justifyContent={"flex-start"}
+          flex={"2"}>
           <Sidebar />
         </Box>
-
         <Box
-          bgColor='transparent'
-          display='flex'
-          alignItems='center'
-          color='white'
-          py={2}
-          px={5}
-          gap={1}
-          borderRadius='full'
-          border='1px solid white'>
-          <FaSearch
-            flex={"2"}
-            color='white'
-            display='flex'
-          />
-          <input
-            type='text'
-            placeholder='Search....'
-            className='w-full border-none focus:outline-none'
-            style={{ backgroundColor: "transparent" }}
-            color='white'
-          />
+          w={["100%"]}
+          flex={"1"}
+          display={["none", "none", "flex", "flex"]}
+          px={"5px"}
+          py={"5px"}
+          justifyContent={"flex-start"}>
+          <Search />
         </Box>
 
         <Box

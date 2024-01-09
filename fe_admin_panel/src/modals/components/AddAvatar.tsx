@@ -28,10 +28,8 @@ interface AddUserModalProps {
 const AddUserModal: React.FC<AddUserModalProps> = ({
   isOpen,
   onClose,
-
-  handleSubmit,
 }) => {
-  const { handleChange } = useAddAvatar();
+  const { handleChange,  handleSubmit } = useAddAvatar();
 
   return (
     <Modal
@@ -42,37 +40,31 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
         <ModalHeader>Add Avatar</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {/* <Input
-            type='text'
-            placeholder='Avatar Name *'
-            name="username"
-            value={newUserData.username}
-            onChange={(e) =>
-              setNewUserData({ ...newUserData, username: e.target.value })
-            }
-          /> */}
-          <Input
-            type='file'
-            accept='image/*'
-            onChange={(e) => handleChange(e)}
-            name='avatar'
-            mt={4}
-            alignItems={"center"}
-            display={"flex"}
-          />
-          <Box
-            mt={4}
-            width={"100%"}
-            display={"flex"}>
-            <Button
-              onClick={handleSubmit}
-              colorScheme='blue'
+          <form
+            encType='multipart/form-data'
+            onSubmit={handleSubmit}>
+            <Input
+              type='file'
+              onChange={(e) => handleChange(e)}
+              name='photo_freeavatar'
+              mt={4}
               alignItems={"center"}
-              justifyContent={"end"}>
-              {" "}
-              Add Avatar
-            </Button>
-          </Box>
+              display={"flex"}
+            />
+            <Box
+              mt={4}
+              width={"100%"}
+              display={"flex"}>
+              <Button
+                type='submit'
+                colorScheme='blue'
+                alignItems={"center"}
+                justifyContent={"end"}>
+                {" "}
+                Add Avatar
+              </Button>
+            </Box>
+          </form>
         </ModalBody>
       </ModalContent>
     </Modal>

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useMutation } from "react-query";
 import axios from "axios";
 
-type useRegister= {
+type useRegister = {
   name: string;
   email: string;
   password: string;
@@ -27,9 +27,13 @@ export const useRegister = () => {
   };
   const { mutate: handleSubmit } = useMutation(async () => {
     try {
+      const headers = {
+        "Content-Type": "multipart/form-data",
+      }
       const res = await axios.post(
-        "http://127.0.0.1:8001/api/auth/register",
-        dataRegister
+        "http://192.168.18.169:8001/api/auth/registeruser",
+        dataRegister,
+        { headers }
       );
       console.log(res);
     } catch (error) {

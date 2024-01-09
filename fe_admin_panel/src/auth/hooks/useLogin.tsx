@@ -6,14 +6,12 @@ import { useMutation } from "react-query";
 import axios from "axios";
 
 type useLogin = {
-
   email: string;
   password: string;
 };
 
 export const useLogin = () => {
   const [dataLogin, setDataLogin] = useState<useLogin>({
-   
     email: "",
     password: "",
   });
@@ -25,11 +23,16 @@ export const useLogin = () => {
       [name]: value,
     });
   };
-  const { mutate: handleSubmit } = useMutation(async () => {
+  const { mutate: handleSubmit } = useMutation(async (e: any) => {
+    e.preventDefault();
     try {
+      const headers = {
+        "Content-Type": "multipart/form-data",
+      };
       const res = await axios.post(
-        "http://127.0.0.1:8001/api/auth/login",
-        dataLogin
+        "http://192.168.18.169:8001/api/auth/login",
+        dataLogin,
+        { headers }
       );
       console.log(res);
     } catch (error) {

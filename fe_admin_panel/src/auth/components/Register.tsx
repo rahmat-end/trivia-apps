@@ -44,9 +44,11 @@ const RegisterPages: React.FC = () => {
         </Box>
       </Heading>
       <VStack
-        spacing={4}
+        spacing={3}
         align='stretch'>
-        <form onSubmit={handleRegister}>
+        <form
+          encType='multipart/form-data'
+          onSubmit={handleRegister}>
           <Box
             display={"flex"}
             justifyContent={"center"}
@@ -80,7 +82,7 @@ const RegisterPages: React.FC = () => {
                     w={"100%"}
                     p={4}
                     borderRadius={"full"}
-                    height={"40px"}
+                    height={"35px"}
                     placeholder='Username'
                   />
                 </FormControl>
@@ -98,10 +100,10 @@ const RegisterPages: React.FC = () => {
                     onChange={handleChange}
                     bg={"white"}
                     color={"black"}
-                    p={5}
+                    p={4}
                     w={"100%"}
                     borderRadius={"full"}
-                    height={"40px"}
+                    height={"35px"}
                   />
                 </FormControl>
               </Box>
@@ -116,8 +118,8 @@ const RegisterPages: React.FC = () => {
                     name='password'
                     bg={"white"}
                     color={"black"}
-                    height={"40px"}
-                    p={5}
+                    height={"35px"}
+                    p={4}
                     borderRadius={"full"}
                     w={"100%"}
                   />
@@ -143,7 +145,11 @@ const RegisterPages: React.FC = () => {
               <Text>
                 Have account yet?{" "}
                 <Link
-                  style={{ color: "green", fontStyle: "italic", fontWeight:"bold" }}
+                  style={{
+                    color: "green",
+                    fontStyle: "italic",
+                    fontWeight: "bold",
+                  }}
                   to={"/login"}>
                   Login
                 </Link>

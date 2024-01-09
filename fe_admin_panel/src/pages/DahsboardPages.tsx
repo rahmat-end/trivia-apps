@@ -2,9 +2,9 @@
 
 // src/pages/Dashboard.tsx
 import React from "react";
-import { Box, Container, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Text } from "@chakra-ui/react";
 import Player from "../components/Players";
-import Server from "../components/server";
+// import Server from "../components/server";
 import Content from "../components/Content";
 import Serch from "../serch/components/serch";
 import Sidebar from "../components/Sidebar";
@@ -16,7 +16,9 @@ const Dashboard: React.FC = () => {
       bgImage={
         "https://i.pinimg.com/originals/86/87/ed/8687eddeeb660a2b0b9fba7cc43d2459.jpg"
       }
-      h={"100vh"}>
+      minH={"100vh"}
+      bgSize='cover'
+      overflowY='auto'>
       <Flex
         bg='gray.800'
         align='center'
@@ -47,22 +49,45 @@ const Dashboard: React.FC = () => {
           <RightBar />
         </Box>
       </Flex>
-      <Container maxW='container.3xl'
-      p={5}>
-        <Heading mb='4'>
-          <Text color={"grey"}>Admin Dashboard</Text>
+      <Container
+        maxW='container.3xl'
+        p={5}>
+        <Heading
+          mb={"40px"}
+          textAlign={"center"}>
+          <Box
+            display={"flex"}
+            flexDirection={"row"}
+            justifyContent={"end"}
+            bgColor={"gray.800"}
+            className='rounded-tl-[60px] rounded-br-[60px]'
+            py={"30px"}
+            p={"5"}
+            width={"200px"}
+            height={"105px"}
+            position={"relative"}
+            borderEnd={"7px ridge #dcfcfe"}
+            borderTop={"5px ridge #dcfcfe"}>
+            <Text
+              color={"gray.400"}
+              fontSize={"2xl"}
+              fontWeight={"bold"}>
+              Admin Dashboard
+            </Text>
+          </Box>
         </Heading>
-        <Flex>
-          <Box flex='2'>
+        <Flex gap={100}>
+          <Box flex='1'>
             <Player />
           </Box>
-          <Spacer />
-          <Box flex='1'>
+
+          {/* <Box flex='0'>
             <Server />
-          </Box>
-          <Spacer />
-          <Box flex='1'
-          mr={"50"}>
+          </Box> */}
+
+          <Box
+            flex='1'
+            display={["none", "none", "flex", "flex"]}>
             <Content />
           </Box>
         </Flex>

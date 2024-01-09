@@ -55,87 +55,82 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
         <ModalHeader>Add Question</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Input
-            type='Text'
-            accept='text/*'
-            placeholder='question'
-            value={question.question}
-            name='question'
-            onChange={(e) => handleChange(e)}
-            mt={4}
-            alignItems={"center"}
-            display={"flex"}
-          />
-
-          <Input
-            type='file'
-            accept='image/*'
-            name='image'
-            onChange={(e) => handleImageUpload(e)}
-            mt={4}
-            alignItems={"center"}
-            display={"flex"}
-          />
-          <Input
-            type='Text'
-            accept='text/*'
-            placeholder='answer 1'
-            value={question.answer}
-            onChange={(e) => handleChange(e)}
-            name='answer'
-            mt={4}
-            alignItems={"center"}
-            display={"flex"}
-          />
-          <Input
-            type='Text'
-            accept='text/*'
-            placeholder='answer2'
-            value={question.answer}
-            name='answer2'
-            onChange={(e) => handleChange(e)}
-            mt={4}
-            alignItems={"center"}
-            display={"flex"}
-          />
-          <Input
-            type='Text'
-            accept='text/*'
-            placeholder='answer 3'
-            value={question.answer}
-            name='answer3'
-            onChange={(e) => handleChange(e)}
-            mt={4}
-            alignItems={"center"}
-            display={"flex"}
-          />
-          <Input
-            type='Text'
-            accept='text/*'
-            onChange={(e) => handleChange(e)}
-            value={question.answer}
-            placeholder='answer 4'
-            name='answer4'
-            mt={4}
-            alignItems={"center"}
-            display={"flex"}
-          />
-
-          <Box
-            mt={4}
-            width={"100%"}
-            display={"flex"}>
-            <Button
-              onClick={handleSubmit}
-              type='submit'
-              name='Question'
-              colorScheme='blue'
+          <form
+            onSubmit={handleSubmit}
+            encType='multipart/form-data'>
+            <Input
+              type='Text'
+              accept='text/*'
+              placeholder='question'
+              value={question.question}
+              name='question'
+              onChange={(e) => handleChange(e)}
+              mt={4}
               alignItems={"center"}
-              justifyContent={"end"}>
-              {" "}
-              Add Question
-            </Button>
-          </Box>
+              display={"flex"}
+            />
+
+            <Input
+              type='file'
+              accept='image/*'
+              name='image'
+              onChange={(e) => handleImageUpload(e)}
+              mt={4}
+              alignItems={"center"}
+              display={"flex"}
+            />
+            <Input
+              type='Text'
+              placeholder='answer 1'
+              onChange={(e) => handleChange(e)}
+              name='answer'
+              mt={4}
+              alignItems={"center"}
+              display={"flex"}
+            />
+            <Input
+              type='Text'
+              placeholder='answer2'
+              name='answer2'
+              onChange={(e) => handleChange(e)}
+              mt={4}
+              alignItems={"center"}
+              display={"flex"}
+            />
+            <Input
+              type='Text'
+              placeholder='answer 3'
+              name='answer3'
+              onChange={(e) => handleChange(e)}
+              mt={4}
+              alignItems={"center"}
+              display={"flex"}
+            />
+            <Input
+              type='Text'
+              onChange={(e) => handleChange(e)}
+              placeholder='answer 4'
+              name='answer4'
+              mt={4}
+              alignItems={"center"}
+              display={"flex"}
+            />
+
+            <Box
+              mt={4}
+              width={"100%"}
+              display={"flex"}>
+              <Button
+                type='submit'
+                name='Question'
+                colorScheme='blue'
+                alignItems={"center"}
+                justifyContent={"end"}>
+                {" "}
+                Add Question
+              </Button>
+            </Box>
+          </form>
         </ModalBody>
       </ModalContent>
     </Modal>

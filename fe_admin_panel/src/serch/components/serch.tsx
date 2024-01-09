@@ -22,9 +22,13 @@ function serch() {
           flex={0}
           color='white'
           display={"flex"}
+          py={2}
+          px={5}
+          gap={1}
         />
         <input
           type='text'
+          
           placeholder='Search....'
           className='w-full border-none focus:outline-none '
           style={{ backgroundColor: "transparent" }}

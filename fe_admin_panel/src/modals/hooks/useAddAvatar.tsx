@@ -7,37 +7,45 @@ import axios from "axios";
 
 type AddAvatarModal = {
   photo_freeavatar: File | null;
+
 };
 
 export const useAddAvatar = () => {
   const [dataAvatar, setDataAvatar] = useState<AddAvatarModal>({
-    photo_freeavatar: null,
+    photo_freeavatar: null
   });
 
-const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const {name, files} = event.target;
 
-  console.log(files)
-  setDataAvatar({
-    ...dataAvatar,
-    [name]: files? files[0] : null,
-  })
-}
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, files, value } = event.target;
+    setDataAvatar({
+      ...dataAvatar,
+      [name]: files ? files[0] : value
+    })
+  };
 
- const {mutate:handleSubmit} = useMutation( async () => {
-  try {
-    const data = new FormData()
-    data.append("photo_freeavatar", dataAvatar.photo_freeavatar as File);
-    const res = await axios.post("http://127.0.0.1:8001/api/freeavatar/", data);
-    console.log(res)
-  } catch (error) {
-    console.log(error)  
-  }
-   
- })
+  useEffect(() => {
 
-    
-  
-  return { dataAvatar, handleChange, handleSubmit };
-  
+    console.log(dataAvatar);
+  },[dataAvatar])
+  const { mutate: handleSubmit } = useMutation(async (e: any) => {
+    e.preventDefault();
+    try {
+
+      const headers = {
+        "Content-Type": "multipart/form-data",
+      }
+      const formData = new FormData();
+      formData.append("photo_freeavatar", dataAvatar.photo_freeavatar as File);
+      const res = await axios.post(
+        "http://192.168.18.169:8001/api/freeavatar/",
+        formData, {headers}
+      );
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  return { dataAvatar, handleChange, handleSubmit};
 };

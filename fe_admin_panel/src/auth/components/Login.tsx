@@ -47,7 +47,9 @@ const LoginPages: React.FC = () => {
       <VStack
         spacing={4}
         align='stretch'>
-        <form onSubmit={handleLogin}>
+        <form
+          encType='multipart/form-data'
+          onSubmit={handleLogin}>
           <Box
             display={"flex"}
             justifyContent={"center"}
@@ -125,7 +127,11 @@ const LoginPages: React.FC = () => {
               <Text>
                 Have no account yet?{" "}
                 <Link
-                  style={{ color: "green" , fontWeight:"bold", fontStyle: "italic", }}
+                  style={{
+                    color: "green",
+                    fontWeight: "bold",
+                    fontStyle: "italic",
+                  }}
                   to={"/register"}>
                   Register
                 </Link>

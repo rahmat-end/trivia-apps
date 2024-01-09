@@ -1,6 +1,6 @@
 /** @format */
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import axios from "axios";
@@ -19,24 +19,30 @@ export const Question = () => {
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+    const { name, value, files } = event.target;
     setQuestion({
       ...question,
-      [name]: value,
+      [name]: files ? files[0] : value,
     });
-
-    console.log(question);
   };
+  useEffect(() => {
+    console.log(question);
+  }, [question]);
 
-  const { mutate: handleSubmit } = useMutation(async () => {
+  const { mutate: handleSubmit } = useMutation(async (e: any) => {
+    e.preventDefault();
     try {
+      const headers = {
+        "Content-Type": "multipart/form-data",
+      };
       const dataQuestion = new FormData();
       dataQuestion.append("question", question.question);
       dataQuestion.append("answer", question.answer);
       dataQuestion.append("image", question.image as File);
       const res = await axios.post(
-        "http://127.0.0.1:8001/api/freeavatar/",
-        dataQuestion
+        "http://192.168.18.169:8001/api/freeavatar/",
+        dataQuestion,
+        { headers }
       );
       console.log(res);
     } catch (error) {
