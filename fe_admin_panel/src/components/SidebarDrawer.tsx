@@ -1,6 +1,6 @@
 /** @format */
-
-import { Button, Box, Text, Flex, Image } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
+import { Box, Flex, Image, Button, Text } from "@chakra-ui/react";
 import Logo from "../assets/image/logo.png";
 
 const SidebarDrawer = () => {
@@ -8,52 +8,77 @@ const SidebarDrawer = () => {
     <>
       <Flex
         display={"flex"}
-        flexDirection={"row"}
+        flexDirection={{ base: "row", md: "column" }}
         bgColor={"gray.800"}
-        className='rounded-tl-[50px] rounded-br-[50px]'
-        p={5}>
+        className='rounded-tl-[130px] rounded-br-[180px]'
+        p={5}
+        borderRight={"10px ridge #dcfcfe"}
+        borderTop={"5px ridge #dcfcfe"}>
         <Box
-          flexDirection={"row"}
-          display={"flex"}>
+          flexDirection={{ base: "column", md: "row" }}
+          display={"flex"}
+          marginLeft={"10"}>
           <Flex
-            align={"center"}
             w={"50%"}
-            flexDirection={"column"}>
-            <Box>
-              <Text
-                color={"white"}
-                fontSize={"3xl"}>
-                Play Trivia Game
-              </Text>
+            flexDirection={{ base: "row", md: "column" }}>
+            <Box
+              display={"flex"}
+              alignItems={"center"}>
+              <Box>
+                <Link to={`/home`}>
+                  <Text>
+                    <Button
+                      fontSize={{ base: "xl", md: "2xl" }}
+                      textDecoration={"none"}
+                      _hover={{ color: "blue.600" }}
+                      bg={"transparent"}
+                      color={"white"}>
+                      Home
+                    </Button>
+                  </Text>
+                </Link>
+              </Box>
+              <Box>
+                <Link to={`/dahsboard`}>
+                  <Text>
+                    <Button
+                      fontSize={{ base: "xl", md: "2xl" }}
+                      color={"grey"}
+                      textDecoration={"none"}
+                      _hover={{ color: "blue.600" }}
+                      bg={"transparent"}>
+                      Dahsboard
+                    </Button>
+                  </Text>
+                </Link>
+              </Box>
             </Box>
-            <Box>
-              <Text
-                size={"sm"}
-                color={"grey"}>
-                React does not prescribe how you add CSS files. In the simplest
-                case, you’ll add a tag to your HTML. If you use a build tool or
-                a
-              </Text>
-            </Box>
-            <Box>
-              <Button
-                colorScheme='teal'
-                className='rounded-tl-2xl- rounded-br-2x1'>
-                
-                Play Now
-              </Button>
+            <Box mt={"5"}>
+              <img
+                src='https://i.pinimg.com/564x/a3/fb/f1/a3fbf1da54db06bcd540588c188506fe.jpg'
+                alt=''
+                width='80%'
+              />
             </Box>
           </Flex>
           <Box
+            flexDirection={{ base: "row", md: "column" }}
             w={"50%"}
             display={"flex"}
-            justifyContent={"end"}>
+            justifyContent={"center"}
+            alignItems={"center"}>
             <Image
               src={Logo}
               alt='logo'
+<<<<<<< HEAD
               w={"50"}
               h={"40"}
               ></Image>
+=======
+              w={{ base: "80px", md: "200px" }}
+              h={{ base: "60px", md: "200px" }}
+              animation='spin 1s linear infinite'></Image>
+>>>>>>> 49d105ff244509fb4eb101c5ea8040a14717b06e
           </Box>
         </Box>
       </Flex>
