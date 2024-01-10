@@ -1,30 +1,17 @@
 /** @format */
 
-// import React from "react";
-import Home from "./pages/home.tsx";
-import Login from "./pages/LoginPages.tsx";
-import Register from "./pages/RegisterPages";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React from "react";
+import ReactDOM from "react-dom/client";
 
-const App = () => {
-  return (
-    <Router>
-      <Routes>
-        <Route
-          path='/'
-          element={<Home />}
-        />
-        <Route
-          path='/login'
-          element={<Login />}
-        />
-        <Route
-          path='/register'
-          element={<Register />}
-        />
-      </Routes>
-    </Router>
-  );
-};
+// import "./index.css";
+import { ChakraProvider } from "@chakra-ui/react";
+import AppRouter from "./router/AppRouter.tsx";
+import { Route } from "react-router-dom";
 
-export default App;
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <ChakraProvider>
+      <AppRouter />
+    </ChakraProvider>
+  </React.StrictMode>
+);

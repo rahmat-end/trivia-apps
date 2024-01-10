@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "triviaApps",
-    "slug": "triviaApps",
+    "name": "trivaGames",
+    "slug": "trivaGames",
+    "plugins": ["@react-native-google-signin/google-signin"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,13 +19,20 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.dianpayno2023.trivaGames"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "14ddb505-b547-44a7-af61-28c442a8e3be"
+      }
     }
   }
 }

@@ -53,7 +53,7 @@ const SidebarDrawer = () => {
               alt='logo'
               w={"50"}
               h={"40"}
-              animation='spin 1s linear infinite'></Image>
+              ></Image>
           </Box>
         </Box>
       </Flex>
