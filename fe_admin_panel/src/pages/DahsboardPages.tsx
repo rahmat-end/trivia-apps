@@ -9,6 +9,7 @@ import Content from "../components/Content";
 import Serch from "../serch/components/serch";
 import Sidebar from "../components/Sidebar";
 import RightBar from "../components/RightBar";
+import Oclock from "../components/Clock";
 
 const Dashboard: React.FC = () => {
   return (
@@ -18,7 +19,8 @@ const Dashboard: React.FC = () => {
       }
       minH={"100vh"}
       bgSize='cover'
-      overflowY='auto'>
+      overflowY='auto'
+      w={"100%"}>
       <Flex
         bg='gray.800'
         align='center'
@@ -45,20 +47,22 @@ const Dashboard: React.FC = () => {
           alignItems={"center"}
           justifyContent={"flex-start"}
           flex={"0"}
-          mr={"50"}>
+          mr={"60px"}
+          w={"100%"}>
           <RightBar />
         </Box>
       </Flex>
       <Container
         maxW='container.3xl'
-        p={5}>
+        >
         <Heading
           mb={"40px"}
-          textAlign={"center"}>
+          textAlign={"center"}
+          justifyContent={"space-between"}
+          display={"flex"}>
           <Box
             display={"flex"}
             flexDirection={"row"}
-            justifyContent={"end"}
             bgColor={"gray.800"}
             className='rounded-tl-[60px] rounded-br-[60px]'
             py={"30px"}
@@ -67,17 +71,26 @@ const Dashboard: React.FC = () => {
             height={"105px"}
             position={"relative"}
             borderEnd={"7px ridge #dcfcfe"}
-            borderTop={"5px ridge #dcfcfe"}>
+            borderTop={"5px ridge #dcfcfe"}
+            ml={"50px"}>
             <Text
               color={"gray.400"}
               fontSize={"2xl"}
-              fontWeight={"bold"}>
+              fontWeight={"bold"}
+              justifyContent={"end"}>
               Admin Dashboard
             </Text>
           </Box>
+          <Box mr={"120px"}>
+            <Oclock />
+          </Box>
         </Heading>
-        <Flex gap={100}>
-          <Box flex='1'>
+        <Flex
+          ml={"50px"}
+          display={"flex"}
+          flexDirection={"column"}
+          flexWrap={"wrap"}>
+          <Box>
             <Player />
           </Box>
 
@@ -86,8 +99,11 @@ const Dashboard: React.FC = () => {
           </Box> */}
 
           <Box
-            flex='1'
-            display={["none", "none", "flex", "flex"]}>
+            display={"flex"}
+            flexDirection={"column"}
+            gap={2}
+            ml={"50px"}
+            mt={"50px"}>
             <Content />
           </Box>
         </Flex>

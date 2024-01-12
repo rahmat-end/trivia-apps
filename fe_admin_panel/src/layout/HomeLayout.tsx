@@ -1,14 +1,21 @@
 /** @format */
 
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Heading } from "@chakra-ui/react";
 import Search from "../serch/components/serch";
 import Sidebar from "../components/Sidebar";
 import SidebarDrawer from "../components/SidebarDrawer";
 import RightBar from "../components/RightBar";
 import Bothbar from "../components/Bothbar";
 import AvatarCard from "../avatar/components/AvatarCard";
+import Clock from "../components/Clock";
+import { useAddDiamond } from "../modals/hooks/useAddDiamond";
+import { useEffect } from "react";
 
 const HomeLayout = () => {
+  const {getDataDiamond} = useAddDiamond()
+  useEffect(() => {
+    console.log(getDataDiamond)
+  },[getDataDiamond])
   return (
     <Box
       minH={"100vh"}
@@ -49,6 +56,16 @@ const HomeLayout = () => {
         </Box>
       </Flex>
 
+      <Heading w={"100%"}>
+        <Box
+          display={"flex"}
+          justifyContent={"flex-end"}
+          alignItems={"center"}
+          mt={"10px"}
+          mr={"100px"}>
+          <Clock />
+        </Box>
+      </Heading>
       <Flex>
         <Box
           display='flex'
@@ -61,7 +78,7 @@ const HomeLayout = () => {
             flexDirection={"column"}>
             <Box
               w={"100%"}
-              p={5}
+              p={3}
               bg={"transparent"}
               borderRadius={"lg"}
               boxShadow={"lg"}

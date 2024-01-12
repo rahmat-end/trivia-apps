@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import { useEffect } from "react";
 
@@ -49,5 +49,17 @@ export const useAddDiamond = () => {
     console.log(dataDiamond);
   });
 
-  return { dataDiamond, handleChange, handleSubmit };
+const {data:getDataDiamond}=useQuery("diamond", async()=>{
+try {
+  const response = await axios.get("http://192.168.18.169:8001/api/diamond/");
+  console.log(response.data);
+  return response.data
+  
+} catch (error) {
+  console.log(error);
+}
+
+})
+
+  return { dataDiamond, handleChange, handleSubmit, getDataDiamond };
 };

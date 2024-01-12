@@ -1,8 +1,8 @@
 /** @format */
 
-import { Flex, Box, Text } from "@chakra-ui/react";
-import Avatars1 from "../../assets/image/avataaars (1).png";
-// import Avatars2 from "../assets/image/avataaars (2).png";
+import { Flex, Box, Text, Button } from "@chakra-ui/react";
+import Avatars1 from "../../assets/image/Animate from1.png";
+import Avatars2 from "../assets/image/avataaars (2).png";
 // import Avatars3 from "../assets/image/avataaars (3).png";
 // import Avatars5 from "../assets/image/avataaars (5).png";
 // import Avatars6 from "../assets/image/avataaars (6).png";
@@ -11,8 +11,6 @@ import { avatar } from "../../service/avatar";
 import useAvatar from "./hooks/useAvatar";
 
 function AvatarCard() {
- 
-
   return (
     <>
       <Flex>
@@ -56,9 +54,18 @@ function AvatarCard() {
                   />
                   <Box
                     display={"flex"}
-                    flexDirection={"column"}>
+                    flexDirection={"column"}
+                    gap={1}
+                    p={"10px"}>
                     <Text color={"white"}>{item.name}</Text>
                     <Text color={"grey"}>{item.username}</Text>
+                    <Button
+                      colorScheme='teal'
+                      borderRadius={"5px"}
+                      mt={"10px"}
+                      p={"3px"}>
+                      Edit
+                    </Button>
                   </Box>
                 </Box>
               );

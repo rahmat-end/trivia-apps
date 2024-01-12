@@ -1,7 +1,7 @@
 /** @format */
 import { Link } from "react-router-dom";
 import { Box, Flex, Image, Button, Text } from "@chakra-ui/react";
-import Logo from "../assets/image/logo.png";
+import Logo2 from "../assets/image/logo2.png";
 
 const SidebarDrawer = () => {
   return (
@@ -10,10 +10,14 @@ const SidebarDrawer = () => {
         display={"flex"}
         flexDirection={{ base: "row", md: "column" }}
         bgColor={"gray.800"}
-        className='rounded-tl-[130px] rounded-br-[180px]'
-        p={5}
+        className='rounded-tl-[130px] rounded-br-[150px]'
+        p={4}
         borderRight={"10px ridge #dcfcfe"}
-        borderTop={"5px ridge #dcfcfe"}>
+        borderTop={"5px ridge #dcfcfe"}
+        w={"100%"}
+        h={"100%"}
+        justifyContent={"space-between"}
+        >
         <Box
           flexDirection={{ base: "column", md: "row" }}
           display={"flex"}
@@ -57,7 +61,8 @@ const SidebarDrawer = () => {
               <img
                 src='https://i.pinimg.com/564x/a3/fb/f1/a3fbf1da54db06bcd540588c188506fe.jpg'
                 alt=''
-                width='80%'
+                width='100%'
+                height='100%'
               />
             </Box>
           </Flex>
@@ -68,7 +73,7 @@ const SidebarDrawer = () => {
             justifyContent={"center"}
             alignItems={"center"}>
             <Image
-              src={Logo}
+              src={Logo2}
               alt='logo'
               w={{ base: "80px", md: "200px" }}
               h={{ base: "60px", md: "200px" }}

@@ -1,51 +1,31 @@
 /** @format */
 
-import { Link } from "react-router-dom";
-import { FaCog, FaDashcube, FaHome } from "react-icons/fa";
-import { Button, Text } from "@chakra-ui/react";
+import  { useContext } from "react";
+import { HStack, Avatar, VStack, Text } from "@chakra-ui/react";
+import { UserContext } from "../auth/hooks/UserContext";
 
 function RightBar() {
+  const { user } = useContext(UserContext) || {}; // Gunakan optional chaining disini
+
   return (
-    <>
-      <Link to={`/`}>
-        <Text>
-          <Button
-            color='blue.600 '
-            marginLeft={"8"}
-            textDecoration={"none"}
-            _hover={{ color: "blue.600" }}
-            bg={"transparent"}>
-            <FaHome />
-            Home
-          </Button>
+    <HStack>
+      <Avatar
+        size='sm'
+        name={user ? user.name : "John Doe"}
+        src={
+          user
+            ? user.avatar
+            : "https://i.pinimg.com/564x/f9/c6/58/f9c65832a1d731843b423e0f42a18098.jpg"
+        }
+      />
+      <VStack align='start'>
+        <Text
+          color='white'
+          fontSize='lg'>
+          {user ? user.name : "John Doe"}
         </Text>
-      </Link>
-      <Link to={`/dahsboard`}>
-        <Text>
-          <Button
-            color='white'
-            marginLeft={"1"}
-            textDecoration={"none"}
-            _hover={{ color: "blue.600" }}
-            bg={"transparent"}>
-            <FaDashcube />
-            Dahsbboard
-          </Button>
-        </Text>
-      </Link>
-      <Link to={`/dashboard`}>
-        <Text>
-          <Button
-            color='white'
-            textDecoration={"none"}
-            _hover={{ color: "blue.600" }}
-            bg={"transparent"}>
-            <FaCog />
-            Settings
-          </Button>
-        </Text>
-      </Link>
-    </>
+      </VStack>
+    </HStack>
   );
 }
 

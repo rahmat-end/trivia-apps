@@ -1,7 +1,8 @@
 /** @format */
 
 // src/pages/RegisterPages.tsx
-import React from "react";
+
+import { useEffect } from "react";
 import {
   Box,
   Button,
@@ -12,20 +13,32 @@ import {
   Text,
   Heading,
   Image,
+  Alert,
+  AlertIcon,
+  AlertDescription,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/image/logo.png";
 
 import { useLogin } from "../hooks/useLogin";
 
-const LoginPages: React.FC = () => {
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Add your registration logic here
-    console.log("Registering...");
-  };
-  const { dataLogin, handleChange } = useLogin();
+export default function Login() {
+  const navigate = useNavigate();
+  const {
+    form,
+    handleChange,
+    handleLogin,
+    isLoading,
+    isError,
+    error,
+    isLoginSuccess,
+  } = useLogin();
 
+  useEffect(() => {
+    if (isLoginSuccess) {
+      navigate("/");
+    }
+  }, [isLoginSuccess]);
   return (
     <Box
       minH={"100vh"}
@@ -69,6 +82,16 @@ const LoginPages: React.FC = () => {
                   Login To Trivia
                 </Text>
               </Box>
+              {isError && (
+                <Alert
+                  status='error'
+                  bg={"#FF6969"}
+                  mb={3}
+                  borderRadius={5}>
+                  <AlertIcon color={"black"} />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
 
               <Box>
                 <FormControl>
@@ -77,7 +100,7 @@ const LoginPages: React.FC = () => {
                     type='text'
                     accept='email'
                     placeholder='Email'
-                    value={dataLogin.email}
+                    value={form.email}
                     name='email'
                     onChange={handleChange}
                     bg={"white"}
@@ -95,7 +118,7 @@ const LoginPages: React.FC = () => {
                   <Input
                     type='password'
                     placeholder='Password'
-                    value={dataLogin.password}
+                    value={form.password}
                     onChange={handleChange}
                     name='password'
                     bg={"white"}
@@ -107,23 +130,36 @@ const LoginPages: React.FC = () => {
                   />
                 </FormControl>
               </Box>
-              <Box
-                mt={5}
-                justifyContent={"end"}
-                display={"flex"}>
+              {isLoading ? (
                 <Button
-                  _hover={{ bg: "gray.700" }}
-                  type='submit'
-                  w={"100%"}
-                  alignItems={"center"}
-                  color={"white"}
-                  fontSize={{ base: "xl", md: "2xl" }}
+                  isLoading
+                  colorScheme='green'
+                  variant='solid'
                   borderRadius={"full"}
-                  bg={"green.500"}
-                  h={"40px"}>
-                  Login
+                  width={"100%"}
+                  mb={3}>
+                  Loading
                 </Button>
-              </Box>
+              ) : (
+                <Box
+                  mt={5}
+                  justifyContent={"end"}
+                  display={"flex"}>
+                  <Button
+                    _hover={{ bg: "gray.700" }}
+                    type='submit'
+                    onClick={handleLogin}
+                    w={"100%"}
+                    alignItems={"center"}
+                    color={"white"}
+                    fontSize={{ base: "xl", md: "2xl" }}
+                    borderRadius={"full"}
+                    bg={"green.500"}
+                    h={"40px"}>
+                    Login
+                  </Button>
+                </Box>
+              )}
               <Text>
                 Have no account yet?{" "}
                 <Link
@@ -142,6 +178,4 @@ const LoginPages: React.FC = () => {
       </VStack>
     </Box>
   );
-};
-
-export default LoginPages;
+}

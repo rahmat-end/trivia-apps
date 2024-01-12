@@ -27,15 +27,20 @@ import {
   FaUserPlus,
   FaHome,
   FaDailymotion,
+  FaUserClock,
+  FaHouseDamage,
 } from "react-icons/fa";
 import logo from "../assets/image/logo.png";
-import AddUserModal from "../modals/components/AddAvatar";
+import AddFreeAvatarModal from "../modals/components/AddFreeAvatar";
 import AddQuestionModal from "../modals/components/AddQuestionModal";
 import AddDiamondsModal from "../modals/components/AddDiamonds";
+import AddBuyAvatar from "../modals/components/AddBuyAvatar";
 
 const Sidebar: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const [freeavatarModalVisible, setFreeAvatarModalVisible] =
+    React.useState(false);
   const [isQuestionModalOpen, setQuestionModalOpen] = React.useState(false);
 
   const [newQuestion, setNewQuestion] = React.useState({
@@ -48,6 +53,8 @@ const Sidebar: React.FC = () => {
     question: 0,
     answer: 0,
   });
+
+  const [isBuyAvatarModalOpen, setBuyAvatarModalOpen] = React.useState(false);
 
   const [isAddUserModalOpen, setAddUserModalOpen] = React.useState(false);
   const [newUserData, setNewUserData] = React.useState({
@@ -65,9 +72,10 @@ const Sidebar: React.FC = () => {
       <Flex
         align={"center"}
         justifyContent={"space-between"}
-        p={2}
-        gap={20}>
+        gap={20}
+        p={1}>
         <Image
+          alignContent={"center"}
           src={logo}
           alt=''
           color={"white"}
@@ -94,12 +102,9 @@ const Sidebar: React.FC = () => {
         </button>
       </Flex>
 
-      <AddUserModal
-        isOpen={isAddUserModalOpen}
-        onClose={() => setAddUserModalOpen(false)}
-        newUserData={newUserData}
-        setNewUserData={setNewUserData}
-        handleSubmit={() => setAddUserModalOpen(false)}
+      <AddFreeAvatarModal
+        isOpen={freeavatarModalVisible}
+        onClose={() => setFreeAvatarModalVisible(false)}
       />
 
       <AddQuestionModal
@@ -112,6 +117,14 @@ const Sidebar: React.FC = () => {
         onClose={() => setDiamondsModalOpen(false)}
       />
 
+      <AddBuyAvatar
+        isOpen={isAddUserModalOpen}
+        onClose={() => setAddUserModalOpen(false)}
+        newUserData={newUserData}
+        setNewUserData={setNewUserData}
+        handleSubmit={() => setAddUserModalOpen(false)}
+      />
+
       <Drawer
         isOpen={isOpen}
         onClose={onClose}
@@ -120,14 +133,27 @@ const Sidebar: React.FC = () => {
         <DrawerOverlay />
         <DrawerContent
           bg={"gray.800"}
-          color={"white"}>
+          color={"white"}
+          borderRadius={"30px"}
+          boxShadow={"lg"}
+          className='rounded-tl-[60px] rounded-br-[60px]'
+          borderEnd={"7px ridge #dcfcfe"}>
           <DrawerCloseButton />
 
           <DrawerHeader
             color='white'
-            mt={4}
             fontSize={"2xl"}>
-            Trivia Games
+            <Image
+              src={logo}
+              alt='logo'
+              w={"150px"}
+              objectFit={"contain"}
+              justifyContent={"start"}
+              display={["none", "flex"]}
+              flexDirection={"row"}
+              className='rounded-tl-[60px] rounded-br-[60px]'
+              borderRadius={"30px"}
+              boxShadow={"lg"}></Image>
           </DrawerHeader>
           <HStack
             align='center'
@@ -136,23 +162,6 @@ const Sidebar: React.FC = () => {
               align='center'
               spacing={4}
               mt={4}>
-              <HStack>
-                <Avatar
-                  size='lg'
-                  name={"John Doe"}
-                  src={
-                    "https://i.pinimg.com/564x/f9/c6/58/f9c65832a1d731843b423e0f42a18098.jpg"
-                  }
-                />
-                <VStack align='start'>
-                  <Text
-                    color='white'
-                    fontSize='lg'>
-                    John Doe
-                  </Text>
-                </VStack>
-              </HStack>
-
               <DrawerBody mt={8}>
                 <ul className='space-y-2'>
                   <li>
@@ -165,6 +174,23 @@ const Sidebar: React.FC = () => {
                             color='white'
                             _hover={{ color: "blue.600" }}>
                             Home
+                          </Text>
+                        </HStack>
+                      </button>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`/dahsboard`}>
+                      <button>
+                        <HStack
+                          spacing={2}
+                          mt={4}>
+                          <FaHouseDamage size='1.5em' />
+                          <Text
+                            fontSize='md'
+                            color='white'
+                            _hover={{ color: "blue.600" }}>
+                            Dahsboard
                           </Text>
                         </HStack>
                       </button>
@@ -203,7 +229,7 @@ const Sidebar: React.FC = () => {
                   </li>
 
                   <li>
-                    <button onClick={() => setAddUserModalOpen(true)}>
+                    <button onClick={() => setFreeAvatarModalVisible(true)}>
                       <HStack
                         spacing={2}
                         mt={4}>
@@ -212,7 +238,22 @@ const Sidebar: React.FC = () => {
                           fontSize='md'
                           color='white'
                           _hover={{ color: "blue.600" }}>
-                          Add Avatar
+                          Add Free Avatar
+                        </Text>
+                      </HStack>
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={() => setAddUserModalOpen(true)}>
+                      <HStack
+                        spacing={2}
+                        mt={4}>
+                        <FaUserClock size='1.5em' />
+                        <Text
+                          fontSize='md'
+                          color='white'
+                          _hover={{ color: "blue.600" }}>
+                          Add buy Avatar
                         </Text>
                       </HStack>
                     </button>
@@ -222,7 +263,7 @@ const Sidebar: React.FC = () => {
                     <button>
                       <HStack
                         spacing={2}
-                        mt={60}>
+                        mt={4}>
                         <FaCog size='1.5em' />
                         <Text
                           fontSize='md'
@@ -239,7 +280,7 @@ const Sidebar: React.FC = () => {
                       <button>
                         <HStack
                           spacing={2}
-                          mt={5}>
+                          mt={2}>
                           <FaSignOutAlt
                             size='1.5em'
                             color='red'

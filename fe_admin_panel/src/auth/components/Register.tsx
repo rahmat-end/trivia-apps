@@ -1,7 +1,7 @@
 /** @format */
 
 // src/pages/RegisterPages.tsx
-import React from "react";
+import { useEffect } from "react";
 import {
   Box,
   Button,
@@ -12,18 +12,31 @@ import {
   Text,
   Image,
   Heading,
+  Alert,
+  AlertIcon,
+  AlertDescription,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/image/logo.png";
 import { useRegister } from "../hooks/useRegister";
 
-const RegisterPages: React.FC = () => {
-  const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Add your registration logic here
-    console.log("Registering...");
-  };
-  const { dataRegister, handleChange } = useRegister();
+export default function Register() {
+  const navigate = useNavigate();
+  const {
+    form,
+    handleChange,
+    handleRegister,
+    isLoading,
+    isError,
+    error,
+    isRegisterSuccess,
+  } = useRegister();
+
+  useEffect(() => {
+    if (isRegisterSuccess) {
+      navigate("/login");
+    }
+  }, [isRegisterSuccess]);
 
   return (
     <Box
@@ -67,15 +80,24 @@ const RegisterPages: React.FC = () => {
                   fontWeight={"bold"}>
                   Register To Trivia
                 </Text>
+                {isError && (
+                  <Alert
+                    status='error'
+                    bg={"#FF6969"}
+                    mb={3}
+                    borderRadius={5}>
+                    <AlertIcon color={"black"} />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
               </Box>
               <Box>
                 <FormControl>
-                  <FormLabel>UserName</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <Input
                     type='text'
-                    name='username'
-                    accept='username'
-                    value={dataRegister.name}
+                    name='name'
+                    value={form.name}
                     bg={"white"}
                     onChange={handleChange}
                     color={"black"}
@@ -92,10 +114,9 @@ const RegisterPages: React.FC = () => {
                 <FormControl>
                   <FormLabel>Email</FormLabel>
                   <Input
-                    type='text'
-                    accept='email'
+                    type='email'
                     placeholder='Email'
-                    value={dataRegister.email}
+                    value={form.email}
                     name='email'
                     onChange={handleChange}
                     bg={"white"}
@@ -113,7 +134,7 @@ const RegisterPages: React.FC = () => {
                   <Input
                     type='password'
                     placeholder='Password'
-                    value={dataRegister.password}
+                    value={form.password}
                     onChange={handleChange}
                     name='password'
                     bg={"white"}
@@ -125,23 +146,35 @@ const RegisterPages: React.FC = () => {
                   />
                 </FormControl>
               </Box>
-              <Box
-                mt={4}
-                justifyContent={"end"}
-                display={"flex"}>
+              {isLoading ? (
                 <Button
-                  _hover={{ bg: "gray.700" }}
-                  type='submit'
-                  w={"100%"}
-                  alignItems={"center"}
-                  color={"white"}
-                  fontSize={{ base: "xl", md: "2xl" }}
+                  isLoading
+                  colorScheme='green'
+                  variant='solid'
                   borderRadius={"full"}
-                  bg={"green.500"}
-                  h={"40px"}>
-                  Register
+                  width={"100%"}
+                  mb={3}>
+                  Loading
                 </Button>
-              </Box>
+              ) : (
+                <Box
+                  mt={4}
+                  justifyContent={"end"}
+                  display={"flex"}>
+                  <Button
+                    _hover={{ bg: "gray.700" }}
+                    onClick={handleRegister}
+                    w={"100%"}
+                    alignItems={"center"}
+                    color={"white"}
+                    fontSize={{ base: "xl", md: "2xl" }}
+                    borderRadius={"full"}
+                    bg={"green.500"}
+                    h={"40px"}>
+                    Register
+                  </Button>
+                </Box>
+              )}
               <Text>
                 Have account yet?{" "}
                 <Link
@@ -160,6 +193,4 @@ const RegisterPages: React.FC = () => {
       </VStack>
     </Box>
   );
-};
-
-export default RegisterPages;
+}

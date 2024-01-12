@@ -1,7 +1,7 @@
 /** @format */
 
 import {  Box, Text, Flex, Image } from "@chakra-ui/react";
-import Avatar from "../assets/image/avatar1.jpg";
+import Avatar from "../assets/image/avatar1.png";
 import Avatar2 from "../assets/image/avatar2.jpg";
 import Avatar3 from "../assets/image/avatar3.jpg";
 
@@ -15,7 +15,11 @@ const SidebarDrawer = () => {
         className='rounded-tl-[200px] rounded-br-[120px]'
         borderRight={"10px ridge #dcfcfe"}
         borderTop={"5px ridge #dcfcfe"}
-        p={50}>
+        p={50}
+        w={"100%"}
+        h={"100%"}
+        justifyContent={"space-between"}
+        >
         <Box
           flexDirection={"row"}
           display={"flex"}>
@@ -42,7 +46,7 @@ const SidebarDrawer = () => {
             <Box> </Box>
           </Flex>
           <Box
-            w={"50%"}
+            
             display={"flex"}
             justifyContent={"end"}>
             <Image
