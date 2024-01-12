@@ -1,30 +1,50 @@
 /** @format */
 
+<<<<<<< HEAD
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+// import "./index.css";
+import { ChakraProvider } from "@chakra-ui/react";
+import AppRouter from "./router/AppRouter.tsx";
+import { Route } from "react-router-dom";
+=======
 // import React from "react";
-import Home from "./pages/home.tsx";
-import Login from "./pages/LoginPages.tsx";
-import Register from "./pages/RegisterPages";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import AppRouter from "./router/AppRouter.tsx";
+import { QueryClientProvider, QueryClient } from "react-query";
+import axios from "axios";
+import { useEffect } from "react";
 
 const App = () => {
+  const test = async () => {
+    try {
+      const response = await axios.get("http://192.168.18.169:8001/api/user");
+      console.log(response.data);
+      
+    } catch (error) {
+      console.error("Error fetching or parsing data:", error);
+    }
+  };
+
+  useEffect(() => {
+    test();
+  }, []);
+
+  const queryClient = new QueryClient();
   return (
-    <Router>
-      <Routes>
-        <Route
-          path='/'
-          element={<Home />}
-        />
-        <Route
-          path='/login'
-          element={<Login />}
-        />
-        <Route
-          path='/register'
-          element={<Register />}
-        />
-      </Routes>
-    </Router>
+    <>
+      <QueryClientProvider client={queryClient}>
+        <AppRouter />
+      </QueryClientProvider>
+    </>
   );
 };
+>>>>>>> 49d105ff244509fb4eb101c5ea8040a14717b06e
 
-export default App;
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <ChakraProvider>
+      <AppRouter />
+    </ChakraProvider>
+  </React.StrictMode>
+);

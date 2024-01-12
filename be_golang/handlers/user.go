@@ -3,19 +3,21 @@ package handlers
 import (
 	"net/http"
 	"strconv"
+
+	// "strconv"
 	dto "trivia_app/dto/result"
 	usersdto "trivia_app/dto/user"
 	"trivia_app/models"
-	"trivia_app/repository"
+	"trivia_app/repositories"
 
 	"github.com/labstack/echo/v4"
 )
 
 type handlerUser struct {
-	UserRepository repository.UserRepository
+	UserRepository repositories.UserRepository
 }
 
-func UserHandler(userRepository repository.UserRepository) *handlerUser {
+func UserHandler(userRepository repositories.UserRepository) *handlerUser {
 	return &handlerUser{userRepository}
 }
 
@@ -34,7 +36,7 @@ func (h *handlerUser) FindUsers(c echo.Context) error {
 }
 
 func (h *handlerUser) GetUser(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
+	id := c.Param("id")
 	user, err := h.UserRepository.GetUser(id)
 
 	if err != nil {
@@ -50,9 +52,7 @@ func (h *handlerUser) GetUser(c echo.Context) error {
 
 func convertResponse(u models.User) usersdto.UserResponse {
 	return usersdto.UserResponse{
-		Id:   u.Id,
-		Name: u.Name,
-		// Email:    u.Email,
-		// Password: u.Password,
+		IdUser: strconv.Itoa(u.UserId),
+		Name:   u.Name,
 	}
 }
