@@ -17,20 +17,17 @@ import FindPeople from "../Screens/FindPeople/Index";
 import LetsPlay from "../Screens/LetsPlay/Index";
 import ResultMatch from "../Screens/Result/Index";
 const Stack = createNativeStackNavigator();
-import { useAppSelector } from "../Redux/hooks";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
+
 
 export default function Navigation() {
-    
-    
-
   const CostumHeader = ({ navigation }: { navigation: any }) => {
     const [isSettingOpen, setIsSettingOpen] = useState(false);
     return (
       <View style={styles.container}>
         <Image
           style={styles.logo}
-          source={require("../../assets/BackgroundImage/logo.png")}
+          source={require("../../assets/BackgroundImage/newlogo.png")}
         />
         <TouchableOpacity onPress={() => setIsSettingOpen(true)}>
           <LottieView
@@ -41,7 +38,10 @@ export default function Navigation() {
         </TouchableOpacity>
 
         {isSettingOpen && (
-          <SettingModal navigation={navigation} setIsOpen={() => setIsSettingOpen(false)} />
+          <SettingModal
+            navigation={navigation}
+            setIsOpen={() => setIsSettingOpen(false)}
+          />
         )}
       </View>
     );
@@ -56,8 +56,8 @@ export default function Navigation() {
       paddingHorizontal: horizontalScale(10),
     },
     logo: {
-      width: horizontalScale(100),
-      height: verticalScale(100),
+      width: horizontalScale(70),
+      height: verticalScale(70),
       resizeMode: "contain",
     },
     settingButton: {
@@ -67,74 +67,72 @@ export default function Navigation() {
     },
   });
 
+
   return (
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Splash Screen">
-
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Splash Screen">
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="SplashScreen"
+          component={SplashScreen}
+        />
+        
+        
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Login Screen"
+            component={Login}
+          />
           
-                     <Stack.Screen
-                options={{ headerShown: false }}
-                name="SpalashScreen"
-                component={SplashScreen}
-              />
-              <Stack.Screen
-                options={{ headerShown: false }}
-                name="Login Screen"
-                component={Login}
-              />
-                    
-                       <Stack.Screen
-                options={{
-                  header: CostumHeader,
-                  headerTransparent: true,
-                  headerShown: true,
-                }}
-                name="Choose Avatar"
-                component={ChooseAvatar}
-              />
-
-              <Stack.Screen
-                options={{
-                  headerShown: false,
-                }}
-                name="Start Game"
-                component={StartGame}
-              />
-
-              <Stack.Screen
-                options={{
-                  header: CostumHeader,
-                  headerTransparent: true,
-                  headerShown: true,
-                }}
-                name="Find People"
-                component={FindPeople}
-              />
-              <Stack.Screen
-                options={{
-                  header: CostumHeader,
-                  headerTransparent: true,
-                  headerShown: true,
-                }}
-                name="Lets Play"
-                component={LetsPlay}
-              />
-              <Stack.Screen
-                options={{
-                  header: CostumHeader,
-                  headerTransparent: true,
-                  headerShown: true,
-                }}
-                name="Result Match"
-                component={ResultMatch}
-              />
-                  
           
-             
-         
-           
-          
-        </Stack.Navigator>
-      </NavigationContainer>
+          <Stack.Screen
+            options={{
+              header: CostumHeader,
+              headerTransparent: true,
+              headerShown: true,
+            }}
+            name="Choose Avatar"
+            component={ChooseAvatar}
+          />
+  
+          <Stack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name="Start Game"
+            component={StartGame}
+          />
+  
+          <Stack.Screen
+            options={{
+              header: CostumHeader,
+              headerTransparent: true,
+              headerShown: true,
+            }}
+            name="Find People"
+            component={FindPeople}
+          />
+          <Stack.Screen
+            options={{
+              header: CostumHeader,
+              headerTransparent: true,
+              headerShown: true,
+            }}
+            name="Lets Play"
+            component={LetsPlay}
+          />
+          <Stack.Screen
+            options={{
+              header: CostumHeader,
+              headerTransparent: true,
+              headerShown: true,
+            }}
+            name="Result Match"
+            component={ResultMatch}
+          />
+       
+
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }

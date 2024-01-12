@@ -1,87 +1,130 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
-import axios from "axios";
+import {apigolang, apilaravel} from "../Components/libs/api";
 import { useQuery, useMutation } from "react-query";
 import { useState, useEffect } from "react";
-import useLogin from "./useLogin";
 import { useAppSelector } from "../Redux/hooks";
-import { useNavigation } from "@react-navigation/native";
-type createDataUSer = {
+import { useAppDispatch } from "../Redux/hooks";
+import { SAVE_USER, SAVEUSER_ASYNCSTORE } from "../Redux/dataUserSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { RootState } from "../Redux/store";
+import useUser from "./useUser";
+type editDataUSer = {
   name: string;
   email: string;
   username: string;
   avatar: string;
   password: string;
+  profile: string;
 };
-const useAvatar =() => {
-  const user = useAppSelector((state: any) => state.user.user);
-  const[avatar, setAvatar]=useState("");
-  const [addDataUser, setAddDataUser] = useState({
-    name:"",
-    email:"",
-    username:"",
+const useAvatar = () => {
+  const [avatar, setAvatar] = useState("");
+  const {userlogin} = useUser()
+  const [addDataUser, setAddDataUser] = useState<editDataUSer>({
+    name: "",
+    email: "",
+    username: "",
     avatar: "",
-    profile:"",
-    password:""
+    profile: "",
+    password: "",
   });
-
-  const navigation = useNavigation();
+  const dispatch = useAppDispatch();
+const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
   const { data: dataAvatar, isLoading: dataFreevatarLoading } = useQuery(
-    "user",
+    "dataAvatar",
     async () => {
       try {
-        const response = await axios.get(
-          "http://192.168.18.169:8001/api/freeavatar"
+        const response = await apigolang.get(
+          "/freeavatar"
         );
-        return response.data;
+        return response.data.data;
       } catch (error) {
-        console.log(error);
+        console.log(error.data);
       }
     }
   );
 
-  const handleChange = (key: string, value: string)=>{
+  const {data:avatarpaid }= useQuery('avatarpaid', async ()=>{
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${dataUser?.token}`,
+      }
+      const response = await apigolang.get("/buyavatars", { headers })
+      return response.data.data
+    } catch (error) {
+      console.log(error.data);
+    }
+  })
+
+  const handleChange = (key: string, value: string) => {
     setAddDataUser({
       ...addDataUser,
-      name: user.displayName,
-      email: user.email,
-      profile: user.photoURL,
-      password:"roottrivia",
+      email: userlogin?.email,
+      profile: userlogin?.profile,
+      password: "roottrivia",
       avatar: avatar,
-     [key]: value
-    })
-  }
+      [key]: value,
+    });
+  };
 
   useEffect(() => {
-    console.log(addDataUser)
-  },[addDataUser,avatar])
+    console.log("data submit aba",addDataUser);
+    console.log(avatar);
+  }, [addDataUser, avatar]);
 
-
-
-  const { mutate: createUser, isLoading: createUserLoading } = useMutation(
-    async () => {
-      try {
-        const headers = {
-          "Content-Type": "application/json",
+  const {
+    mutate: createUser,
+    isLoading: createUserLoading,
+    isSuccess: createUserSuccess,
+    isError: createUserError,
+  } = useMutation(async () => {
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        
+      };
+      const response = await apilaravel.put(
+        `/userprofile/update/${userlogin?.user_id}`,
+        addDataUser,
+        {
+          headers,
         }
-        const response = await axios.post(
-          "http://192.168.18.169:8001/api/auth/registeruser", addDataUser, {
-            headers,
-          }
-        );
-        console.log(response.data);
-        return response.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },{
-      onSuccess: () => {
-        navigation.goBack();
-      },
+      );
+      // dispatch(SAVEUSER_ASYNCSTORE(response.data.user));
+      // saveDataUser();
+      console.log("ini response",response.data);
+      return response.data;
+    } catch (error) {
+      console.log("ini pesan error",error.response.data.message);
     }
-  );
+  });
 
-  return { dataAvatar, dataFreevatarLoading, handleChange, createUser, addDataUser, setAvatar };
+  const saveDataUser = async () => {
+    try {
+    const dataString =  await AsyncStorage.getItem("dataUser");
+    const payload = JSON.parse(dataString);
+    dispatch(SAVE_USER(payload));
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+    
+  };
+
+  return {
+    dataAvatar,
+    dataFreevatarLoading,
+    createUserError,
+    createUserSuccess,
+    handleChange,
+    createUser,
+    addDataUser,
+    setAvatar,
+    avatar,
+    createUserLoading,
+    saveDataUser,
+    avatarpaid
+  };
 };
 
 export default useAvatar;

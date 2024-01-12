@@ -19,34 +19,24 @@ import LottieView from "lottie-react-native";
 import useLogin from "../../hooks/useLogin";
 import { useAppSelector } from "../../Redux/hooks";
 import { RootState } from "../../Redux/store";
+import AlertPopUp from "../../Components/AlertPopUp/Index";
 
 const Login = ({ navigation }: { navigation: any }) => {
-  const { submitLogin, initializing } = useLogin();
-  const { user } = useAppSelector((state: RootState) => state.user);
+  const { submitLogin, initializing, errorMessage, handleLogout } = useLogin();
+const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
+  const [visible, setvisible] = useState(false);
 
   useEffect(() => {
-    if (user.token) {
+    if (dataUser.token) {
       navigation.navigate("Choose Avatar");
     }
-  }, [user, submitLogin]);
+  }, [dataUser])
 
-  // if (initializing && !user.token) {
-  //   return (
-  //     <ImageBackground
-  //     source={require("../../../assets/BackgroundImage/splashScreen.png")}
-  //     style={styles.backgroundLoading}
-  //   >
-  //     <View style={styles.animationContainer}>
-  //       <LottieView
-  //         source={require("../../../assets/Animatiom/loading.json")}
-  //         loop
-  //         autoPlay
-  //         style={styles.animationlogo}
-  //       />
-  //     </View>
-  //     </ImageBackground>
-  //   );
-  // }
+  useEffect(() => {
+    if (errorMessage) {
+      setvisible(true);
+    }
+  }, [errorMessage, setvisible]);
 
   return (
     <ImageBackground
@@ -55,7 +45,14 @@ const Login = ({ navigation }: { navigation: any }) => {
     >
       <StatusBar style="light" />
       <View style={styles.heroLogo}>
+        {
+          visible?
+        <View style={styles.containerconfirm}>
+          <AlertPopUp alertText={errorMessage} alertVisible={setvisible} />
+        </View>:
+        <>
         <View>
+          
           <TouchableOpacity
             onPress={() => submitLogin()}
             style={styles.loginButton}
@@ -67,7 +64,14 @@ const Login = ({ navigation }: { navigation: any }) => {
             <Text style={styles.loginText}>sign in with google</Text>
           </TouchableOpacity>
         </View>
-        {initializing && !user.token ? (
+        {/* <TouchableOpacity
+        onPress={()=>handleLogout()}
+        >
+          <Text>Logoout</Text>
+        </TouchableOpacity> */}
+        </>
+        }
+        {initializing? (
           <View style={styles.animationContainer}>
             <LottieView
               source={require("../../../assets/Animatiom/loading.json")}
@@ -93,18 +97,27 @@ const styles = StyleSheet.create({
     height: verticalScale(33),
     resizeMode: "contain",
   },
+  containerPopUp: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItem: "center",
+  },
   animationContainer: {
     position: "absolute",
     zIndex: -1,
     left: 0,
-    top: 0,
+    top: 60,
     right: 0,
     justifyContent: "center",
     alignItems: "center",
   },
   animationlogo: {
-    width: horizontalScale(200),
-    height: verticalScale(200),
+    width: horizontalScale(100),
+    height: verticalScale(100),
   },
   heroLogo: {
     flex: 1,
@@ -129,5 +142,11 @@ const styles = StyleSheet.create({
     textTransform: "capitalize",
     color: "black",
     fontWeight: "bold",
+  },
+  containerconfirm: {
+    width: horizontalScale(300),
+    height: verticalScale(300),
+    backgroundColor: "white",
+    borderRadius: moderateScale(10),
   },
 });

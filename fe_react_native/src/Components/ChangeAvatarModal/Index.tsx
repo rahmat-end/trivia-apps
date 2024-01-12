@@ -2,6 +2,11 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { topUpAvatar } from "../../services/avatar";
 import { horizontalScale, verticalScale, moderateScale } from "../../themes/Metrixs";
+import LottieView from "lottie-react-native";
+import { useState } from "react";
+import useAvatar from "../../hooks/useAvatar";
+import { formatPrice } from "../libs/priceformat";
+import useUser from "../../hooks/useUser";
 
 
 type ModalProps = {
@@ -9,7 +14,22 @@ type ModalProps = {
   setIsOpen: any;
 };
 const ChangeAvatarModal = ({ open, setIsOpen }: ModalProps) => {
+  const [visible, setVisible] = useState(false);
+  const {userlogin}= useUser();
+  const {avatarpaid}= useAvatar();
+  const [selectedAvatar, setSelectedAvatar] = useState({
+    photo_buyavatar: "",
+    price_buyavatar: 0,
+    id_buyavatar: 0,
+  })
+
+  const handleCheckOut = (item: any) => {
+    setVisible(true);
+    setSelectedAvatar(item);
+  }
   return (
+    <>
+
     <View style={styles.modalContent}>
       <TouchableOpacity
         style={styles.closeButton}
@@ -21,35 +41,30 @@ const ChangeAvatarModal = ({ open, setIsOpen }: ModalProps) => {
       </TouchableOpacity>
       <View style={styles.cardContainer}>
       {
-        topUpAvatar.map((item:any)=>{
+        avatarpaid?.map((item:any, index:number)=>{
           return (
-      <TouchableOpacity key={item.id} style={styles.cardAvatar}>
+      <TouchableOpacity 
+      onPress={() => handleCheckOut(item)}
+      key={index} style={styles.cardAvatar}>
         <View style={styles.avatarbackground}>
         <Image 
         style={styles.avatarImage}
-        source={require(`../../../assets/Avatar/avatar.png`)} />
+        source={{uri: item.photo_buyavatar}} />
         </View>
         <View style={styles.unlock}>
-          {
-            item.isFree?
-            <Image 
-            style={styles.unlockicon}
-            source={require(`../../../assets/LogoAction/unlocked-svgrepo-com.png`)} />:
+          
             <Image 
             style={styles.unlockicon}
             source={require(`../../../assets/LogoAction/lockkey.png`)} />
-          }
-        </View>
-        {
-          item.isFree? 
-          <Text style={styles.Avatartext}>free</Text>:
+          
+        </View> 
           <View style={styles.diamondContainer}>
           <Image 
           style={styles.diamond}
           source={require(`../../../assets/LogoAction/diamond-svgrepo-com.png`)} />
-          <Text style={styles.Avatartext}>{item.price}</Text>
+          <Text style={styles.Avatartext}>{item.price_buyavatar}</Text>
           </View>
-        }
+      
       </TouchableOpacity>
           )
           
@@ -57,8 +72,62 @@ const ChangeAvatarModal = ({ open, setIsOpen }: ModalProps) => {
       }
 
       </View>
-      
     </View>
+    {visible &&
+      // <View style={styles.overlayConfirm}>
+      //   <View style={styles.confirmContainer}>
+      //     <Text style={styles.confirmheader}>
+      //       Uppss! :(
+      //     </Text>
+      //     <Text style={styles.confirmmessage}>you don't have any diamond yet</Text>
+      //     <LottieView style={styles.lottie} 
+      //     source={require("../../../assets/Animatiom/emptybox.json")} autoPlay/>
+      //     <TouchableOpacity style={styles.topupdiamond}>
+      //       <Text style={styles.topupText}>Buy Diamond</Text>
+      //     </TouchableOpacity>
+      //       <TouchableOpacity
+
+      //       style={styles.closebuttondua}
+      //       onPress={() => setVisible(false)}
+      //       >
+
+      //       <Image source={require("../../../assets/LogoAction/close-svgrepo-com.png")} style={styles.closeicondua} />
+      //       </TouchableOpacity>
+          
+      //   </View>
+      // </View>
+<View style={styles.overlayConfirm}>
+        <View style={styles.confirmContainer}>
+          <Text style={styles.confirmheader}>
+           You Want to Buy this Avatar
+          </Text>
+          <Text style={styles.confirmmessage}>your balance is {userlogin?.diamond} </Text>
+          <Image style={styles.lottie} 
+           source={{uri: selectedAvatar.photo_buyavatar}} />
+           <View style={styles.diamondContainer}>
+          <Image 
+          style={styles.diamond}
+          source={require(`../../../assets/LogoAction/diamond-svgrepo-com.png`)} />
+          <Text style={styles.Avatartext}>{selectedAvatar.price_buyavatar}</Text>
+          </View>
+          <TouchableOpacity style={styles.topupdiamond}>
+            <Text style={styles.topupText}>Buy Avatar</Text>
+          </TouchableOpacity>
+            <TouchableOpacity
+
+            style={styles.closebuttondua}
+            onPress={() => setVisible(false)}
+            >
+
+            <Image source={require("../../../assets/LogoAction/close-svgrepo-com.png")} style={styles.closeicondua} />
+            </TouchableOpacity>
+          
+        </View>
+      </View>
+}
+
+    </>
+      
   );
 };
 
@@ -110,7 +179,7 @@ const styles = StyleSheet.create({
   Avatartext:{
     textAlign:"center",
     textTransform:"uppercase",
-    fontSize:moderateScale(20),
+    fontSize:moderateScale(15),
     fontWeight:"bold",
     marginTop:verticalScale(3)
   },
@@ -145,5 +214,66 @@ const styles = StyleSheet.create({
     width:horizontalScale(30),
     height:verticalScale(30),
     resizeMode:"contain"
+  },
+  overlayConfirm : {
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  confirmContainer:{
+    width:horizontalScale(300),
+    height:verticalScale(300),
+    backgroundColor:"white",
+    borderRadius:moderateScale(10),
+    justifyContent:"center",
+    alignItems:"center"
+  },
+  confirmheader:{
+    textAlign:"center",
+    fontSize:moderateScale(18),
+    fontWeight:"bold",
+    marginTop:verticalScale(10)
+  },
+  confirmmessage:{
+    textAlign:"center",
+    fontSize:moderateScale(15),
+    marginTop:verticalScale(10),
+    textTransform:"capitalize"
+  },
+  lottie:{
+    width:horizontalScale(100),
+    height:verticalScale(100),
+    resizeMode:"contain"
+  
+  },
+  topupdiamond:{
+    width:horizontalScale(150),
+    height:verticalScale(40),
+    borderRadius:moderateScale(10),
+    justifyContent:"center",
+    alignItems:"center",
+    marginTop:verticalScale(20),
+    backgroundColor:"#318CE7",
+  },
+  topupText:{
+    color:"white",
+    fontWeight:"bold",
+  },
+  closeicondua:{
+    width:horizontalScale(35),
+    height:verticalScale(35),
+    resizeMode:"contain",
+   
+  },
+  closebuttondua:{
+    position:"absolute",
+    top:verticalScale(-15),
+    right:horizontalScale(-15), 
   }
+
 });
