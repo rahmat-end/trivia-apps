@@ -5,17 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserBuyAvatar extends Model
+class Transaction extends Model
 {
     use HasFactory;
 
-    protected $table = 'user_buy_avatars';
+    protected $table = 'transactions';
     public $timestamps = true;
-    protected $primaryKey = 'id_user_buy_avatar';
+    protected $primaryKey = 'id_transaction';
 
     protected $fillable = [
-        'user_id',
-        'id_buyavatar',
+        'amount_diamond',
+        'total_price',
+        'status',
     ];
 
     public function user()
@@ -23,8 +24,8 @@ class UserBuyAvatar extends Model
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
-    public function buyAvatar()
+    public function diamond()
     {
-        return $this->belongsTo(BuyAvatar::class, 'id_buyavatar', 'id_buyavatar');
+        return $this->belongsTo(Diamond::class, 'id_diamond', 'id_diamond');
     }
 }

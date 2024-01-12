@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('free_avatar', function (Blueprint $table) {
+        Schema::create('free_avatars', function (Blueprint $table) {
             $table->id('id_freeavatar');
             $table->string('photo_freeavatar');
             $table->timestamps();

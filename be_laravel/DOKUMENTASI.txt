@@ -1,0 +1,157 @@
+AUTH
+
+-Register
+http://127.0.0.1:8001/api/auth/register
+{
+    "name" : "super admin",
+    "email": "superadmin@gmail.com",
+    "password": "arre007a"
+}
+
+-Login
+http://127.0.0.1:8001/api/auth/login
+{
+    "email" : "superadmin@gmail.com",
+    "password": "arre007a"
+}
+
+
+------------------------------------------------------
+USER
+-Get User
+http://127.0.0.1:8001/api/user
+
+-Get By ID
+http://127.0.0.1:8001/api/user/67c8b28e-6b3d-4ba6-8934-90418c9c1afb
+
+
+-Create
+http://127.0.0.1:8001/api/user/
+{
+    "name" : "Admin",
+    "email" : "admin@gmail.com",
+    "password": "arre007a"
+}
+
+-Update
+http://127.0.0.1:8001/api/user/67c8b28e-6b3d-4ba6-8934-90418c9c1afb
+{
+    "name" : "Arre"
+}
+
+-Delete
+http://127.0.0.1:8001/api/user/67c8b28e-6b3d-4ba6-8934-90418c9c1afb
+
+------------------------------------------------------------
+
+Buy Avatar
+-Get All Data
+http://127.0.0.1:8001/api/buyavatar/
+
+-Create
+http://127.0.0.1:8001/api/buyavatar/create
+{
+    "photo_buyavatar_string" : "dari cloudinary KE 2",
+    "price_buyavatar" : "5000"
+}
+
+-Update
+http://127.0.0.1:8001/api/buyavatar/1
+{
+    "photo_buyavatar" : "abc"
+}
+
+-Delete
+http://127.0.0.1:8001/api/buyavatar/1
+
+----------------------------------------------------------------------
+
+Free Avatar
+
+-Get All Data
+http://127.0.0.1:8001/api/freeavatar/
+
+
+-Create
+http://127.0.0.1:8001/api/freeavatar/
+{
+    "photo_freeavatar_string" : "dawdwad"
+}
+
+ATAU
+
+{
+    "photo_freeavatar" : *File Foto
+}
+
+
+-Update
+http://127.0.0.1:8001/api/freeavatar/1
+{
+    "price_diamond" : "200"
+}
+
+-Delete
+http://127.0.0.1:8001/api/freeavatar/1
+
+
+--------------------------------------------------------------------------------
+Diamond
+
+-Get ALL
+http://127.0.0.1:8001/api/diamond/
+
+-Create
+http://127.0.0.1:8001/api/diamond/
+
+{
+    "amount_diamond" : "300",
+    "price_diamond" : "30000"
+}
+
+-Update
+http://127.0.0.1:8001/api/diamond/3
+{
+    "amount_diamond": "2314",
+    "price_diamond" : "450250"
+}
+
+
+-Delete
+http://127.0.0.1:8001/api/diamond/3
+
+
+-------------------------------------------------------------------------------------
+
+HOW TO USE
+
+1. Install XAMPP
+   - Settings php.ini
+
+2. Install Composer
+
+3. Install PHP
+   - v8
+
+4. In your project
+   - composer install
+   - php artisan serve
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

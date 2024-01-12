@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Models\Question;
@@ -12,6 +14,17 @@ class QuestionController extends Controller
     {
         $questions = Question::getAllData();
         return response()->json($questions);
+    }
+
+    public function getQuestionById($id)
+    {
+        $Question = Question::getQuestionById($id);
+
+        if (!$Question) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        return response()->json(['user' => $Question], 200);
     }
 
     public function store(Request $request)

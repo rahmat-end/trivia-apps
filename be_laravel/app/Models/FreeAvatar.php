@@ -10,7 +10,7 @@ class FreeAvatar extends Model
     use HasFactory;
 
     public $timestamps = true;
-    protected $table = 'free_avatar';
+    protected $table = 'free_avatars';
     protected $primaryKey = 'id_freeavatar';
 
     protected $fillable = [
@@ -21,5 +21,10 @@ class FreeAvatar extends Model
     public static function getAllData()
     {
         return self::all();
+    }
+
+    public static function getFreeAvatarById($id)
+    {
+        return self::find($id);
     }
 }
