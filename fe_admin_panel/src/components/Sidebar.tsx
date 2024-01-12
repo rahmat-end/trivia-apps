@@ -15,9 +15,12 @@ import {
   Text,
   HStack,
   VStack,
-  Avatar,
+  UnorderedList,
   Image,
   Spacer,
+  ListItem,
+  Button,
+
 } from "@chakra-ui/react";
 import {
   FaBars,
@@ -87,9 +90,10 @@ const Sidebar: React.FC = () => {
           flexDirection={"row"}
         />
         <Spacer />
-        <button
+        <Button
           onClick={onOpen}
-          className='flexDirection-end'>
+          className='flexDirection-end'
+          bgColor={"transparent"}>
           <Flex
             align='end'
             justifyContent='end'
@@ -99,7 +103,7 @@ const Sidebar: React.FC = () => {
               color='white'
             />
           </Flex>
-        </button>
+        </Button>
       </Flex>
 
       <AddFreeAvatarModal
@@ -110,11 +114,15 @@ const Sidebar: React.FC = () => {
       <AddQuestionModal
         isOpen={isQuestionModalOpen}
         onClose={() => setQuestionModalOpen(false)}
+        newQuestion={newQuestion}
+        setNewQuestion={setNewQuestion}
       />
 
       <AddDiamondsModal
         isOpen={isDiamondsModalOpen}
         onClose={() => setDiamondsModalOpen(false)}
+        newDiamondsData={newDiamondsData}
+        setNewDiamondsData={setNewDiamondsData}
       />
 
       <AddBuyAvatar
@@ -157,29 +165,35 @@ const Sidebar: React.FC = () => {
           </DrawerHeader>
           <HStack
             align='center'
-            spacing={4}>
+            spacing={2}>
             <VStack
               align='center'
               spacing={4}
               mt={4}>
               <DrawerBody mt={8}>
-                <ul className='space-y-2'>
-                  <li>
+                <UnorderedList listStyleType='none'>
+                   <ListItem>
                     <Link to={`/`}>
                       <button>
                         <HStack spacing={2}>
-                          <FaHome size='1.5em' />
+                          <FaHome
+                            size='1.5em'
+                            Text
+                          />
                           <Text
                             fontSize='md'
                             color='white'
-                            _hover={{ color: "blue.600" }}>
+                            _hover={{ color: "blue.600" }}
+                            textDecoration={"none"}
+                            decoration={"none"}>
                             Home
                           </Text>
                         </HStack>
                       </button>
                     </Link>
-                  </li>
-                  <li>
+                 </ListItem>
+
+                   <ListItem>
                     <Link to={`/dahsboard`}>
                       <button>
                         <HStack
@@ -195,9 +209,10 @@ const Sidebar: React.FC = () => {
                         </HStack>
                       </button>
                     </Link>
-                  </li>
+                  </ListItem>
 
-                  <li>
+
+                   <ListItem>
                     <button onClick={() => setQuestionModalOpen(true)}>
                       <HStack
                         spacing={2}
@@ -211,8 +226,9 @@ const Sidebar: React.FC = () => {
                         </Text>
                       </HStack>
                     </button>
-                  </li>
-                  <li>
+                  </ListItem>
+
+                   <ListItem>
                     <button onClick={() => setDiamondsModalOpen(true)}>
                       <HStack
                         spacing={2}
@@ -226,9 +242,10 @@ const Sidebar: React.FC = () => {
                         </Text>
                       </HStack>
                     </button>
-                  </li>
+                 </ListItem>
 
-                  <li>
+
+                  <ListItem>
                     <button onClick={() => setFreeAvatarModalVisible(true)}>
                       <HStack
                         spacing={2}
@@ -242,8 +259,9 @@ const Sidebar: React.FC = () => {
                         </Text>
                       </HStack>
                     </button>
-                  </li>
-                  <li>
+                 </ListItem>
+
+                   <ListItem>
                     <button onClick={() => setAddUserModalOpen(true)}>
                       <HStack
                         spacing={2}
@@ -257,9 +275,10 @@ const Sidebar: React.FC = () => {
                         </Text>
                       </HStack>
                     </button>
-                  </li>
+                </ListItem>
 
-                  <li>
+
+                   <ListItem>
                     <button>
                       <HStack
                         spacing={2}
@@ -273,9 +292,9 @@ const Sidebar: React.FC = () => {
                         </Text>
                       </HStack>
                     </button>
-                  </li>
+                  </ListItem>
 
-                  <li>
+                   <ListItem>
                     <Link to={`/login`}>
                       <button>
                         <HStack
@@ -290,8 +309,9 @@ const Sidebar: React.FC = () => {
                         </HStack>
                       </button>
                     </Link>
-                  </li>
-                </ul>
+                 </ListItem>
+
+                </UnorderedList>
               </DrawerBody>
             </VStack>
           </HStack>

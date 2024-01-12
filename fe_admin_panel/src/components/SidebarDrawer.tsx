@@ -10,14 +10,14 @@ const SidebarDrawer = () => {
         display={"flex"}
         flexDirection={{ base: "row", md: "column" }}
         bgColor={"gray.800"}
-        className='rounded-tl-[130px] rounded-br-[150px]'
+        borderTopLeftRadius={"60px"}
+        borderBottomRightRadius={"60px"}
         p={4}
         borderRight={"10px ridge #dcfcfe"}
         borderTop={"5px ridge #dcfcfe"}
         w={"100%"}
         h={"100%"}
-        justifyContent={"space-between"}
-        >
+        justifyContent={"space-between"}>
         <Box
           flexDirection={{ base: "column", md: "row" }}
           display={"flex"}

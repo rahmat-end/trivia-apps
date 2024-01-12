@@ -1,6 +1,5 @@
 /** @format */
 
-import axios from "axios";
 import { useQuery } from "react-query";
 import { apigolang, apilaravel } from "../../utils/Api";
 
@@ -20,9 +19,7 @@ const useUser = () => {
 
   const deleteUser = async (id: number) => {
     try {
-      const response = await axios.delete(
-        `http://192.168.18.169:8001/api/user/${id}`
-      );
+      const response = await apilaravel.delete(`/user/${id}`);
       console.log(response.data);
     } catch (error) {
       console.log(error);
@@ -36,4 +33,4 @@ const useUser = () => {
   };
 };
 
-  export default useUser;
+export default useUser;

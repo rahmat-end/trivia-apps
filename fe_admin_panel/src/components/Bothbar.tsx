@@ -12,14 +12,14 @@ const SidebarDrawer = () => {
         display={"flex"}
         flexDirection={"row"}
         bgColor={"gray.800"}
-        className='rounded-tl-[200px] rounded-br-[120px]'
+        borderTopLeftRadius={"60px"}
+        borderBottomRightRadius={"60px"}
         borderRight={"10px ridge #dcfcfe"}
         borderTop={"5px ridge #dcfcfe"}
         p={50}
         w={"100%"}
         h={"100%"}
-        justifyContent={"space-between"}
-        >
+        justifyContent={"space-between"}>
         <Box
           flexDirection={"row"}
           display={"flex"}>
@@ -46,7 +46,6 @@ const SidebarDrawer = () => {
             <Box> </Box>
           </Flex>
           <Box
-            
             display={"flex"}
             justifyContent={"end"}>
             <Image

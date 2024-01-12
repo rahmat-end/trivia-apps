@@ -1,6 +1,6 @@
 /** @format */
 
-import { Flex, Box, Text, Button } from "@chakra-ui/react";
+import { Flex, Box, Text, Button, Image } from "@chakra-ui/react";
 import Avatars1 from "../../assets/image/Animate from1.png";
 import Avatars2 from "../assets/image/avataaars (2).png";
 // import Avatars3 from "../assets/image/avataaars (3).png";
@@ -38,7 +38,8 @@ function AvatarCard() {
                   flexDirection={"row"}
                   justifyContent={"end"}
                   bgColor={"gray.800"}
-                  className='rounded-tl-[60px] rounded-br-[60px]'
+                  borderTopLeftRadius={"60px"}
+                  borderBottomRightRadius={"60px"}
                   py={"30px"}
                   p={"5"}
                   width={"250px"}
@@ -46,10 +47,12 @@ function AvatarCard() {
                   position={"relative"}
                   borderEnd={"7px ridge #dcfcfe"}
                   borderTop={"5px ridge #dcfcfe"}>
-                  <img
-                    src={Avatars1}
+                  <Image
                     className='absolute left-0 top-[-30px]'
-                    alt='Avatars1'
+                    position={"absolute"}
+                    left={"-0"}
+                    top={"-30px"}
+                    src={Avatars1}
                     width={"100px"}
                   />
                   <Box

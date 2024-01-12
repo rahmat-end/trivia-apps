@@ -8,6 +8,7 @@ import Login from "../pages/LoginPages";
 import Register from "../pages/RegisterPages";
 import Dashboard from "../pages/DahsboardPages";
 
+
 const AppRouter: React.FC = () => {
   return (
     <Router>

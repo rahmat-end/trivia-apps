@@ -1,6 +1,7 @@
+/** @format */
 
 import { FaSearch } from "react-icons/fa";
-import { Box } from "@chakra-ui/react";
+import { Box, Input } from "@chakra-ui/react";
 
 function serch() {
   return (
@@ -26,12 +27,12 @@ function serch() {
           px={5}
           gap={1}
         />
-        <input
+        <Input
           type='text'
-          
+          border={"none"}
+          outline={"none"}
+          focusBorderColor='transparent'
           placeholder='Search....'
-          className='w-full border-none focus:outline-none '
-          style={{ backgroundColor: "transparent" }}
           color='white'
           width={"100%"}
         />
@@ -40,4 +41,4 @@ function serch() {
   );
 }
 
-export default serch
+export default serch;

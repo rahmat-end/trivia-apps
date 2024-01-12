@@ -90,3 +90,61 @@ export const avatar =[
         }
     
     ]
+
+    export const diamondData =[
+        
+        {
+            id:1,
+            qty:100,
+            price:"20K",
+        },
+        {
+            id:2,
+            qty:500,
+            price:"50K",
+        },
+        {
+            id:3,
+            qty:"1K",
+            price:"65K",
+        },
+        {
+            id:4,
+            qty:"2K",
+            price:"100K",
+        },
+        {
+            id:5,
+            qty:"42K",
+            price:"200K",
+        },
+    
+    {
+        id:6,
+        qty:"99K",
+        price:"500K",
+    },
+    ]
+
+export const findPeople =[
+    {
+        id:1,
+        name:"dian",
+      
+    },
+    {
+        id:2,
+        name:"rahmat",
+    
+    },
+    {
+        id:3,
+        name:"arre",
+       
+    },
+    {
+        id:4,
+        name:"Agung",
+     
+    }
+] 

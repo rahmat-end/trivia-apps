@@ -38,33 +38,37 @@ const Dashboard: React.FC = () => {
           flexDirection={"column"}
           gap={2}
           flex={"2"}
-          ml={"200"}>
+          ml={"200"}
+          w={"100%"}
+          justifyContent={"flex-start"}
+          display={["none", "none", "flex", "flex"]}
+          px={"5px"}
+          py={"10px"}>
           <Serch />
         </Box>
 
         <Box
-          display={"flex"}
-          alignItems={"center"}
-          justifyContent={"flex-start"}
-          flex={"0"}
-          mr={"60px"}
-          w={"100%"}>
+          display='flex'
+          alignItems='center'
+          justifyContent={"flex-end"}
+          flex={"1"}
+          marginRight={"70px"}>
           <RightBar />
         </Box>
       </Flex>
-      <Container
-        maxW='container.3xl'
-        >
+      <Container maxW='container.3xl'>
         <Heading
           mb={"40px"}
           textAlign={"center"}
           justifyContent={"space-between"}
-          display={"flex"}>
+          display={"flex"}
+          mt={"30px"}>
           <Box
             display={"flex"}
             flexDirection={"row"}
             bgColor={"gray.800"}
-            className='rounded-tl-[60px] rounded-br-[60px]'
+            borderTopLeftRadius={"60px"}
+            borderBottomRightRadius={"60px"}
             py={"30px"}
             p={"5"}
             width={"200px"}

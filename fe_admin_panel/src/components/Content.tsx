@@ -3,7 +3,7 @@
 // src/components/ContentManagement.tsx
 import React from "react";
 import { Box, Flex, Text, Image, Button } from "@chakra-ui/react";
-import Avatar from "../assets/image/AvatarBerbayar6.png";
+// import Avatar from "../assets/image/AvatarBerbayar6.png";
 // import { Content } from "../service/content";
 import { FaClosedCaptioning } from "react-icons/fa";
 import useGetFreeAvatar from "../modals/hooks/useGetFreeAvatar";
@@ -11,14 +11,15 @@ import { useEffect } from "react";
 import { FaTrash } from "react-icons/fa";
 
 const ContentManagement: React.FC = () => {
-  const { getFreeavatar, getFreeavatarRefetch } = useGetFreeAvatar();
-  // const { handleFetchgetFreeavatar } = useGetFreeAvatar();
-  // useEffect(() => {
-  //   handleFetchgetFreeavatar();
-  // }, []);
+  const { getFreeavatar, getFreeavatarRefetch, deleteGetFreeavatar } =
+    useGetFreeAvatar();
+
   useEffect(() => {
-    // getFreeavatarRefetch();
-    console.log(getFreeavatar);
+    getFreeavatarRefetch();
+  }, []);
+
+  useEffect(() => {
+    getFreeavatarRefetch();
   }, [getFreeavatar]);
 
   return (
@@ -36,7 +37,8 @@ const ContentManagement: React.FC = () => {
               flexDirection={"row"}
               justifyContent={"end"}
               bgColor={"gray.800"}
-              className='rounded-tl-[60px] rounded-br-[60px]'
+              borderTopLeftRadius={"60px"}
+              borderBottomRightRadius={"60px"}
               py={"30px"}
               p={"5"}
               width={"250px"}
@@ -45,7 +47,9 @@ const ContentManagement: React.FC = () => {
               borderEnd={"7px ridge #dcfcfe"}
               borderTop={"5px ridge #dcfcfe"}>
               <Image
-                className='absolute left-0 top-[-30px]'
+                position={"absolute"}
+                left={"-0"}
+                top={"-30px"}
                 src={item.photo_freeavatar}
                 width={"100px"}
               />
@@ -62,7 +66,9 @@ const ContentManagement: React.FC = () => {
                 <Button
                   colorScheme={"white"}
                   mt={"5"}
-                  // onClick={() => deleteUser(item.user_id)()}
+                  onClick={() => {
+                    deleteGetFreeavatar(item.id);
+                  }}
                   bg={"red.500"}
                   fontSize={"sm"}>
                   <FaTrash />

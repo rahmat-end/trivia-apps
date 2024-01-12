@@ -1,21 +1,21 @@
 /** @format */
 
 import { Box, Flex, Heading } from "@chakra-ui/react";
+// import { useEffect } from "react";
+// import useAddDiamond from "../../src/modals/hooks/useAddDiamond";
 import Search from "../serch/components/serch";
 import Sidebar from "../components/Sidebar";
 import SidebarDrawer from "../components/SidebarDrawer";
 import RightBar from "../components/RightBar";
 import Bothbar from "../components/Bothbar";
 import AvatarCard from "../avatar/components/AvatarCard";
-import Clock from "../components/Clock";
-import { useAddDiamond } from "../modals/hooks/useAddDiamond";
-import { useEffect } from "react";
+import Oclock from "../components/Clock";
 
 const HomeLayout = () => {
-  const {getDataDiamond} = useAddDiamond()
-  useEffect(() => {
-    console.log(getDataDiamond)
-  },[getDataDiamond])
+  // const { getDataDiamond } = useAddDiamond();
+  // useEffect(() => {
+  //   console.log(getDataDiamond);
+  // }, [getDataDiamond]);
   return (
     <Box
       minH={"100vh"}
@@ -27,22 +27,25 @@ const HomeLayout = () => {
       <Flex
         bg='gray.800'
         align='center'
-        direction={["column", "row"]}
-        display={["flex", "flex"]}>
+        display={["none", "none", "flex", "flex"]}>
         <Box
-          w={["100%"]}
-          display={["none", "none", "flex", "flex"]}
-          justifyContent={"flex-start"}
-          flex={"2"}>
+          flex={"1"}
+          display={"flex"}
+          alignItems={""}
+          flexDirection={"column"}
+          w={"100%"}>
           <Sidebar />
         </Box>
         <Box
-          w={["100%"]}
-          flex={"1"}
+          flexDirection={"column"}
+          gap={2}
+          flex={"2"}
+          ml={"200"}
+          w={"100%"}
+          justifyContent={"flex-start"}
           display={["none", "none", "flex", "flex"]}
           px={"5px"}
-          py={"5px"}
-          justifyContent={"flex-start"}>
+          py={"10px"}>
           <Search />
         </Box>
 
@@ -63,7 +66,7 @@ const HomeLayout = () => {
           alignItems={"center"}
           mt={"10px"}
           mr={"100px"}>
-          <Clock />
+          <Oclock />
         </Box>
       </Heading>
       <Flex>
