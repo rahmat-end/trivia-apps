@@ -3,17 +3,24 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\GoogleLoginController;
-use App\Http\Controllers\BuyAvatarController;
-use App\Http\Controllers\FreeAvatarController;
-use App\Http\Controllers\DiamondController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\GoogleLoginController;
+use App\Http\Controllers\Admin\BuyAvatarController;
+use App\Http\Controllers\Admin\FreeAvatarController;
+use App\Http\Controllers\Admin\DiamondController;
+
+use App\Http\Controllers\UseByUser\UserAvatarShop;
+use App\Http\Controllers\UseByUser\UserProfile;
 
 Route::get('/google/redirect', [GoogleLoginController::class, 'redirectToGoogle']);
 Route::get('/google/callback', [GoogleLoginController::class, 'handleGoogleCallback']);
 
+
+// -------------------------------------ADMIN GAME ROUTES-----------------------------------
+
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
+    Route::post('registeruser', [AuthController::class, 'registerNewUser']);
     Route::post('login', [AuthController::class, 'login']);
     Route::get('checklogin', [AuthController::class, 'me']);
 });
@@ -46,4 +53,17 @@ Route::prefix('freeavatar')->group(function () {
     Route::post('/', [FreeAvatarController::class, 'store']);
     Route::put('/{id}', [FreeAvatarController::class, 'update']);
     Route::delete('/{id}', [FreeAvatarController::class, 'destroy']);
+});
+
+// -------------------------------------USER IN GAME ROUTES-----------------------------------
+
+Route::prefix('transaction')->group(function () {
+    Route::get('/', [UserAvatarShop::class, 'index']);
+    Route::get('/{id}', [UserAvatarShop::class, 'getTransactionData']);
+    Route::post('/userbuyavatar/{id}', [UserAvatarShop::class, 'BuyAvatarByUser']);
+});
+
+Route::prefix('userprofile')->group(function () {
+    Route::put('update/{id}', [UserProfile::class, 'update']);
+    Route::put('/{id}', [UserController::class, 'getUserById']);
 });

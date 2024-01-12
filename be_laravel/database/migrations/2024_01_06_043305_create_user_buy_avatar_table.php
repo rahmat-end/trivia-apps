@@ -13,10 +13,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_buy_avatar', function (Blueprint $table) {
+        Schema::create('user_buy_avatars', function (Blueprint $table) {
+            // Use bigIncrements for auto-incrementing primary key
             $table->id('id_user_buy_avatar');
-            $table->uuid('user_id')->index();
-            $table->foreignId('id_buyavatar')->index();
+            
+            // Use UUID type for user_id
+            $table->bigInteger('user_id')->index();
+            
+            // Define other columns without auto-incrementing for composite primary key
+            $table->bigInteger('id_buyavatar')->index();
+            
+            $table->foreign('user_id')->references('user_id')->on('users');
+            $table->foreign('id_buyavatar')->references('id_buyavatar')->on('buy_avatars');
+            
             $table->timestamps();
         });
     }

@@ -24,8 +24,13 @@ class BuyAvatar extends Model
         return self::all();
     }
 
-    public function users()
+    public static function getBuyAvatarById($id)
     {
-        return $this->belongsToMany(User::class, 'user_buy_avatar', 'buy_avatar_id', 'user_id');
+        return self::find($id);
+    }
+
+    public function userBuyAvatars()
+    {
+        return $this->hasMany(UserBuyAvatar::class, 'id_buyavatar', 'id_buyavatar');
     }
 }

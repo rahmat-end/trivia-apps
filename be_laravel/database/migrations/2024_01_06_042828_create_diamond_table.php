@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('diamonds', function (Blueprint $table) {
             $table->id('id_diamond');
+            $table->string('photo_diamond');
             $table->integer('amount_diamond');
             $table->integer('price_diamond');
             $table->timestamps();

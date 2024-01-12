@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Models\FreeAvatar;
@@ -12,7 +14,7 @@ class FreeAvatarController extends Controller
     public function __construct()
     {
         // $this->middleware('jwt.auth', ['except' => ['getAllUsers', 'getUserById', 'getAvatarGratis', 'getAvatarBayar']]);
-        $this->middleware('jwt.auth');
+        // $this->middleware('jwt.auth');
     }
 
     public function index()
@@ -21,32 +23,43 @@ class FreeAvatarController extends Controller
         return response()->json($FreeAvatars);
     }
 
+    public function getFreeAvatarById($id)
+    {
+        $FreeAvatar = FreeAvatar::getFreeAvatarById($id);
+
+        if (!$FreeAvatar) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        return response()->json(['user' => $FreeAvatar], 200);
+    }
+
     public function store(Request $request)
     {
         // Validate and store the data
         $validatedData = $request->validate([
             'photo_freeavatar' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'photo_freeavatar_string' => 'sometimes|string', 
+            'photo_freeavatar_string' => 'sometimes|string',
         ]);
-        
+
         // Check if 'photo_FreeAvatar' is present in the request and it's a file
         if ($request->hasFile('photo_freeavatar')) {
-            $imagePath = $request->file('photo_freeavatar')->getRealPath();
-            $uploadResult = Cloudinary::upload($imagePath, ['folder' => 'AvatarGratis']);
-            $secureUrl = $uploadResult->getSecurePath();
-        
-            $buy = FreeAvatar::create([
-                'photo_freeavatar' => $secureUrl,
-                'public_id' => $uploadResult->getPublicId(),
+
+            $cloudinaryUpload = Cloudinary::upload($request->file('photo_freeavatar')->getRealPath(), [
+                'folder' => 'AvatarGratis',
             ]);
-        
+
+            $buy = FreeAvatar::create([
+                'photo_freeavatar' => $cloudinaryUpload->getSecurePath(),
+            ]);
+
             return response()->json($buy);
         } elseif ($request->filled('photo_freeavatar_string')) {
             // Handle string input for 'photo_FreeAvatar' if provided
             $buy = FreeAvatar::create([
                 'photo_freeavatar' => $validatedData['photo_freeavatar_string'],
             ]);
-        
+
             return response()->json($buy);
         } else {
             // Handle the case when neither 'photo_FreeAvatar' nor 'photo_FreeAvatar_string' is provided

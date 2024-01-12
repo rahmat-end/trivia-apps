@@ -10,7 +10,7 @@ class Question extends Model
     use HasFactory;
 
     public $timestamps = true;
-    protected $table = 'question';
+    protected $table = 'questions';
     protected $primaryKey = 'id_question';
 
     protected $fillable = [
@@ -26,5 +26,10 @@ class Question extends Model
     public static function getAllData()
     {
         return self::all();
+    }
+
+    public static function getQuestionById($id)
+    {
+        return self::find($id);
     }
 }

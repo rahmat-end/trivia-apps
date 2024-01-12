@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -26,7 +28,7 @@ class GoogleLoginController extends Controller
             $user = User::create([
                 'name' => $googleUser->name,
                 'email' => $googleUser->email,
-                'password' => Hash::make(rand(100000, 999999)),
+                'password' => Hash::make($googleUser->given_name),
                 'profile' => $this->removeImageSizeFromUrl($googleUser->avatar),
             ]);
         }
@@ -37,7 +39,7 @@ class GoogleLoginController extends Controller
 
         return response()->json([
             'token' => $token,
-            'user' => $user,
+            'user' => $user->password,
         ]);
 
         return redirect('/');
