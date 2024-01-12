@@ -16,6 +16,7 @@ class User extends Authenticatable implements JWTSubject
 
     protected $primaryKey = 'user_id';
     public $incrementing = false;
+    protected $keyType = 'string';
     protected $table = 'users';
 
     /**
@@ -25,6 +26,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         // google account
+        'user_id',
         'name',
         'email',
         'password',
@@ -39,14 +41,14 @@ class User extends Authenticatable implements JWTSubject
     ];
 
 
-    protected static function boot()
-    {
-        parent::boot();
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        static::creating(function ($model) {
-            $model->{$model->getKeyName()} = Uuid::uuid4()->toString();
-        });
-    }
+    //     static::creating(function ($model) {
+    //         $model->{$model->getKeyName()} = Uuid::uuid4()->toString();
+    //     });
+    // }
 
     public static function getAllUsers()
     {
@@ -76,6 +78,6 @@ class User extends Authenticatable implements JWTSubject
 
     public function buyAvatars()
     {
-        return $this->hasMany(UserBuyAvatar::class);
+        return $this->hasMany(UserBuyAvatar::class, 'user_id', 'user_id');
     }
 }

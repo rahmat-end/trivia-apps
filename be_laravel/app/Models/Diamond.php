@@ -10,11 +10,12 @@ class Diamond extends Model
     use HasFactory;
 
     public $timestamps = true;
-    protected $table = 'diamond';
+    protected $table = 'diamonds';
     protected $primaryKey = 'id_diamond';
 
     protected $fillable = [
         'id_diamond',
+        'photo_diamond',
         'amount_diamond',
         'price_diamond',
     ];
@@ -22,5 +23,10 @@ class Diamond extends Model
     public static function getAllData()
     {
         return self::all();
+    }
+
+    public static function getDiamondById($id)
+    {
+        return self::find($id);
     }
 }
