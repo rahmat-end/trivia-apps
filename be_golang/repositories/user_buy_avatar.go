@@ -17,7 +17,7 @@ func RepositoryUserBuyAvatar(db *gorm.DB) *repository {
 
 func (r *repository) FindUserBuyAvatars() ([]models.UserBuyAvatar, error) {
 	var userBuyAvatars []models.UserBuyAvatar
-	err := r.db.Preload("User").Preload("BuyAvatar").Find(&userBuyAvatars).Error
+	err := r.db.Find(&userBuyAvatars).Error
 
 	return userBuyAvatars, err
 }
