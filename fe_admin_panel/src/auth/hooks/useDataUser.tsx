@@ -1,6 +1,6 @@
 /** @format */
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { apilaravel } from "../../utils/Api";
 import { useMutation } from "react-query";
 
 type UserData = {
@@ -19,10 +19,7 @@ export const useAddAvatar = () => {
   const { mutate: handleAddAvatar } = useMutation(async () => {
     try {
       // Gantilah URL dengan endpoint yang sesuai untuk menambahkan avatar
-      const response = await axios.post(
-        "http://192.168.18.182:8001/api/add-avatar",
-        dataUser
-      );
+      const response = await apilaravel.post("/add-avatar", dataUser);
       console.log(response.data);
     } catch (error) {
       console.error("Error adding avatar:", error);
@@ -40,7 +37,7 @@ export const useAddAvatar = () => {
 export const useFetchUserData = () => {
   const { mutate: fetchDataUser } = useMutation(async () => {
     try {
-      const response = await axios.get("http://192.168.18.182:8001/api/user");
+      const response = await apilaravel.get("/user");
       console.log(response.data);
       // Jika ingin mengambil data dari respons dan mengubah state atau melakukan operasi lain, tambahkan kode di sini.
     } catch (error) {

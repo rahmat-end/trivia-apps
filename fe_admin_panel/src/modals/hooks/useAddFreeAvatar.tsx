@@ -3,7 +3,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useMutation } from "react-query";
-import axios from "axios";
+
+import { apilaravel } from "../../utils/Api";
 
 type AddFreeAvatarModal = {
   photo_freeavatar: File | null;
@@ -16,7 +17,7 @@ export const useAddFreeAvatar = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files, value } = event.target;
-     setDatafreeAvatar({
+    setDatafreeAvatar({
       ...dataFreeAvatar,
       [name]: files ? files[0] : value,
     });
@@ -25,7 +26,6 @@ export const useAddFreeAvatar = () => {
   useEffect(() => {
     console.log(dataFreeAvatar);
   }, [dataFreeAvatar]);
-
 
   const { mutate: handleSubmit } = useMutation(async (e: any) => {
     e.preventDefault();
@@ -38,11 +38,7 @@ export const useAddFreeAvatar = () => {
         "photo_freeavatar",
         dataFreeAvatar.photo_freeavatar as File
       );
-      const res = await axios.post(
-        "http://192.168.18.169:8001/api/freeavatar/",
-        formData,
-        { headers }
-      );
+      const res = await apilaravel.post("/freeavatar/", formData, { headers });
       console.log(res.data);
     } catch (error) {
       console.log(error);

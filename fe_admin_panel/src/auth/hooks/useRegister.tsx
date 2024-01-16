@@ -1,11 +1,10 @@
 /** @format */
 
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import { RegisterType } from "../../types";
-import axios from "axios";
-
 import { toast } from "react-toastify";
 import getError from "../../utils/getError";
+import { apilaravel } from "../../utils/Api";
 
 export function useRegister() {
   const [form, setForm] = useState<RegisterType>({
@@ -29,10 +28,7 @@ export function useRegister() {
     try {
       setIsLoading(true);
 
-      const response = await axios.post(
-        "http://192.168.18.169:8001/api/auth/register",
-        form
-      );
+      const response = await apilaravel.post("/auth/register", form);
       console.log(response);
       toast.success(response.data.message, {
         position: "top-center",
@@ -55,6 +51,9 @@ export function useRegister() {
       setIsLoading(false);
     }
   }
+  useEffect(() => {
+    console.log(form);
+  }, [form]);
 
   return {
     form,

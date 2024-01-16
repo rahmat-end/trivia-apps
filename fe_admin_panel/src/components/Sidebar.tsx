@@ -20,7 +20,6 @@ import {
   Spacer,
   ListItem,
   Button,
-
 } from "@chakra-ui/react";
 import {
   FaBars,
@@ -38,6 +37,8 @@ import AddFreeAvatarModal from "../modals/components/AddFreeAvatar";
 import AddQuestionModal from "../modals/components/AddQuestionModal";
 import AddDiamondsModal from "../modals/components/AddDiamonds";
 import AddBuyAvatar from "../modals/components/AddBuyAvatar";
+import { REMOVE_TOKEN } from "../redux/authSlice";
+import { useAppDispatch } from "../redux/hook";
 
 const Sidebar: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -64,9 +65,10 @@ const Sidebar: React.FC = () => {
     username: "",
     avatarUrl: "",
   });
+  const dispatch = useAppDispatch();
 
   const handleLogout = () => {
-    localStorage.clear();
+    dispatch(REMOVE_TOKEN());
     window.location.reload();
   };
 
@@ -92,6 +94,9 @@ const Sidebar: React.FC = () => {
         <Spacer />
         <Button
           onClick={onOpen}
+          border={"none"}
+          borderRadius={"full"}
+          _hover={{ bg: "transparent", color: "red.500" }}
           className='flexDirection-end'
           bgColor={"transparent"}>
           <Flex
@@ -161,18 +166,19 @@ const Sidebar: React.FC = () => {
               flexDirection={"row"}
               className='rounded-tl-[60px] rounded-br-[60px]'
               borderRadius={"30px"}
-              boxShadow={"lg"}></Image>
+              boxShadow={"lg"}
+            />
           </DrawerHeader>
           <HStack
             align='center'
             spacing={2}>
             <VStack
               align='center'
-              spacing={4}
-              mt={4}>
+              spacing={2}
+              mt={1}>
               <DrawerBody mt={8}>
                 <UnorderedList listStyleType='none'>
-                   <ListItem>
+                  <ListItem>
                     <Link to={`/`}>
                       <button>
                         <HStack spacing={2}>
@@ -191,9 +197,9 @@ const Sidebar: React.FC = () => {
                         </HStack>
                       </button>
                     </Link>
-                 </ListItem>
+                  </ListItem>
 
-                   <ListItem>
+                  <ListItem>
                     <Link to={`/dahsboard`}>
                       <button>
                         <HStack
@@ -211,8 +217,7 @@ const Sidebar: React.FC = () => {
                     </Link>
                   </ListItem>
 
-
-                   <ListItem>
+                  <ListItem>
                     <button onClick={() => setQuestionModalOpen(true)}>
                       <HStack
                         spacing={2}
@@ -228,7 +233,7 @@ const Sidebar: React.FC = () => {
                     </button>
                   </ListItem>
 
-                   <ListItem>
+                  <ListItem>
                     <button onClick={() => setDiamondsModalOpen(true)}>
                       <HStack
                         spacing={2}
@@ -242,8 +247,7 @@ const Sidebar: React.FC = () => {
                         </Text>
                       </HStack>
                     </button>
-                 </ListItem>
-
+                  </ListItem>
 
                   <ListItem>
                     <button onClick={() => setFreeAvatarModalVisible(true)}>
@@ -259,9 +263,9 @@ const Sidebar: React.FC = () => {
                         </Text>
                       </HStack>
                     </button>
-                 </ListItem>
+                  </ListItem>
 
-                   <ListItem>
+                  <ListItem>
                     <button onClick={() => setAddUserModalOpen(true)}>
                       <HStack
                         spacing={2}
@@ -275,10 +279,9 @@ const Sidebar: React.FC = () => {
                         </Text>
                       </HStack>
                     </button>
-                </ListItem>
+                  </ListItem>
 
-
-                   <ListItem>
+                  <ListItem>
                     <button>
                       <HStack
                         spacing={2}
@@ -294,7 +297,7 @@ const Sidebar: React.FC = () => {
                     </button>
                   </ListItem>
 
-                   <ListItem>
+                  <ListItem>
                     <Link to={`/login`}>
                       <button>
                         <HStack
@@ -309,8 +312,7 @@ const Sidebar: React.FC = () => {
                         </HStack>
                       </button>
                     </Link>
-                 </ListItem>
-
+                  </ListItem>
                 </UnorderedList>
               </DrawerBody>
             </VStack>

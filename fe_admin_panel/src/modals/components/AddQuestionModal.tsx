@@ -44,7 +44,7 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
       };
     }
   };
-  const { question, handleChange } = Question();
+  const { question, handleChange, answer1Obj, handleAnswerSatu } = Question();
 
   return (
     <Modal
@@ -56,14 +56,13 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
         <ModalCloseButton />
         <ModalBody>
           <form
-            onSubmit={handleSubmit}
+            // onSubmit={handleSubmitQuestion}
             encType='multipart/form-data'>
             <Input
               type='Text'
-              accept='text/*'
               placeholder='question'
-              value={question.question}
-              name='question'
+              value={question.the_question}
+              name='the_question'
               onChange={(e) => handleChange(e)}
               mt={4}
               alignItems={"center"}
@@ -72,49 +71,62 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
 
             <Input
               type='file'
-              accept='image/*'
-              name='image'
-              onChange={(e) => handleImageUpload(e)}
+              name='profile'
+              onChange={(e) => handleChange(e)}
               mt={4}
               alignItems={"center"}
               display={"flex"}
             />
             <Input
               type='Text'
-              placeholder='answer 1'
-              onChange={(e) => handleChange(e)}
+              placeholder='answer_1'
+              onChange={(e) =>handleAnswerSatu(e)} 
+              value={answer1Obj.answer}
               name='answer'
               mt={4}
               alignItems={"center"}
               display={"flex"}
             />
-            <Input
+            {/* <Input
               type='Text'
-              placeholder='answer2'
-              name='answer2'
-              onChange={(e) => handleChange(e)}
+              placeholder='answer_1'
+              onChange={(e) => handleAnswer(e)}
+              value={answerObj}
+              name='answer_1'
               mt={4}
               alignItems={"center"}
               display={"flex"}
             />
             <Input
               type='Text'
-              placeholder='answer 3'
-              name='answer3'
-              onChange={(e) => handleChange(e)}
+              placeholder='answer_2'
+              value={answerObj}
+              name='answer_2'
+              onChange={(e) => handleAnswer(e)}
               mt={4}
               alignItems={"center"}
               display={"flex"}
             />
             <Input
               type='Text'
-              onChange={(e) => handleChange(e)}
-              placeholder='answer 4'
-              name='answer4'
+              placeholder='answer_3'
+              value={answerObj}
+              name='answer_3'
+              onChange={(e) => handleAnswer(e)}
               mt={4}
               alignItems={"center"}
               display={"flex"}
             />
+            <Input
+              type='Text'
+              onChange={(e) => handleAnswer(e)}
+              value={answerObj}
+              placeholder='answer_4'
+              name='answer_4'
+              mt={4}
+              alignItems={"center"}
+              display={"flex"}
+            /> */}
 
             <Box
               mt={4}

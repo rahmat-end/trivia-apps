@@ -1,7 +1,9 @@
 /** @format */
 import { Link } from "react-router-dom";
-import { Box, Flex, Image, Button, Text } from "@chakra-ui/react";
-import Logo2 from "../assets/image/logo2.png";
+import { Box, Flex, Button, Text } from "@chakra-ui/react";
+import Logo2 from "../assets/image/chou.jpg";
+import Logo1 from "../assets/image/avatar21.png";
+import Logo3 from "../assets/image/avatar31.png";
 
 const SidebarDrawer = () => {
   return (
@@ -10,9 +12,11 @@ const SidebarDrawer = () => {
         display={"flex"}
         flexDirection={{ base: "row", md: "column" }}
         bgColor={"gray.800"}
-        borderTopLeftRadius={"60px"}
-        borderBottomRightRadius={"60px"}
-        p={4}
+        p={5}
+        borderTopLeftRadius={"160px"}
+        borderBottomRightRadius={"150px"}
+        px={9}
+        py={4}
         borderRight={"10px ridge #dcfcfe"}
         borderTop={"5px ridge #dcfcfe"}
         w={"100%"}
@@ -21,7 +25,7 @@ const SidebarDrawer = () => {
         <Box
           flexDirection={{ base: "column", md: "row" }}
           display={"flex"}
-          marginLeft={"10"}>
+          p={5}>
           <Flex
             w={"50%"}
             flexDirection={{ base: "row", md: "column" }}>
@@ -57,28 +61,76 @@ const SidebarDrawer = () => {
                 </Link>
               </Box>
             </Box>
-            <Box mt={"5"}>
+            <Box
+              mt={"5"}
+              display={"flex"}
+              flexDirection={"row"}
+              alignItems={"center"}
+              p={10}
+              justifyContent={"center"}
+              w={"100%"}
+              h={"100%"}>
               <img
-                src='https://i.pinimg.com/564x/a3/fb/f1/a3fbf1da54db06bcd540588c188506fe.jpg'
+                src={Logo1}
                 alt=''
-                width='100%'
-                height='100%'
+                width='40%'
+                height='60%'
               />
+              <img
+                src={Logo3}
+                alt=''
+                width='40%'
+                height='60%'
+              />
+              <img
+                src={Logo2}
+                alt=''
+                width='40%'
+                height='60%'
+              />
+              <img
+                src={Logo2}
+                alt=''
+                width='40%'
+                height='60%'
+              />
+
+              {/* <Box
+                display={"flex"}
+                justifyContent={"start"}
+                alignItems={"start"}
+                w={"100%"}
+                flexDirection={"column"}
+                fontSize={"xl"}
+                p={3}>
+                <Text
+                  display={"flex"}
+                  borderRadius={"50px"}
+                  alignContent={"start"}
+                  color={"blue.500"}
+                  alignItems={"start"}
+                  borderTopLeftRadius={"60px"}
+                  borderBottomRightRadius={"60px"}
+                  as={"samp"}
+                  fontSize={"md"}>
+                  Platinum
+                </Text>
+                <Text
+                  borderRadius={"50px"}
+                  textAlign={"center"}
+                  color={"blue.700"}
+                  alignItems={"center"}
+                  borderTopLeftRadius={"60px"}
+                  borderBottomRightRadius={"60px"}
+                  p={2}
+                  fontSize={"xs"}
+                  mt={2}
+                  as={"sub"}>
+                  rare
+                </Text>
+              </Box> */}
             </Box>
           </Flex>
-          <Box
-            flexDirection={{ base: "row", md: "column" }}
-            w={"50%"}
-            display={"flex"}
-            justifyContent={"center"}
-            alignItems={"center"}>
-            <Image
-              src={Logo2}
-              alt='logo'
-              w={{ base: "80px", md: "200px" }}
-              h={{ base: "60px", md: "200px" }}
-              animation='spin 1s linear infinite'></Image>
-          </Box>
         </Box>
       </Flex>
     </>

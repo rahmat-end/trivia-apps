@@ -3,13 +3,9 @@
 import React from "react";
 import { useState } from "react";
 import { useMutation } from "react-query";
-import axios from "axios";
+import { apilaravel } from "./../../utils/Api";
 import { useEffect } from "react";
-
-type UseBuyAvatar = {
-  photo_buyavatar: File | null;
-  price_buyavatar: number;
-};
+import { UseBuyAvatar } from "../../types/index";
 
 export const useBuyAvatar = () => {
   const [dataBuyAvatar, setDataBuyAvatar] = useState<UseBuyAvatar>({
@@ -35,11 +31,9 @@ export const useBuyAvatar = () => {
       "Content-Type": "multipart/form-data",
     };
     try {
-      const res = await axios.post(
-        "http://192.168.18.169:8001/api/buyavatar/",
-        dataBuyAvatar,
-        { headers }
-      );
+      const res = await apilaravel.post("/buyavatar/", dataBuyAvatar, {
+        headers,
+      });
       console.log(res);
     } catch (error) {
       console.log(error);

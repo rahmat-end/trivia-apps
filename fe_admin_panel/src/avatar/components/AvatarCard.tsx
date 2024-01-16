@@ -2,13 +2,13 @@
 
 import { Flex, Box, Text, Button, Image } from "@chakra-ui/react";
 import Avatars1 from "../../assets/image/Animate from1.png";
-import Avatars2 from "../assets/image/avataaars (2).png";
+import { avatar } from "../../service/avatar";
+// import Avatars2 from "../assets/image/avataaars (2).png";
 // import Avatars3 from "../assets/image/avataaars (3).png";
 // import Avatars5 from "../assets/image/avataaars (5).png";
 // import Avatars6 from "../assets/image/avataaars (6).png";
 // import Avatars7 from "../assets/image/avataaars (7).png";
-import { avatar } from "../../service/avatar";
-import useAvatar from "./hooks/useAvatar";
+// import useAvatar from "./hooks/useAvatar";
 
 function AvatarCard() {
   return (

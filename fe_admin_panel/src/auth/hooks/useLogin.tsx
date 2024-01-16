@@ -4,9 +4,12 @@ import { useState, ChangeEvent } from "react";
 import { LoginType } from "../../types";
 import { toast } from "react-toastify";
 import getError from "../../utils/getError";
-import axios from "axios";
+import { apigolang } from "../../utils/Api";
+import { SAVE_TOKEN, SAVE_USER } from "../../redux/authSlice";
+import { useAppDispatch } from "../../redux/hook";
 
 export function useLogin() {
+  const dispatch = useAppDispatch();
   const [form, setForm] = useState<LoginType>({
     email: "",
     password: "",
@@ -27,10 +30,10 @@ export function useLogin() {
     try {
       setIsLoading(true);
 
-      const response = await axios.post(
-        "http://192.168.18.169:8001/api/auth/login",
-        form
-      );
+      const response = await apigolang.post("/login", form);
+      dispatch(SAVE_TOKEN(response.data.data));
+      saveDatauser();
+
       console.log(response);
       toast.success(response.data.message, {
         position: "top-center",
@@ -42,7 +45,6 @@ export function useLogin() {
         progress: undefined,
         theme: "colored",
       });
-      localStorage.setItem("jwtToken", response.data.token);
 
       setIsError(false);
       setError("");
@@ -55,6 +57,14 @@ export function useLogin() {
       setIsLoading(false);
     }
   }
+  function saveDatauser() {
+    const data = localStorage.getItem("auth");
+    if (data) {
+      const payload = JSON.parse(data);
+      dispatch(SAVE_USER(payload));
+    }
+  }
+
   console.log(form);
 
   return {
@@ -65,5 +75,6 @@ export function useLogin() {
     isError,
     error,
     isLoginSuccess,
+    saveDatauser,
   };
 }

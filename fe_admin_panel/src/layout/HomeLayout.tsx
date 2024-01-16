@@ -37,15 +37,13 @@ const HomeLayout = () => {
           <Sidebar />
         </Box>
         <Box
-          flexDirection={"column"}
+          flexDirection={"row"}
           gap={2}
           flex={"2"}
           ml={"200"}
           w={"100%"}
           justifyContent={"flex-start"}
-          display={["none", "none", "flex", "flex"]}
-          px={"5px"}
-          py={"10px"}>
+          display={["none", "flex"]}>
           <Search />
         </Box>
 

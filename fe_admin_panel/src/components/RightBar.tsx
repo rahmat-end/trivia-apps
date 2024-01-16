@@ -1,17 +1,23 @@
 /** @format */
 
-import  { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { HStack, Avatar, VStack, Text } from "@chakra-ui/react";
 import { UserContext } from "../auth/hooks/UserContext";
+import { useAppSelector } from "../redux/hook";
+import { RootState } from "../redux/store";
 
 function RightBar() {
   const { user } = useContext(UserContext) || {}; // Gunakan optional chaining disini
+  const auth = useAppSelector((state: RootState) => state.auth);
+  useEffect(() => {
+    console.log("ini auth", auth);
+  });
 
   return (
     <HStack>
       <Avatar
         size='sm'
-        name={user ? user.name : "John Doe"}
+        name={auth.name}
         src={
           user
             ? user.avatar
@@ -22,7 +28,7 @@ function RightBar() {
         <Text
           color='white'
           fontSize='lg'>
-          {user ? user.name : "John Doe"}
+          {auth.name}
         </Text>
       </VStack>
     </HStack>

@@ -3,17 +3,12 @@
 import React from "react";
 import { useState } from "react";
 import { useMutation, useQuery } from "react-query";
-import axios from "axios";
+import { AddDiamondType } from "../../types/index";
 import { useEffect } from "react";
-
-type AddDiamond = {
-  amount_diamond: number;
-  price_diamond: number;
-  photo_diamond: File | null;
-};
+import { apilaravel } from "../../utils/Api";
 
 export const useAddDiamond = () => {
-  const [dataDiamond, setDataDiamond] = useState<AddDiamond>({
+  const [dataDiamond, setDataDiamond] = useState<AddDiamondType>({
     amount_diamond: 0,
     price_diamond: 0,
     photo_diamond: null,
@@ -37,11 +32,7 @@ export const useAddDiamond = () => {
       "Content-Type": "multipart/form-data",
     };
     try {
-      const res = await axios.post(
-        "http://192.168.18.169:8001/api/diamond/",
-        dataDiamond,
-        { headers }
-      );
+      const res = await apilaravel.post("/diamond/", dataDiamond, { headers });
       console.log(res);
     } catch (error) {
       console.log(error);
@@ -49,17 +40,15 @@ export const useAddDiamond = () => {
     console.log(dataDiamond);
   });
 
-const {data:getDataDiamond}=useQuery("diamond", async()=>{
-try {
-  const response = await axios.get("http://192.168.18.169:8001/api/diamond/");
-  console.log(response.data);
-  return response.data
-  
-} catch (error) {
-  console.log(error);
-}
-
-})
+  const { data: getDataDiamond } = useQuery("diamond", async () => {
+    try {
+      const response = await apilaravel.get("/diamond/");
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  });
 
   return { dataDiamond, handleChange, handleSubmit, getDataDiamond };
 };
