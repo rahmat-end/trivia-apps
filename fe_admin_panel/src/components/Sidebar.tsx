@@ -39,6 +39,7 @@ import AddDiamondsModal from "../modals/components/AddDiamonds";
 import AddBuyAvatar from "../modals/components/AddBuyAvatar";
 import { REMOVE_TOKEN } from "../redux/authSlice";
 import { useAppDispatch } from "../redux/hook";
+// import AddSettings from "../modals/components/AddSettings";
 
 const Sidebar: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -137,6 +138,8 @@ const Sidebar: React.FC = () => {
         setNewUserData={setNewUserData}
         handleSubmit={() => setAddUserModalOpen(false)}
       />
+      {/* 
+      <AddSettings /> */}
 
       <Drawer
         isOpen={isOpen}
@@ -171,7 +174,7 @@ const Sidebar: React.FC = () => {
           </DrawerHeader>
           <HStack
             align='center'
-            spacing={2}>
+            gap={4}>
             <VStack
               align='center'
               spacing={2}
@@ -182,16 +185,18 @@ const Sidebar: React.FC = () => {
                     <Link to={`/`}>
                       <button>
                         <HStack spacing={2}>
-                          <FaHome
-                            size='1.5em'
-                            Text
-                          />
                           <Text
                             fontSize='md'
+                            display={["none", "flex"]}
                             color='white'
                             _hover={{ color: "blue.600" }}
                             textDecoration={"none"}
-                            decoration={"none"}>
+                            decoration={"none"}
+                            gap={2}>
+                            <FaHome
+                              size='1.5em'
+                              Text
+                            />
                             Home
                           </Text>
                         </HStack>
@@ -202,14 +207,14 @@ const Sidebar: React.FC = () => {
                   <ListItem>
                     <Link to={`/dahsboard`}>
                       <button>
-                        <HStack
-                          spacing={2}
-                          mt={4}>
-                          <FaHouseDamage size='1.5em' />
+                        <HStack mt={6}>
                           <Text
                             fontSize='md'
                             color='white'
-                            _hover={{ color: "blue.600" }}>
+                            _hover={{ color: "blue.600" }}
+                            gap={2}
+                            display={["none", "flex"]}>
+                            <FaHouseDamage size='1.5em' />
                             Dahsboard
                           </Text>
                         </HStack>
@@ -219,14 +224,14 @@ const Sidebar: React.FC = () => {
 
                   <ListItem>
                     <button onClick={() => setQuestionModalOpen(true)}>
-                      <HStack
-                        spacing={2}
-                        mt={4}>
-                        <FaQuestion size='1.5em' />
+                      <HStack mt={6}>
                         <Text
                           fontSize='md'
                           color='white'
-                          _hover={{ color: "blue.600" }}>
+                          display={["none", "flex"]}
+                          _hover={{ color: "blue.600" }}
+                          gap={2}>
+                          <FaQuestion size='1.5em' />
                           Add Question
                         </Text>
                       </HStack>
@@ -235,14 +240,14 @@ const Sidebar: React.FC = () => {
 
                   <ListItem>
                     <button onClick={() => setDiamondsModalOpen(true)}>
-                      <HStack
-                        spacing={2}
-                        mt={4}>
-                        <FaDailymotion size='1.5em' />
+                      <HStack mt={6}>
                         <Text
                           fontSize='md'
                           color='white'
-                          _hover={{ color: "blue.600" }}>
+                          _hover={{ color: "blue.600" }}
+                          display={["none", "flex"]}
+                          gap={2}>
+                          <FaDailymotion size='1.5em' />
                           Add Diamond
                         </Text>
                       </HStack>
@@ -251,14 +256,14 @@ const Sidebar: React.FC = () => {
 
                   <ListItem>
                     <button onClick={() => setFreeAvatarModalVisible(true)}>
-                      <HStack
-                        spacing={2}
-                        mt={4}>
-                        <FaUserPlus size='1.5em' />
+                      <HStack mt={6}>
                         <Text
                           fontSize='md'
                           color='white'
-                          _hover={{ color: "blue.600" }}>
+                          _hover={{ color: "blue.600" }}
+                          display={"flex"}
+                          gap={2}>
+                          <FaUserPlus size='1.5em' />
                           Add Free Avatar
                         </Text>
                       </HStack>
@@ -267,14 +272,14 @@ const Sidebar: React.FC = () => {
 
                   <ListItem>
                     <button onClick={() => setAddUserModalOpen(true)}>
-                      <HStack
-                        spacing={2}
-                        mt={4}>
-                        <FaUserClock size='1.5em' />
+                      <HStack mt={6}>
                         <Text
                           fontSize='md'
                           color='white'
-                          _hover={{ color: "blue.600" }}>
+                          _hover={{ color: "blue.600" }}
+                          display={"flex"}
+                          gap={2}>
+                          <FaUserClock size='1.5em' />
                           Add buy Avatar
                         </Text>
                       </HStack>
@@ -283,14 +288,14 @@ const Sidebar: React.FC = () => {
 
                   <ListItem>
                     <button>
-                      <HStack
-                        spacing={2}
-                        mt={4}>
-                        <FaCog size='1.5em' />
+                      <HStack mt={6}>
                         <Text
                           fontSize='md'
                           color='white'
-                          _hover={{ color: "blue.600" }}>
+                          _hover={{ color: "blue.600" }}
+                          display={["none", "flex"]}
+                          gap={4}>
+                          <FaCog size='1.5em' />
                           Settings
                         </Text>
                       </HStack>
@@ -300,9 +305,7 @@ const Sidebar: React.FC = () => {
                   <ListItem>
                     <Link to={`/login`}>
                       <button>
-                        <HStack
-                          spacing={2}
-                          mt={2}>
+                        <HStack mt={20}>
                           <FaSignOutAlt
                             size='1.5em'
                             color='red'

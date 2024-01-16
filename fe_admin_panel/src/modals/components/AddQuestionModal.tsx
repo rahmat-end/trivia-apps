@@ -51,8 +51,8 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Add Question</ModalHeader>
+      <ModalContent bgColor={"gray.800"}>
+        <ModalHeader color={"white"}>Add Question</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <form
@@ -60,6 +60,7 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
             encType='multipart/form-data'>
             <Input
               type='Text'
+              color={"white"}
               placeholder='question'
               value={question.the_question}
               name='the_question'
@@ -72,6 +73,7 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
             <Input
               type='file'
               name='profile'
+              color={"white"}
               onChange={(e) => handleChange(e)}
               mt={4}
               alignItems={"center"}
@@ -79,6 +81,7 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
             />
             <Input
               type='Text'
+              color={"white"}
               placeholder='answer_1'
               onChange={(e) =>handleAnswerSatu(e)} 
               value={answer1Obj.answer}

@@ -70,17 +70,18 @@ const HomeLayout = () => {
       <Flex>
         <Box
           display='flex'
-          justifyContent='center'
           alignItems='center'
+          justifyContent={"start"}
           flexDirection={"column"}
-          flex={"1"}>
+          flex={"1"}
+          w={"100%"}>
           <Box
             display={"flex"}
-            flexDirection={"column"}>
+            flexDirection={"column"}
+            justifyContent={"start"}
+            w={"100%"}>
             <Box
-              w={"100%"}
               p={3}
-              bg={"transparent"}
               borderRadius={"lg"}
               boxShadow={"lg"}
               color={"white"}>
@@ -97,7 +98,8 @@ const HomeLayout = () => {
               bg={"transparent"}
               borderRadius={"lg"}
               boxShadow={"lg"}
-              color={"white"}>
+              color={"white"}
+              gap={5}>
               <Bothbar />
             </Box>
           </Box>

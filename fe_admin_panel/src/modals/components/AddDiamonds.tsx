@@ -37,14 +37,15 @@ const AddDiamondsModal: React.FC<AddDiamondsProps> = ({ isOpen, onClose }) => {
       isOpen={isOpen}
       onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Add Diamond</ModalHeader>
+      <ModalContent bgColor={"gray.800"}>
+        <ModalHeader color={"white"}>Add Diamond</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <form
             onSubmit={handleSubmit}
             encType='multipart/form-data'>
             <Input
+              color={"white"}
               type='number'
               placeholder='Amount of Diamonds*'
               mt={4}
@@ -56,7 +57,7 @@ const AddDiamondsModal: React.FC<AddDiamondsProps> = ({ isOpen, onClose }) => {
             <InputGroup>
               <InputLeftElement
                 pointerEvents='none'
-                color='gray.300'
+                color='gray.400'
                 fontSize='1.2em'>
                 RP
               </InputLeftElement>
@@ -74,6 +75,7 @@ const AddDiamondsModal: React.FC<AddDiamondsProps> = ({ isOpen, onClose }) => {
             <Input
               type='file'
               name='photo_diamond'
+              color={"white"}
               onChange={(e) => handleChange(e)}
               mt={4}
               alignItems={"center"}

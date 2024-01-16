@@ -18,20 +18,18 @@ import { useAddFreeAvatar } from "../hooks/useAddFreeAvatar";
 interface AddFreeAvatar {
   isOpen: boolean;
   onClose: () => void;
-
 }
 
-const AddFreeAvatarModal: React.FC<AddFreeAvatar>= ({isOpen, onClose}) => {
+const AddFreeAvatarModal: React.FC<AddFreeAvatar> = ({ isOpen, onClose }) => {
   const { handleChange, handleSubmit } = useAddFreeAvatar();
 
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
-      >
+      onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Add Free Avatar</ModalHeader>
+      <ModalContent bgColor={"gray.800"}>
+        <ModalHeader color={"white"}>Add Free Avatar</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <form
@@ -40,6 +38,7 @@ const AddFreeAvatarModal: React.FC<AddFreeAvatar>= ({isOpen, onClose}) => {
             <Input
               type='file'
               onChange={(e) => handleChange(e)}
+              color={"white"}
               name='photo_freeavatar'
               mt={4}
               alignItems={"center"}
@@ -51,6 +50,7 @@ const AddFreeAvatarModal: React.FC<AddFreeAvatar>= ({isOpen, onClose}) => {
               display={"flex"}>
               <Button
                 type='submit'
+                color={"white"}
                 colorScheme='blue'
                 alignItems={"center"}
                 justifyContent={"end"}>

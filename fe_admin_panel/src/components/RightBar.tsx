@@ -1,10 +1,12 @@
 /** @format */
 
 import { useContext, useEffect } from "react";
-import { HStack, Avatar, VStack, Text } from "@chakra-ui/react";
+import { HStack, Avatar, VStack, Text , Button } from "@chakra-ui/react";
 import { UserContext } from "../auth/hooks/UserContext";
 import { useAppSelector } from "../redux/hook";
 import { RootState } from "../redux/store";
+import { FaSignOutAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function RightBar() {
   const { user } = useContext(UserContext) || {}; // Gunakan optional chaining disini
@@ -30,6 +32,20 @@ function RightBar() {
           fontSize='lg'>
           {auth.name}
         </Text>
+        <Link to={`/login`}>
+          <Text>
+            <Button
+              fontSize={"medium"}
+              ml={3}
+              color={"grey"}
+              textDecoration={"none"}
+              _hover={{ color: "red.600" }}
+              bg={"transparent"}>
+              <FaSignOutAlt />
+              Logout
+            </Button>
+          </Text>
+        </Link>
       </VStack>
     </HStack>
   );

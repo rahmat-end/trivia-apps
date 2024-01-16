@@ -1,64 +1,73 @@
-/** @format */
+// /** @format */
 
-import {
-  Button,
-  FormControl,
-  Flex,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-  Text,
-} from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+// // AddUserModal.tsx
+// import React from "react";
+// import {
+//   Modal,
+//   ModalOverlay,
+//   ModalContent,
+//   ModalHeader,
+//   ModalBody,
+//   ModalCloseButton,
+//   Input,
+//   Button,
+//   Box,
+// } from "@chakra-ui/react";
+// import useSetting from "../hooks/useSetting";
 
-function AddSettings() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  return (
-    <>
-      <Button onClick={onOpen}>Open Modal</Button>
+// interface AddSettingProps {
+//   isOpen: boolean;
+//   onClose: () => void;
+//   newUserData: { username: string; avatarUrl: string };
+//   setNewUserData: React.Dispatch<
+//     React.SetStateAction<{ username: string; avatarUrl: string }>
+//   >;
+//   handleSubmit: () => void;
+// }
 
-      <Modal
-        // initialFocusRef={initialRef}
-        // finalFocusRef={finalRef}
-        isOpen={isOpen}
-        onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Create your account</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            <FormControl>
-              <Button></Button>
-            </FormControl>
+// const AddSetting: React.FC<AddSettingProps> = ({ isOpen, onClose }) => {
+//   const { , getSetting } = useSetting();
+//   return (
+//     <Modal
+//       isOpen={isOpen}
+//       onClose={onClose}>
+//       <ModalOverlay />
+//       <ModalContent bgColor={"gray.800"}>
+//         <ModalHeader color={"white"}>Add Buy Avatar</ModalHeader>
+//         <ModalCloseButton />
+//         <ModalBody>
+//           <form encType='multipart/form-data'>
+//             <Input
+//               type='file'
+//               name='photo_buyavatar'
+//               mt={4}
+//               alignItems={"center"}
+//               display={"flex"}
+//             />
+//             <Input
+//               placeholder='Enter amount'
+//               name='price_buyavatar'
+//               color={"white"}
+//               type='number'
+//             />
+//             <Box
+//               mt={4}
+//               width={"100%"}
+//               display={"flex"}>
+//               <Button
+//                 type='submit'
+//                 colorScheme='blue'
+//                 alignItems={"center"}
+//                 justifyContent={"end"}>
+//                 {" "}
+//                 Add buy Avatar
+//               </Button>
+//             </Box>
+//           </form>
+//         </ModalBody>
+//       </ModalContent>
+//     </Modal>
+//   );
+// };
 
-            <FormControl mt={4}>
-              <Flex>
-                <Button>
-                  <Link to='/login'>
-                    <Text> Login</Text>
-                  </Link>
-                </Button>
-              </Flex>
-            </FormControl>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button
-              colorScheme='blue'
-              mr={3}>
-              Save
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
-  );
-}
-
-export default AddSettings;
+// export default AddSetting;

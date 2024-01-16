@@ -1,9 +1,12 @@
 /** @format */
 
 import { FaSearch } from "react-icons/fa";
-import { Box, Input } from "@chakra-ui/react";
+import { AiOutlineDelete } from "react-icons/ai";
+import { Box, Input, Button, Text } from "@chakra-ui/react";
+import useSearch from "../hooks/useSerch";
 
-function serch() {
+function Search() {
+  const { searchValue, updateSearchValue, resetSearchValue } = useSearch();
   return (
     <>
       <Box
@@ -12,21 +15,20 @@ function serch() {
         alignItems={"center"}
         justifyContent={"flex-start"}
         color={"white"}
-        py={2}
         px={5}
-        w={"50%"}
-        gap={3}
-        // px={200}
+        w={"80%"}
         borderRadius={"full"}
         border={"1px solid white"}>
         <FaSearch
           flex={0}
           color='white'
           display={"flex"}
-    
         />
         <Input
           type='text'
+          value={searchValue}
+          onChange={(e) => updateSearchValue(e.target.value)}
+          name='search'
           border={"none"}
           outline={"none"}
           focusBorderColor='transparent'
@@ -34,9 +36,27 @@ function serch() {
           color='white'
           width={"100%"}
         />
+        <Button
+          onClick={resetSearchValue}
+          bgColor='transparent'
+          border={"none"}
+          color={"white"}
+          _hover={{ bgColor: "transparent", color: "red.500" }}>
+          <Text
+            display={"flex"}
+            alignItems={"center"}
+            justifyContent={"center"}>
+            <AiOutlineDelete
+              flex={0}
+              size={25}
+              color='red'
+            />
+            Reset
+          </Text>
+        </Button>
       </Box>
     </>
   );
 }
 
-export default serch;
+export default Search;

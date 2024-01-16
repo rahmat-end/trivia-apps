@@ -13,7 +13,7 @@ import {
   Button,
   Box,
 } from "@chakra-ui/react";
-import { useBuyAvatar } from "../hooks/useBuyAvatar";                                   
+import { useBuyAvatar } from "../hooks/useBuyAvatar";
 
 interface AddUserModalProps {
   isOpen: boolean;
@@ -33,8 +33,8 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose }) => {
       isOpen={isOpen}
       onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Add Buy Avatar</ModalHeader>
+      <ModalContent bgColor={"gray.800"}>
+        <ModalHeader color={"white"}>Add Buy Avatar</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <form
@@ -43,6 +43,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose }) => {
             <Input
               type='file'
               onChange={(e) => handleChange(e)}
+              color={"white"}
               name='photo_buyavatar'
               mt={4}
               alignItems={"center"}
@@ -51,6 +52,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose }) => {
             <Input
               placeholder='Enter amount'
               name='price_buyavatar'
+              color={"white"}
               type='number'
               onChange={(e) => handleChange(e)}
             />
