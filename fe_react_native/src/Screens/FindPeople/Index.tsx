@@ -15,14 +15,47 @@ import {
   verticalScale,
   moderateScale,
 } from "../../themes/Metrixs";
-import { useEffect } from "react";
-import { StackActions } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+
 const FindPeople = ({ navigation }: { navigation: any }) => {
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     navigation.dispatch(StackActions.replace("Lets Play"));
-  //   }, 5000);
-  // },[]);
+  const [countDown, setCountDown] = useState(20);
+  const [visibleSatu, setVisibleSatu] = useState(false);
+  const [visibleDua, setVisibleDua] = useState(false);
+  const [visibleTiga, setVisibleTiga] = useState(false);
+  const [visibleEmpat, setVisibleEmpat] = useState(false);  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (countDown > 0) {
+        setCountDown(countDown - 1);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [countDown]);
+
+useEffect (() => {
+  if (countDown === 0) {
+    navigation.navigate("LetsPlay");
+  }
+}, [countDown])
+
+
+
+
+useEffect(() => {
+  
+    if (countDown === 18) {
+      setVisibleSatu(true);}
+      else if (countDown === 11) {
+        setVisibleDua(true);
+      }
+      else if (countDown === 7) {
+        setVisibleTiga(true);
+      }
+      else if (countDown === 5) {
+        setVisibleEmpat(true);
+      }
+}, [countDown])
+
   return (
     <ImageBackground
       source={require("../../../assets/BackgroundImage/bgfindpeople.png")}
@@ -38,8 +71,29 @@ const FindPeople = ({ navigation }: { navigation: any }) => {
           />
         </View>
         <StatusBar style="light" />
-        <Text style={styles.textTimer}>00:15</Text>
+        {
+          countDown === 0 ?
+          <View style={styles.overlayCountDown}>
+            <View style={styles.countDownContainer}>
+            <Text style={styles.textCountDown}>Time Is Up!!</Text>
+            <Text>You Found 3 Opponents</Text>
+            <Image 
+            style={styles.timeIcon}
+            source = {require('../../../assets/LogoAction/time-hourglass-svgrepo-com.png')}
+            />
+            <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("LetsPlay")}
+            >
+              <Text style={{color: 'white', fontWeight: 'bold'}}>Play Now</Text>
+            </TouchableOpacity>
+            </View>
+          </View> :
+          <>
+        <Text style={styles.textTimer}>00:{countDown < 10 ? `0${countDown}` : countDown}</Text>
         <Text style={styles.textTitle}>Finding Opponent...</Text>
+          </>
+        }
         {findPeople.map((item: any, index: number) => {
           return (
             <View
@@ -49,13 +103,14 @@ const FindPeople = ({ navigation }: { navigation: any }) => {
                 justifyContent: "center",
                 alignItems: "center",
                 zIndex: 1,
+                display: visibleSatu && index === 0 ? "flex" : visibleDua && index === 1 ? "flex" : visibleTiga && index === 2 ? "flex" : visibleEmpat && index === 3 ? "flex" : "none",
                 top:
                   index === 0
-                    ? 300
+                    ? 200
                     : index === 1
                     ? 250
                     : index === 2
-                    ? 320
+                    ? 90
                     : 390,
                 left:
                   index === 0
@@ -63,7 +118,7 @@ const FindPeople = ({ navigation }: { navigation: any }) => {
                     : index === 1
                     ? 100
                     : index === 2
-                    ? 320
+                    ? 250
                     : 10,
                 bottom: index === 2 ? 10 : index === 1 ? 10 : null,
               }}
@@ -82,14 +137,6 @@ const FindPeople = ({ navigation }: { navigation: any }) => {
         })}
       </View>
 
-      <TouchableOpacity onPress={() => navigation.navigate("Start Game")}>
-        <LottieView
-          style={styles.backButton}
-          source={require("../../../assets/Animatiom/backanimation.json")}
-          autoPlay
-          loop
-        />
-      </TouchableOpacity>
     </ImageBackground>
   );
 };
@@ -106,6 +153,45 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  overlayCountDown: {
+    position: "absolute",
+    backgroundColor: "rgba(0,0,0,0.7)",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    zIndex: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  countDownContainer: {
+    width: horizontalScale(300),
+    height: verticalScale(200),
+    backgroundColor: "white",
+    borderRadius: moderateScale(10),
+    justifyContent: "center",
+    alignItems:"center"
+  },
+  textCountDown: {
+    color: "black",
+    fontWeight: "bold",
+    fontSize: moderateScale(20),
+  },
+  timeIcon: {
+    width: horizontalScale(50),
+    height: verticalScale(50),
+    marginTop: verticalScale(20),
+    resizeMode: "contain",
+  },
+  button:{
+    width: horizontalScale(200),
+    height: verticalScale(40),
+    marginTop: verticalScale(20),
+    backgroundColor:"#318CE7",
+    borderRadius: moderateScale(10),
+    justifyContent: "center",
+    alignItems: "center",
   },
   textTimer: {
     color: "white",
@@ -147,14 +233,6 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(100),
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 1,
-  },
-  backButton: {
-    height: verticalScale(100),
-    width: horizontalScale(100),
-    position: "absolute",
-    bottom: verticalScale(10),
-    left: horizontalScale(10),
     zIndex: 1,
   },
 });

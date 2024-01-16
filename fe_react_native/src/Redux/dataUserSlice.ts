@@ -5,6 +5,7 @@ type dataUserState = {
     dataUser: {
         token: string;
         userid: string;
+        name: string
       
     };
 };
@@ -13,6 +14,7 @@ const initialState: dataUserState = {
     dataUser: {
         token: "",
         userid: "",
+        name: ""
     }
 }
 
@@ -21,8 +23,9 @@ const dataUserSlice =createSlice ({
     name:"dataUser",
     reducers:{
         SAVE_USER: (state, action) => {        
+            // state.dataUser.name = action.payload.name
             state.dataUser.token = action.payload.token
-            state.dataUser.userid = action.payload.user
+            state.dataUser.userid = action.payload.user_id
             
            
         },

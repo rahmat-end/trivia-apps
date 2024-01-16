@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
+import { useMutation } from "react-query";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import auth from "@react-native-firebase/auth";
-import { SIGNIN_USER, SAVE_TOKEN, LOGOUT } from "../Redux/userSlice";
 import { useAppDispatch, useAppSelector } from "../Redux/hooks";
 import {
   REMOVE_ASYNCSTORE,
@@ -9,9 +9,8 @@ import {
   SAVEUSER_ASYNCSTORE,
   SAVE_USER,
 } from "../Redux/dataUserSlice";
-import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { apilaravel, apigolang } from "../Components/libs/api";
 
 const useLogin = () => {
   GoogleSignin.configure({
@@ -20,7 +19,7 @@ const useLogin = () => {
   });
   const [initializing, setInitializing] = useState(false);
   const dispatch = useAppDispatch();
-  const {dataUser} = useAppSelector((state: any) => state.dataUser);
+  const { dataUser } = useAppSelector((state: any) => state.dataUser);
   const [errorMessage, setErrorMessage] = useState("");
   const [dataResgister, setDataResgister] = useState<any>({
     name: "",
@@ -30,7 +29,6 @@ const useLogin = () => {
     profile: "",
   });
 
-
   const submitLogin = async () => {
     try {
       setInitializing(true);
@@ -39,7 +37,8 @@ const useLogin = () => {
       });
       const { idToken } = await GoogleSignin.signIn();
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-      await registerUsertodb();
+      // registerUsertodb();
+      console.log("ini id token", idToken);
       return auth().signInWithCredential(googleCredential);
     } catch (error) {
       handleLogout();
@@ -61,24 +60,16 @@ const useLogin = () => {
 
   const registerUsertodb = async () => {
     try {
-      // setInitializing(true);
-     const res = await axios.post(
-      "http://192.168.18.169:8001/api/auth/registeruser",
-      dataResgister);
+      setInitializing(true);
+      const res = await apilaravel.post("http://192.168.18.169:8001/api/auth/registeruser", dataResgister);
       dispatch(SAVEUSER_ASYNCSTORE(res.data));
       saveDataUser();
-      console.log("ini response saat login", res.data)
-      
+      console.log("ini response saat login", res.data);
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data);
       setErrorMessage(error.data.email);
     }
-    // finally {
-    //   setInitializing(false);
-    // }
-  }
-
- 
+  };
 
   const onAuthStateChanged = (user: any) => {
     if (user) {
@@ -89,21 +80,52 @@ const useLogin = () => {
         profile: user.photoURL,
         username: user.displayName,
       });
-
+     
     }
- 
   };
+
+  const data ={
+    email:"agungprayogi040701@gmail.com",
+    password:"roottrivia"
+  }
+
+
+  const {mutate:loginGolang}=useMutation(async()=>{
+    try {
+      const res = await apigolang.post("/login", data);
+      console.log(res.data);
+      dispatch(SAVEUSER_ASYNCSTORE(res.data.data));
+      saveDataUser();
+    } catch (error) {
+      console.log(error.response);
+    }
+    
+  })
+
+ const {mutate:loginLaravel}=useMutation(async()=>{
+   try {
+    const res = await apilaravel.post("/auth/login", data);
+    dispatch(SAVEUSER_ASYNCSTORE(res.data));
+    saveDataUser();
+    console.log(res.data);
+    
+   } catch (error) {
+    console.log(error.response);
+   }
+ })
+
+
+
+
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
-  }, [initializing]);
+  }, []);
 
   // useEffect(() => {
-  //   console.log(errorMessage);
-  //   if (errorMessage !== "") {
-  //     handleLogout();
-  //   }
-  // }, [errorMessage]);
+  //     console.log("data resgister", dataResgister);
+  //     }, [dataResgister]);
+
 
   const handleLogout = async () => {
     try {
@@ -117,7 +139,7 @@ const useLogin = () => {
       console.log(error);
     }
   };
-  return { submitLogin, initializing, handleLogout, errorMessage };
+  return { submitLogin, initializing, handleLogout, errorMessage, loginGolang, loginLaravel };
 };
 
 export default useLogin;

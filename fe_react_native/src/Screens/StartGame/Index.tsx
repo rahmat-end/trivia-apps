@@ -11,7 +11,7 @@ import React from "react";
 import { StatusBar } from "expo-status-bar";
 import Button from "../../Components/Button/Index";
 import { useState, useEffect } from "react";
-import ChangeAvatarModal from "../../Components/ChangeAvatarModal/Index";
+import ChangeAvatarModal from "../../Components/BuyAvatarModal/Index";
 import DiamondModal from "../../Components/DiamondPopUp";
 import LottieView from "lottie-react-native";
 import {
@@ -23,31 +23,15 @@ import useUser from "../../hooks/useUser";
 import useLogin from "../../hooks/useLogin";
 import { useAppSelector } from "../../Redux/hooks";
 import { RootState } from "../../Redux/store";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import EditAvatarPopUp from "../../Components/EditAvatarPopUp/Index";
 
 const StartGame = ({ navigation }: { navigation: any }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenModalDiamond, setIsOpenModalDiamond] = useState(false);
+  const [editAvatarVisible, setEditAvatarVisible] = useState(false);
   const { dataUser } = useAppSelector((state: RootState) => state.dataUser);
-  
-
-
-  const {userlogin, isLoadingUserLogin}= useUser();
-  const {handleLogout} = useLogin();
-
-  useEffect(() => {
-    console.log(dataUser)
-    const dataTest = async()=>{
-      try {
-        const data = await AsyncStorage.getItem("dataUser")
-        const  payload = JSON.parse(data);
-        console.log(payload)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-  }, [dataUser])
-
+  const { userlogin, isLoadingUserLogin } = useUser();
+  const { handleLogout } = useLogin();
 
   return (
     <ImageBackground
@@ -87,13 +71,14 @@ const StartGame = ({ navigation }: { navigation: any }) => {
           </View>
           <View style={styles.container}>
             <View style={styles.containerAvatar}>
-              <TouchableOpacity
-               onPress={() => setIsOpen(true)}>
-              <Image style={styles.avatar} source={{ uri: userlogin?.avatar }} />
-
+              <TouchableOpacity onPress={() => setIsOpen(true)}>
+                <Image
+                  style={styles.avatar}
+                  source={{ uri: userlogin?.avatar }}
+                />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => navigation.navigate("Choose Avatar")}
+                onPress={() => setEditAvatarVisible(true)}
                 style={styles.editButton}
               >
                 <Image
@@ -130,9 +115,7 @@ const StartGame = ({ navigation }: { navigation: any }) => {
             </>
           )}
         </View>
-        <TouchableOpacity
-        onPress={() => handleLogout()}
-        >
+        <TouchableOpacity onPress={() => handleLogout()}>
           <Text>Logout</Text>
         </TouchableOpacity>
 
@@ -150,20 +133,24 @@ const StartGame = ({ navigation }: { navigation: any }) => {
       )}
       {isOpenModalDiamond && (
         <View style={styles.modalChageAvatar}>
-          <DiamondModal setmodalOpen={setIsOpenModalDiamond} />
+          <DiamondModal setmodalOpen={setIsOpenModalDiamond} navigation={navigation} />
         </View>
       )}
-      {
-        isLoadingUserLogin &&
-      <View style={styles.overlayModal}>
-        <LottieView 
-        style={styles.test}
-        autoPlay loop
-        source={require("../../../assets/Animatiom/loadingpostdata.json")}
-        />
-
-      </View>
-      }
+      {isLoadingUserLogin && (
+        <View style={styles.overlayModal}>
+          <LottieView
+            style={styles.test}
+            autoPlay
+            loop
+            source={require("../../../assets/Animatiom/loadingpostdata.json")}
+          />
+        </View>
+      )}
+      {editAvatarVisible && (
+        <View style={styles.modalChageAvatar}>
+          <EditAvatarPopUp open={editAvatarVisible} setIsOpen={setEditAvatarVisible} />
+        </View>
+      )}
     </ImageBackground>
   );
 };
@@ -311,7 +298,7 @@ const styles = StyleSheet.create({
     left: horizontalScale(10),
     right: horizontalScale(0),
   },
-  overlayModal:{
+  overlayModal: {
     position: "absolute",
     top: 0,
     bottom: 0,
@@ -321,9 +308,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
   },
-  test:{
-    width:horizontalScale(200),
-    height:verticalScale(200),
-  
-  }
+  test: {
+    width: horizontalScale(200),
+    height: verticalScale(200),
+  },
 });

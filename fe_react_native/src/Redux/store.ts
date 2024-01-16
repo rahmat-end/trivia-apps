@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from './userSlice'
 import userDataReducer from './dataUserSlice'
+import snapMidtransReducer from './snapMidtransSlice'
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
-    dataUser: userDataReducer
+    dataUser: userDataReducer,
+    snapMidtrans: snapMidtransReducer
   
   },
 })

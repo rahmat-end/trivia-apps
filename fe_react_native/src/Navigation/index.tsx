@@ -16,6 +16,9 @@ import StartGame from "../Screens/StartGame/Index";
 import FindPeople from "../Screens/FindPeople/Index";
 import LetsPlay from "../Screens/LetsPlay/Index";
 import ResultMatch from "../Screens/Result/Index";
+import TestWebView from "../Screens/MidtransWebView";
+import MidtransWebView from "../Screens/MidtransWebView";
+import PaymentDetail from "../Screens/PaymentDetail/Index";
 const Stack = createNativeStackNavigator();
 
 
@@ -70,7 +73,7 @@ export default function Navigation() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Splash Screen">
+      <Stack.Navigator initialRouteName="SplashScreen">
         <Stack.Screen
           options={{ headerShown: false }}
           name="SplashScreen"
@@ -118,7 +121,7 @@ export default function Navigation() {
               headerTransparent: true,
               headerShown: true,
             }}
-            name="Lets Play"
+            name="LetsPlay"
             component={LetsPlay}
           />
           <Stack.Screen
@@ -129,6 +132,31 @@ export default function Navigation() {
             }}
             name="Result Match"
             component={ResultMatch}
+          />
+           <Stack.Screen
+            options={{
+              headerShown: true,
+              headerTitle: "Payment",
+              headerTitleAlign: "center",
+              headerTitleStyle: {
+                fontSize: moderateScale(15),
+              }
+            }}
+            name="Payment"
+            component={MidtransWebView}
+          />
+          <Stack.Screen
+            options={{
+              headerShown: true,
+              headerTitle: "Detail Pesanan",
+              headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontSize: moderateScale(17),
+            }
+             
+            }}
+            name="PaymentDetail"
+            component={PaymentDetail}
           />
        
 
