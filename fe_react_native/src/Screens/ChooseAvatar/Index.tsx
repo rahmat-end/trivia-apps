@@ -46,9 +46,9 @@ const ChooseAvatar = ({ navigation }: { navigation: any }) => {
   const [usernameAlertVisible, setUsernameAlertVisible] = useState(false);
   const [isActive, setIsActive] = useState(-1);
 
-  useEffect(() => {
-    console.log("userlogin", userlogin);
-  },[userlogin])
+useEffect(() => {
+  console.log("ini userlogin", dataAvatar)
+}, [dataAvatar])
 
 
   const handleSubmitAvatar = () => {
@@ -275,4 +275,5 @@ const styles = StyleSheet.create({
     height: verticalScale(250),
     position: "absolute",
   },
+  
 });

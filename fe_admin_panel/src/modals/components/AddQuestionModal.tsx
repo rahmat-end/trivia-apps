@@ -12,6 +12,7 @@ import {
   Input,
   Button,
   Box,
+  Radio, RadioGroup, Stack
 } from "@chakra-ui/react";
 import { Question } from "../hooks/useQuestion";
 
@@ -44,26 +45,25 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
       };
     }
   };
-  const { question, handleChange, answer1Obj, handleAnswerSatu } = Question();
+  const { question, handleChange, answer1Obj, answer2Obj, answer3Obj, answer4Obj,
+    handleAnswerSatu, handleAnswerDua, handleAnswerEmpat, handleAnswerTiga, handleSubmitQuestion } = Question();
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
       <ModalOverlay />
       <ModalContent bgColor={"gray.800"}>
         <ModalHeader color={"white"}>Add Question</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <form
-            // onSubmit={handleSubmitQuestion}
-            encType='multipart/form-data'>
+            onSubmit={handleSubmitQuestion}
+            encType="multipart/form-data"
+          >
             <Input
-              type='Text'
-              color={"white"}
-              placeholder='question'
+              type="Text"
+              placeholder="question"
               value={question.the_question}
-              name='the_question'
+              name="the_question"
               onChange={(e) => handleChange(e)}
               mt={4}
               alignItems={"center"}
@@ -71,76 +71,86 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
             />
 
             <Input
-              type='file'
-              name='profile'
-              color={"white"}
+              type="file"
+              name="profile"
               onChange={(e) => handleChange(e)}
               mt={4}
               alignItems={"center"}
               display={"flex"}
             />
+            <p>Pilihan Jawaban</p>
             <Input
-              type='Text'
-              color={"white"}
-              placeholder='answer_1'
-              onChange={(e) =>handleAnswerSatu(e)} 
+              type="Text"
+              placeholder="answer 1"
+              onChange={(e) => handleAnswerSatu(e)}
               value={answer1Obj.answer}
-              name='answer'
+              name="answer"
               mt={4}
               alignItems={"center"}
               display={"flex"}
             />
-            {/* <Input
-              type='Text'
-              placeholder='answer_1'
-              onChange={(e) => handleAnswer(e)}
-              value={answerObj}
-              name='answer_1'
-              mt={4}
-              alignItems={"center"}
-              display={"flex"}
-            />
-            <Input
-              type='Text'
-              placeholder='answer_2'
-              value={answerObj}
-              name='answer_2'
-              onChange={(e) => handleAnswer(e)}
-              mt={4}
-              alignItems={"center"}
-              display={"flex"}
-            />
-            <Input
-              type='Text'
-              placeholder='answer_3'
-              value={answerObj}
-              name='answer_3'
-              onChange={(e) => handleAnswer(e)}
-              mt={4}
-              alignItems={"center"}
-              display={"flex"}
-            />
-            <Input
-              type='Text'
-              onChange={(e) => handleAnswer(e)}
-              value={answerObj}
-              placeholder='answer_4'
-              name='answer_4'
-              mt={4}
-              alignItems={"center"}
-              display={"flex"}
-            /> */}
+            <span className="flex gap-2 items-center">
+            <input type="radio" value="true" checked name="isTrue" onChange={(e) => handleAnswerSatu(e)}/>
+            Kunci Jawaban
+            </span>
 
-            <Box
+            <Input
+              type="Text"
+              placeholder="answer 2"
+              onChange={(e) => handleAnswerDua(e)}
+              value={answer2Obj.answer}
+              name="answer"
               mt={4}
-              width={"100%"}
-              display={"flex"}>
+              alignItems={"center"}
+              display={"flex"}
+            />
+            <span className="flex gap-2 items-center">
+            <input type="radio" value="true"  name="isTrue" onChange={(e) => handleAnswerDua(e)}/>
+            Kunci Jawaban
+            </span>
+
+            <Input
+              type="Text"
+              placeholder="answer 3"
+              onChange={(e) => handleAnswerTiga(e)}
+              value={answer3Obj.answer}
+              name="answer"
+              mt={4}
+              alignItems={"center"}
+              display={"flex"}
+            />
+            <span className="flex gap-2 items-center">
+            <input type="radio" value="true"  name="isTrue" onChange={(e) => handleAnswerTiga(e)}/>
+            Kunci Jawaban
+            </span>
+
+
+            <Input
+              type="Text"
+              placeholder="answer 4"
+              onChange={(e) => handleAnswerEmpat(e)}
+              value={answer4Obj.answer}
+              name="answer"
+              mt={4}
+              alignItems={"center"}
+              display={"flex"}
+            />
+            <span className="flex gap-2 items-center">
+            <input type="radio" value="true"  name="isTrue" onChange={(e) => handleAnswerEmpat(e)}/>
+            Kunci Jawaban
+            </span>
+
+
+            
+
+            <Box mt={4} width={"100%"} display={"flex"}>
               <Button
-                type='submit'
-                name='Question'
-                colorScheme='blue'
+                type="submit"
+                name="Question"
+                colorScheme="blue"
                 alignItems={"center"}
-                justifyContent={"end"}>
+                justifyContent={"end"}
+              >
                 {" "}
                 Add Question
               </Button>

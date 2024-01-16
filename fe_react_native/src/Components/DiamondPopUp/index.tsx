@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
-import { diamondData } from "../../services/avatar";
 import {
   horizontalScale,
   verticalScale,
@@ -12,10 +11,12 @@ import { useState } from "react";
 import { useAppSelector } from "../../Redux/hooks";
 import { RootState } from "../../Redux/store";
 
+
 type ModalProps = {
   setmodalOpen: any;
+  navigation: any;
 };
-const DiamondModal = ({ setmodalOpen }: ModalProps) => {
+const DiamondModal = ({ setmodalOpen, navigation }: ModalProps) => {
   const [visible, setVisible] = useState(false);
   const [selectedDiamond, setSelectedDiamond] = useState({
     amount_diamond: 0,
@@ -23,14 +24,7 @@ const DiamondModal = ({ setmodalOpen }: ModalProps) => {
     id_diamond: 0,
   });
   const { dataDiamond, buydiamond } = useDiamond();
-  const {dataUser}= useAppSelector((state: RootState)=> state.dataUser)
-
-
-  useEffect(() => {
-    console.log(dataUser)
-  }, [dataUser])
-
-  
+  const { snapMidtrans } = useAppSelector((state: RootState) => state.snapMidtrans)
 
   const formatPrice = (price: number): string => {
     if (price >= 100000) {
@@ -47,36 +41,53 @@ const DiamondModal = ({ setmodalOpen }: ModalProps) => {
     setSelectedDiamond(item);
   };
 
+  const handleConfirm = (item:any) => {
+    buydiamond(item);
+    if (snapMidtrans !== "") {
+      navigation.navigate("Payment");
+    }
+  }
+
+  useEffect(() => {
+    console.log("ini dari diamond", snapMidtrans)
+    if (snapMidtrans !== "") {
+      navigation.navigate("Payment");
+    }
+  }, [snapMidtrans]);
+ 
+
   return (
-    <View style={styles.modalContent}>
-      <TouchableOpacity
-        style={styles.closeButton}
-        onPress={() => setmodalOpen(false)}
-      >
-        <Image
-          style={styles.closeicon}
-          source={require(`../../../assets/LogoAction/close-svgrepo-com.png`)}
-        />
-      </TouchableOpacity>
-      <View style={styles.cardContainer}>
-        {dataDiamond?.map((item: any, index: number) => {
-          return (
-            <TouchableOpacity
-              onPress={() => handleCheckOut(item)}
-              key={index}
-              style={styles.cardAvatar}
-            >
-              <Text style={styles.diamondText}>{item.amount_diamond}</Text>
-              <Image
-                style={styles.diamondImage}
-                source={{ uri: item.photo_diamond }}
-              />
-              <Text style={styles.diamondText}>
-                {formatPrice(item.price_diamond)}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
+    <>
+      <View style={styles.modalContent}>
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => setmodalOpen(false)}
+        >
+          <Image
+            style={styles.closeicon}
+            source={require(`../../../assets/LogoAction/close-svgrepo-com.png`)}
+          />
+        </TouchableOpacity>
+        <View style={styles.cardContainer}>
+          {dataDiamond?.map((item: any, index: number) => {
+            return (
+              <TouchableOpacity
+                onPress={() => handleCheckOut(item)}
+                key={index}
+                style={styles.cardAvatar}
+              >
+                <Text style={styles.diamondText}>{item.amount_diamond}</Text>
+                <Image
+                  style={styles.diamondImage}
+                  source={{ uri: item.photo_diamond }}
+                />
+                <Text style={styles.diamondText}>
+                  {formatPrice(item.price_diamond)}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
       </View>
       {visible && (
         <View style={styles.overlayConfirm}>
@@ -90,7 +101,7 @@ const DiamondModal = ({ setmodalOpen }: ModalProps) => {
             </Text>
 
             <TouchableOpacity
-              onPress={() => buydiamond(selectedDiamond?.id_diamond)}
+              onPress={() => handleConfirm(selectedDiamond?.id_diamond)}
               style={styles.topupdiamond}
             >
               <Text style={styles.topupText}>Checkout</Text>
@@ -107,7 +118,7 @@ const DiamondModal = ({ setmodalOpen }: ModalProps) => {
           </View>
         </View>
       )}
-    </View>
+    </>
   );
 };
 

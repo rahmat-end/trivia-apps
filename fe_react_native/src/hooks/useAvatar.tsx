@@ -32,9 +32,14 @@ const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
     "dataAvatar",
     async () => {
       try {
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${dataUser?.token}`,
+        }
         const response = await apigolang.get(
-          "/freeavatar"
+          "/freeavatars", { headers }
         );
+        console.log(response.data.data);
         return response.data.data;
       } catch (error) {
         console.log(error.data);
@@ -98,6 +103,20 @@ const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
     }
   });
 
+
+  const {data:getUserPaidAvatar, refetch:refetchUserPaidAvatar} = useQuery('getUserPaidAvatar', async ()=>{
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${dataUser?.token}`,
+      }
+      const response = await apilaravel.get(`/transaction/userbuyavatar/${dataUser?.userid}`, { headers })
+      return response.data
+    } catch (error) {
+      console.log(error.response);
+    }
+  })
+
   const saveDataUser = async () => {
     try {
     const dataString =  await AsyncStorage.getItem("dataUser");
@@ -113,6 +132,7 @@ const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
 
   return {
     dataAvatar,
+    getUserPaidAvatar,
     dataFreevatarLoading,
     createUserError,
     createUserSuccess,

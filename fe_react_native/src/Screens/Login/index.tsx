@@ -22,7 +22,7 @@ import { RootState } from "../../Redux/store";
 import AlertPopUp from "../../Components/AlertPopUp/Index";
 
 const Login = ({ navigation }: { navigation: any }) => {
-  const { submitLogin, initializing, errorMessage, handleLogout } = useLogin();
+  const { submitLogin, initializing, errorMessage, handleLogout, loginGolang, loginLaravel } = useLogin();
 const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
   const [visible, setvisible] = useState(false);
 
@@ -54,7 +54,7 @@ const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
         <View>
           
           <TouchableOpacity
-            onPress={() => submitLogin()}
+            onPress={() =>loginGolang()}
             style={styles.loginButton}
           >
             <Image

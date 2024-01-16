@@ -7,3 +7,13 @@ export const formatPrice = (price: number): string => {
       return `Rp. ${price}`;
     }
   };
+
+  export const formatDiamond = (diamond: number): string => {
+    if (diamond >= 100000) {
+      return `${diamond / 1000}.K`;
+    } else if (diamond >= 1000) {
+      return `${diamond / 1000}.K`;
+    } else {
+      return `${diamond}`;
+    }
+  };
