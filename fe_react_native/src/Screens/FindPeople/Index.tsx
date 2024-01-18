@@ -16,6 +16,8 @@ import {
   moderateScale,
 } from "../../themes/Metrixs";
 import { useEffect, useState } from "react";
+import useUser from "../../hooks/useUser";
+import { socket } from "../../Components/libs/socket";
 
 const FindPeople = ({ navigation }: { navigation: any }) => {
   const [countDown, setCountDown] = useState(10);
@@ -23,6 +25,9 @@ const FindPeople = ({ navigation }: { navigation: any }) => {
   const [visibleDua, setVisibleDua] = useState(false);
   const [visibleTiga, setVisibleTiga] = useState(false);
   const [visibleEmpat, setVisibleEmpat] = useState(false);  
+  const [dataPlayer, setDataPlayer] = useState([]);
+  const {userlogin} = useUser();
+ 
   useEffect(() => {
     const interval = setInterval(() => {
       if (countDown > 0) {
@@ -32,13 +37,26 @@ const FindPeople = ({ navigation }: { navigation: any }) => {
     return () => clearInterval(interval);
   }, [countDown]);
 
+// useEffect (() => {
+//   if (countDown === 0) {
+//     navigation.navigate("LetsPlay");
+//   }
+// }, [countDown])
+
 useEffect (() => {
-  if (countDown === 0) {
-    navigation.navigate("LetsPlay");
-  }
-}, [countDown])
+  socket.on('getAllPlayers', (data) => {
+    setDataPlayer(data);
+  });
 
+  return () => {
+    socket.disconnect();
+  };
+ 
+},[])
 
+useEffect (() => {
+  console.log(dataPlayer)
+},[dataPlayer])
 
 
 useEffect(() => {
@@ -76,7 +94,7 @@ useEffect(() => {
           <View style={styles.overlayCountDown}>
             <View style={styles.countDownContainer}>
             <Text style={styles.textCountDown}>Time Is Up!!</Text>
-            <Text>You Found 3 Opponents</Text>
+            <Text> {dataPlayer.length === 0 ? 'No Opponent Found' : `You Found ${dataPlayer.length-1} Opponents`} </Text>
             <Image 
             style={styles.timeIcon}
             source = {require('../../../assets/LogoAction/time-hourglass-svgrepo-com.png')}
@@ -88,13 +106,14 @@ useEffect(() => {
               <Text style={{color: 'white', fontWeight: 'bold'}}>Play Now</Text>
             </TouchableOpacity>
             </View>
-          </View> :
+          </View> 
+        :
           <>
         <Text style={styles.textTimer}>00:{countDown < 10 ? `0${countDown}` : countDown}</Text>
         <Text style={styles.textTitle}>Finding Opponent...</Text>
           </>
         }
-        {findPeople.map((item: any, index: number) => {
+        {dataPlayer.map((item: any, index: number) => {
           return (
             <View
               key={index}
@@ -127,11 +146,11 @@ useEffect(() => {
                 <View style={styles.coverAvatar}>
                   <Image
                     style={styles.Avatar}
-                    source={require(`../../../assets/Avatar/avatar.png`)}
+                    source={{uri:item.avatar}}
                   />
                 </View>
               </TouchableOpacity>
-              <Text style={styles.textName}>{item.name}</Text>
+              <Text style={styles.textName}>{item.email === userlogin?.email ? "You" : item.name}</Text>
             </View>
           );
         })}

@@ -126,6 +126,9 @@ const LetsPlay = () => {
                       },
                     ]}
                   >
+                    <Image 
+                    style={styles.avatar}
+                    source={require("../../../assets/Avatar/avatar.png")} />
                     <Text style={styles.textAnswer}>{item.answer}</Text>
                   </TouchableOpacity>
                 );
@@ -244,6 +247,14 @@ const styles = StyleSheet.create({
     width: horizontalScale(300),
     justifyContent: "center",
     alignItems: "center",
+    position: "relative",
     borderRadius: moderateScale(15),
   },
+  avatar:{
+    height: verticalScale(30),
+    width: horizontalScale(30),
+    borderRadius: moderateScale(100),
+    position: "absolute",
+    top: verticalScale(-15),
+  }
 });

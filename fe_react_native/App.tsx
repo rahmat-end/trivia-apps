@@ -5,6 +5,7 @@ import Navigation from "./src/Navigation";
 import { useQueryClient, QueryClient, QueryClientProvider } from "react-query";
 const queryClient = new QueryClient();
 
+
 export default function App() {
   return (
     <Provider store={store}>

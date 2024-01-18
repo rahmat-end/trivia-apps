@@ -25,6 +25,8 @@ import { useAppSelector } from "../../Redux/hooks";
 import { RootState } from "../../Redux/store";
 import EditAvatarPopUp from "../../Components/EditAvatarPopUp/Index";
 import useGetGolangToken from "../../hooks/useGetGolangToken";
+import { socket } from "../../Components/libs/socket";
+
 
 const StartGame = ({ navigation }: { navigation: any }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,12 +37,39 @@ const StartGame = ({ navigation }: { navigation: any }) => {
   const { handleLogout } = useLogin();
   const { loginGolang } = useGetGolangToken();
   const {user}= useAppSelector((state: RootState) => state.user)
+ 
+  const handleCreateRoom = async () => {
+    
+    try {
+      const messageData = {
+        name: userlogin?.name,
+        email: userlogin?.email,
+        avatar: userlogin?.avatar
+      }
+      
+        socket.emit("view", messageData)
+        // navigation.navigate("Find People");
+    } catch (error) {
+      console.log(error)
+    }
+ 
+  }
+
+  // useEffect(() => {
+  //   socket.emit('joinRoom', 'room1');
+  //   socket.on('message', (data) => {
+  //     console.log(data)
+  //   })
+  // }, [])
+
+
 
   // untuk dapat token golang biar bisa masuk ke midtrans
   useEffect(() => {
     loginGolang();
   },[user])
   
+
 
   return (
     <ImageBackground
@@ -130,7 +159,8 @@ const StartGame = ({ navigation }: { navigation: any }) => {
 
         <View style={styles.containerButton}>
           <Button
-            onPress={() => navigation.navigate("Find People")}
+          onPress={() => handleCreateRoom()}
+            // onPress={() => navigation.navigate("Find People")}
             text="Let's Play"
           />
         </View>

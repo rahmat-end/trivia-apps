@@ -224,6 +224,8 @@ export default function Navigation() {
           name="PaymentDetail"
           component={PaymentDetail}
         />
+
+        
       </Stack.Navigator>
     </NavigationContainer>
   );
