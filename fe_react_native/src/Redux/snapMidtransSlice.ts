@@ -17,9 +17,12 @@ const snapMidtransSlice = createSlice({
     reducers: {
         SAVE_SNAP: (state, action) => {
             state.snapMidtrans = action.payload.redirect_url
+        },
+        REMOVE_SNAP: (state) => {
+            state.snapMidtrans = ""
         }
     }
 })
 
-export const {SAVE_SNAP} = snapMidtransSlice.actions
+export const {SAVE_SNAP, REMOVE_SNAP} = snapMidtransSlice.actions
 export default snapMidtransSlice.reducer

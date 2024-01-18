@@ -1,46 +1,89 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   moderateScale,
   verticalScale,
   horizontalScale,
 } from "../../themes/Metrixs";
+import { StatusBar } from "expo-status-bar";
+import { useAppSelector } from "../../Redux/hooks";
+import { RootState } from "../../Redux/store";
+import useDiamond from "../../hooks/useDiamond";
+import LottieView from "lottie-react-native";
 
-const PaymentDetail = () => {
+const PaymentDetail = ({navigation}: any) => {
+  const {diamond}= useAppSelector((state: RootState) => state.diamond)
+  const {user}= useAppSelector((state: RootState) => state.user)
+  const dataGolang = useAppSelector((state: RootState) => state.dataUserGolang.user);
+  const {snapMidtrans} = useAppSelector((state: RootState) => state.snapMidtrans)
+  const [loading, setLoading] = useState(false);
+
+  const handleCheckOut = () => {
+buydiamond()
+setLoading(true)
+};
+
+useEffect(() => {
+  if (snapMidtrans) {
+    navigation.navigate("Payment")
+  } 
+}, [snapMidtrans])
+
+  const {buydiamond}= useDiamond()
+ const amount =Number(diamond.amount).toLocaleString("id-ID",{style: "decimal", minimumFractionDigits: 0,  maximumFractionDigits:diamond.amount % 1 !== 0 ? 2 : 0,})
   return (
     <View style={styles.main}>
+      <StatusBar style="dark" />
       <View style={styles.container}>
         <View style={styles.card}>
           <Image
             style={styles.image}
             source={require("../../../assets/LogoAction/diamond-svgrepo-com.png")}
           />
-          <Text style={styles.textimage}>500</Text>
+          <Text style={styles.textimage}>{amount}</Text>
         </View>
       </View>
       <Text style={styles.textheader}>Detail Pemesan</Text>
       <View style={styles.invoice}>
         <Text>Nama</Text>
-        <Text style={styles.textname}>Dian Herdiana</Text>
+        <Text style={styles.textname}>{user.name}</Text>
 
         <Text>Email</Text>
-        <Text style={styles.textname}>dian@mail.com</Text>
+        <Text style={styles.textname}>{user.email}</Text>
 
         <Text>Item</Text>
-        <Text style={styles.textname}>500 diamonds</Text>
+        <Text style={styles.textname}>{amount} Diamonds</Text>
       </View>
       <View style={styles.checkoutcontainer}>
         <View>
-          <Text style={styles.item}>500 Diamonds</Text>
-          <Text style={styles.price}>Rp. 300.000</Text>
+          <Text style={styles.item}>{amount} Diamonds</Text>
+          <Text style={styles.price}>{Number(diamond.price).toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumFractionDigits: 0,
+                })}</Text>
         </View>
 
         <View>
-         <TouchableOpacity
+          {
+            loading?
+         <View
          style={styles.chekoutbutton}
          >
-          <Text style={styles.checkouttext}>Bayar</Text>
-         </TouchableOpacity>
+         <LottieView
+                  style={styles.lottieloading}
+                  autoPlay
+                  loop
+                  source={require("../../../assets/Animatiom/loadinganimation.json")}
+                />
+         </View>:
+          <TouchableOpacity
+          onPress={()=>handleCheckOut()}
+          style={styles.chekoutbutton}
+          >
+           <Text style={styles.checkouttext}>Bayar</Text>
+          </TouchableOpacity>
+          }
         </View>
       </View>
     </View>
@@ -90,7 +133,7 @@ const styles = StyleSheet.create({
   },
   invoice: {
     marginVertical: verticalScale(20),
-    width: horizontalScale(200),
+    width: horizontalScale(300),
     height: verticalScale(100),
     borderRadius: moderateScale(10),
     backgroundColor: "white",
@@ -130,5 +173,10 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: moderateScale(15),
     fontWeight: "bold",
-  }
+  },
+  lottieloading: {
+    width: horizontalScale(50),
+    height: verticalScale(50),
+    resizeMode: "contain",
+  },
 });

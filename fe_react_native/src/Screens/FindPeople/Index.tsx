@@ -18,7 +18,7 @@ import {
 import { useEffect, useState } from "react";
 
 const FindPeople = ({ navigation }: { navigation: any }) => {
-  const [countDown, setCountDown] = useState(20);
+  const [countDown, setCountDown] = useState(10);
   const [visibleSatu, setVisibleSatu] = useState(false);
   const [visibleDua, setVisibleDua] = useState(false);
   const [visibleTiga, setVisibleTiga] = useState(false);
@@ -43,15 +43,15 @@ useEffect (() => {
 
 useEffect(() => {
   
-    if (countDown === 18) {
+    if (countDown === 7) {
       setVisibleSatu(true);}
-      else if (countDown === 11) {
+      else if (countDown === 5) {
         setVisibleDua(true);
       }
-      else if (countDown === 7) {
+      else if (countDown === 4) {
         setVisibleTiga(true);
       }
-      else if (countDown === 5) {
+      else if (countDown === 3) {
         setVisibleEmpat(true);
       }
 }, [countDown])

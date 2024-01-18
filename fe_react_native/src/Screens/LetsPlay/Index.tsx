@@ -15,7 +15,7 @@ import {
   moderateScale,
   verticalScale,
 } from "../../themes/Metrixs";
-import { question } from "../../services/avatar";
+// import { question } from "../../services/avatar";
 import useQuestion from "../../hooks/useQuestion";
 
 const LetsPlay = () => {
@@ -63,7 +63,7 @@ const LetsPlay = () => {
   }, [countDown]);
 
   useEffect(() => {
-    if (currentPage < Math.ceil(question.length / ITEM_PERPAGE)) {
+    if (currentPage < Math.ceil(dataQuestion?.length / ITEM_PERPAGE)) {
       const interval = setInterval(() => {
         setCurrentPage(currentPage + 1);
         setBackground("#89CFF0");
@@ -158,7 +158,7 @@ const LetsPlay = () => {
         <View style={styles.footer}>
           <View style={styles.footerTextContainer}>
             <Text style={styles.footerText}>
-              {currentPage}/{question.length}
+              {currentPage}/{dataQuestion?.length}
             </Text>
             <Text style={styles.footerText}>Questions</Text>
           </View>

@@ -6,15 +6,14 @@ import {
   moderateScale,
 } from "../../themes/Metrixs";
 import useDiamond from "../../hooks/useDiamond";
-import LottieView from "lottie-react-native";
 import { useState } from "react";
-import { useAppSelector } from "../../Redux/hooks";
+import { useAppSelector , useAppDispatch} from "../../Redux/hooks";
 import { RootState } from "../../Redux/store";
-
+import { SAVE_DIAMOND } from "../../Redux/diamondSlice";
 
 type ModalProps = {
   setmodalOpen: any;
-  navigation: any;
+  navigation?: any;
 };
 const DiamondModal = ({ setmodalOpen, navigation }: ModalProps) => {
   const [visible, setVisible] = useState(false);
@@ -24,7 +23,7 @@ const DiamondModal = ({ setmodalOpen, navigation }: ModalProps) => {
     id_diamond: 0,
   });
   const { dataDiamond, buydiamond } = useDiamond();
-  const { snapMidtrans } = useAppSelector((state: RootState) => state.snapMidtrans)
+ const dispatch = useAppDispatch();
 
   const formatPrice = (price: number): string => {
     if (price >= 100000) {
@@ -39,23 +38,15 @@ const DiamondModal = ({ setmodalOpen, navigation }: ModalProps) => {
   const handleCheckOut = (item: any) => {
     setVisible(true);
     setSelectedDiamond(item);
+    dispatch(SAVE_DIAMOND(item))
   };
 
-  const handleConfirm = (item:any) => {
-    buydiamond(item);
-    if (snapMidtrans !== "") {
-      navigation.navigate("Payment");
-    }
-  }
+  const handleConfirm = (item: any) => {
+    setVisible(false);
+    navigation.navigate("PaymentDetail");
+  };
 
-  useEffect(() => {
-    console.log("ini dari diamond", snapMidtrans)
-    if (snapMidtrans !== "") {
-      navigation.navigate("Payment");
-    }
-  }, [snapMidtrans]);
- 
-
+  
   return (
     <>
       <View style={styles.modalContent}>

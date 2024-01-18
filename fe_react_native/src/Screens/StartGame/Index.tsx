@@ -24,6 +24,7 @@ import useLogin from "../../hooks/useLogin";
 import { useAppSelector } from "../../Redux/hooks";
 import { RootState } from "../../Redux/store";
 import EditAvatarPopUp from "../../Components/EditAvatarPopUp/Index";
+import useGetGolangToken from "../../hooks/useGetGolangToken";
 
 const StartGame = ({ navigation }: { navigation: any }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,6 +33,14 @@ const StartGame = ({ navigation }: { navigation: any }) => {
   const { dataUser } = useAppSelector((state: RootState) => state.dataUser);
   const { userlogin, isLoadingUserLogin } = useUser();
   const { handleLogout } = useLogin();
+  const { loginGolang } = useGetGolangToken();
+  const {user}= useAppSelector((state: RootState) => state.user)
+
+  // untuk dapat token golang biar bisa masuk ke midtrans
+  useEffect(() => {
+    loginGolang();
+  },[user])
+  
 
   return (
     <ImageBackground
@@ -128,7 +137,7 @@ const StartGame = ({ navigation }: { navigation: any }) => {
       </View>
       {isOpen && (
         <View style={styles.modalChageAvatar}>
-          <ChangeAvatarModal open={isOpen} setIsOpen={setIsOpen} />
+          <ChangeAvatarModal open={isOpen} setIsOpen={setIsOpen} navigation={navigation} />
         </View>
       )}
       {isOpenModalDiamond && (

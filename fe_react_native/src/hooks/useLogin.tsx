@@ -20,12 +20,12 @@ const useLogin = () => {
   const [initializing, setInitializing] = useState(false);
   const dispatch = useAppDispatch();
   const { dataUser } = useAppSelector((state: any) => state.dataUser);
-  const [errorMessage, setErrorMessage] = useState("");
+
   const [dataResgister, setDataResgister] = useState<any>({
     name: "",
     email: "",
     username: "",
-    password: "triviagameroot",
+    password: "roottrivia",
     profile: "",
   });
 
@@ -37,14 +37,9 @@ const useLogin = () => {
       });
       const { idToken } = await GoogleSignin.signIn();
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-      // registerUsertodb();
-      console.log("ini id token", idToken);
       return auth().signInWithCredential(googleCredential);
     } catch (error) {
       handleLogout();
-      console.log("ini error", error);
-    } finally {
-      setInitializing(false);
     }
   };
 
@@ -61,16 +56,19 @@ const useLogin = () => {
   const registerUsertodb = async () => {
     try {
       setInitializing(true);
-      const res = await apilaravel.post("http://192.168.18.169:8001/api/auth/registeruser", dataResgister);
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      const res = await apilaravel.post("auth/registeruser", dataResgister, {
+        headers,
+      });
       dispatch(SAVEUSER_ASYNCSTORE(res.data));
       saveDataUser();
-      console.log("ini response saat login", res.data);
+      // console.log("ini response saat login", res.data);
     } catch (error) {
-      console.log(error.response.data);
-      setErrorMessage(error.data.email);
+      console.log("ini response login laravel", error.response.data);
     }
   };
-
   const onAuthStateChanged = (user: any) => {
     if (user) {
       setDataResgister({
@@ -83,49 +81,21 @@ const useLogin = () => {
      
     }
   };
-
-  const data ={
-    email:"agungprayogi040701@gmail.com",
-    password:"roottrivia"
-  }
-
-
-  const {mutate:loginGolang}=useMutation(async()=>{
-    try {
-      const res = await apigolang.post("/login", data);
-      console.log(res.data);
-      dispatch(SAVEUSER_ASYNCSTORE(res.data.data));
-      saveDataUser();
-    } catch (error) {
-      console.log(error.response);
+  useEffect(() => {
+    if (dataResgister.email !== "") {
+      registerUsertodb();
     }
-    
-  })
-
- const {mutate:loginLaravel}=useMutation(async()=>{
-   try {
-    const res = await apilaravel.post("/auth/login", data);
-    dispatch(SAVEUSER_ASYNCSTORE(res.data));
-    saveDataUser();
-    console.log(res.data);
-    
-   } catch (error) {
-    console.log(error.response);
-   }
- })
-
-
-
+    console.log("ini data resgister", dataResgister);
+  }, [dataResgister]);
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
+    return () => subscriber();
   }, []);
 
-  // useEffect(() => {
-  //     console.log("data resgister", dataResgister);
-  //     }, [dataResgister]);
+ 
 
+ 
 
   const handleLogout = async () => {
     try {
@@ -139,7 +109,10 @@ const useLogin = () => {
       console.log(error);
     }
   };
-  return { submitLogin, initializing, handleLogout, errorMessage, loginGolang, loginLaravel };
+
+  
+
+  return { submitLogin, initializing, handleLogout };
 };
 
 export default useLogin;

@@ -19,24 +19,21 @@ import LottieView from "lottie-react-native";
 import useLogin from "../../hooks/useLogin";
 import { useAppSelector } from "../../Redux/hooks";
 import { RootState } from "../../Redux/store";
-import AlertPopUp from "../../Components/AlertPopUp/Index";
 
 const Login = ({ navigation }: { navigation: any }) => {
-  const { submitLogin, initializing, errorMessage, handleLogout, loginGolang, loginLaravel } = useLogin();
+  const { submitLogin, initializing} = useLogin();
 const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
   const [visible, setvisible] = useState(false);
 
   useEffect(() => {
-    if (dataUser.token) {
+    if (dataUser.status === "Done Register") {
       navigation.navigate("Choose Avatar");
+    } else if (dataUser.status === "Done login") {
+      navigation.navigate("Start Game");
     }
   }, [dataUser])
 
-  useEffect(() => {
-    if (errorMessage) {
-      setvisible(true);
-    }
-  }, [errorMessage, setvisible]);
+ 
 
   return (
     <ImageBackground
@@ -48,13 +45,13 @@ const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
         {
           visible?
         <View style={styles.containerconfirm}>
-          <AlertPopUp alertText={errorMessage} alertVisible={setvisible} />
+        
         </View>:
         <>
         <View>
           
           <TouchableOpacity
-            onPress={() =>loginGolang()}
+            onPress={() =>submitLogin()}
             style={styles.loginButton}
           >
             <Image
@@ -64,14 +61,15 @@ const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
             <Text style={styles.loginText}>sign in with google</Text>
           </TouchableOpacity>
         </View>
-        {/* <TouchableOpacity
+       {/* <TouchableOpacity
         onPress={()=>handleLogout()}
         >
           <Text>Logoout</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>  */}
         </>
         }
         {initializing? (
+          <View style={styles.overlay}>
           <View style={styles.animationContainer}>
             <LottieView
               source={require("../../../assets/Animatiom/loading.json")}
@@ -79,6 +77,7 @@ const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
               autoPlay
               style={styles.animationlogo}
             />
+          </View>
           </View>
         ) : null}
       </View>
@@ -97,14 +96,13 @@ const styles = StyleSheet.create({
     height: verticalScale(33),
     resizeMode: "contain",
   },
-  containerPopUp: {
+  overlay:{
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    justifyContent: "center",
-    alignItem: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
   },
   animationContainer: {
     position: "absolute",

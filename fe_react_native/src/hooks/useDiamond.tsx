@@ -3,14 +3,16 @@ import { apilaravel, apigolang } from "../Components/libs/api";
 import { useAppSelector, useAppDispatch } from "../Redux/hooks";
 
 import { RootState } from "../Redux/store";
-import { useEffect, useState } from "react";
 import useUser from "./useUser";
 import { SAVE_SNAP } from "../Redux/snapMidtransSlice";
+
 
 
 const useDiamond = () => {
 
   const { dataUser } = useAppSelector((state: RootState) => state.dataUser);
+  const {user} = useAppSelector((state: RootState) => state.dataUserGolang);
+  const {diamond} = useAppSelector((state: RootState) => state.diamond);
   const dispatch = useAppDispatch();
   const {refetchUserlogin} = useUser()
   const { data: dataDiamond } = useQuery("diamond", async () => {
@@ -30,25 +32,30 @@ const useDiamond = () => {
   //   console.log(dataUser.token);
   // }, []);
 
-  const { mutate: buydiamond } = useMutation(async (id: any) => {
+  const { mutate: buydiamond } = useMutation(async () => {
     try {
       const headers = {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${dataUser?.token}`,
+        Authorization: `Bearer ${user.token}`,
       };
       const response = await apigolang.post(
-        `/transaction/${id}`,
+        `/transaction/${diamond.dimaond_id}`,
         {},
         { headers }
       );
       dispatch(SAVE_SNAP(response.data.data))
       console.log(response.data.data);
     } catch (error) {
-      console.log(error.response.data);
+      console.log("error snap",error.response);
+    }
+  },
+  {
+    onSuccess: () => {
+      refetchUserlogin()
     }
   });
 
-  const { mutate: buyAvatarbyDiamond } = useMutation(async (id: any) => {
+  const { mutate: buyAvatarbyDiamond, isLoading: isLoadingBuyAvatar, isSuccess:isSuccessBuyAvatar } = useMutation(async (id: any) => {
     try {
       const headers = {
         "Content-Type": "application/json",
@@ -58,7 +65,7 @@ const useDiamond = () => {
         `/transaction/userbuyavatar/${id}`,{},{ headers }
       );
       
-      console.log(response.data);
+      // console.log("response beli avatar",response);
     } catch (error) {
       console.log(error.response);
     }
@@ -75,6 +82,9 @@ const useDiamond = () => {
     dataDiamond,
     buydiamond,
     buyAvatarbyDiamond,
+    isLoadingBuyAvatar,
+    isSuccessBuyAvatar,
+  
    
   };
 };

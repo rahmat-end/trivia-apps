@@ -5,7 +5,8 @@ type dataUserState = {
     dataUser: {
         token: string;
         userid: string;
-        name: string
+        status: string;
+    
       
     };
 };
@@ -14,7 +15,8 @@ const initialState: dataUserState = {
     dataUser: {
         token: "",
         userid: "",
-        name: ""
+        status: "",
+      
     }
 }
 
@@ -23,9 +25,9 @@ const dataUserSlice =createSlice ({
     name:"dataUser",
     reducers:{
         SAVE_USER: (state, action) => {        
-            // state.dataUser.name = action.payload.name
             state.dataUser.token = action.payload.token
-            state.dataUser.userid = action.payload.user_id
+            state.dataUser.userid = action.payload.user
+            state.dataUser.status = action.payload.Success
             
            
         },
@@ -38,6 +40,7 @@ const dataUserSlice =createSlice ({
         REMOVE_DATAUSER: (state) => {
             state.dataUser.token = ""
             state.dataUser.userid = ""
+            state.dataUser.status = ""
             
         }
     }

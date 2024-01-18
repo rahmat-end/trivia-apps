@@ -12,18 +12,19 @@ import useUser from "../../hooks/useUser";
 import DiamondModal from "../DiamondPopUp";
 import useDiamond from "../../hooks/useDiamond";
 
-
 type ModalProps = {
   open?: boolean;
   setIsOpen: any;
+  navigation?: any;
 };
-const ChangeAvatarModal = ({ open, setIsOpen }: ModalProps) => {
+const ChangeAvatarModal = ({ open, setIsOpen, navigation }: ModalProps) => {
   const [visible, setVisible] = useState(false);
   const { userlogin } = useUser();
   const { avatarpaid } = useAvatar();
   const [visibleNull, setVisibleNull] = useState(false);
-  const[popUpdiamondvisible,setPopUpdiamondvisible]=useState(false)
-  const {buyAvatarbyDiamond}=useDiamond()
+  const [popUpdiamondvisible, setPopUpdiamondvisible] = useState(false);
+  const { buyAvatarbyDiamond, isLoadingBuyAvatar, isSuccessBuyAvatar } =
+    useDiamond();
   const [selectedAvatar, setSelectedAvatar] = useState({
     photo_buyavatar: "",
     price_buyavatar: 0,
@@ -96,9 +97,12 @@ const ChangeAvatarModal = ({ open, setIsOpen }: ModalProps) => {
               source={require("../../../assets/Animatiom/emptybox.json")}
               autoPlay
             />
-            <TouchableOpacity 
-            onPress={() => {setPopUpdiamondvisible(true)}}
-            style={styles.topupdiamond}>
+            <TouchableOpacity
+              onPress={() => {
+                setPopUpdiamondvisible(true);
+              }}
+              style={styles.topupdiamond}
+            >
               <Text style={styles.topupText}>Buy Diamond</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -117,10 +121,19 @@ const ChangeAvatarModal = ({ open, setIsOpen }: ModalProps) => {
       {visible && (
         <View style={styles.overlayConfirm}>
           <View style={styles.confirmContainer}>
-            <Text style={styles.confirmheader}>
-              You Want to Buy this Avatar
-            </Text>
-            <Text style={styles.confirmmessage}>
+            {isSuccessBuyAvatar ? (
+              <>
+                <Text style={styles.confirmheader}>
+                  Avatar's Purchase was Succesfull
+                </Text>
+                <Text>Check new avatar on your avatar's collections</Text>
+              </>
+            ) : (
+              <>
+              <Text style={styles.confirmheader}>
+                You Want to Buy this Avatar
+              </Text>
+              <Text style={styles.confirmmessage}>
               your balance is {userlogin?.diamond}{" "}
             </Text>
             <Image
@@ -136,11 +149,27 @@ const ChangeAvatarModal = ({ open, setIsOpen }: ModalProps) => {
                 {selectedAvatar.price_buyavatar}
               </Text>
             </View>
-            <TouchableOpacity 
-            onPress={()=>buyAvatarbyDiamond(selectedAvatar.id_buyavatar)}
-            style={styles.topupdiamond}>
-              <Text style={styles.topupText}>Buy Avatar</Text>
-            </TouchableOpacity>
+            {isLoadingBuyAvatar ? (
+              <View style={styles.topupdiamondloading}>
+                <LottieView
+                  style={styles.lottieloading}
+                  autoPlay
+                  loop
+                  source={require("../../../assets/Animatiom/loadinganimation.json")}
+                />
+              </View>
+            ) : (
+              <TouchableOpacity
+                onPress={() => buyAvatarbyDiamond(selectedAvatar.id_buyavatar)}
+                style={styles.topupdiamond}
+              >
+                <Text style={styles.topupText}>Buy Avatar</Text>
+              </TouchableOpacity>
+            )}
+              </>
+            )}
+
+            
             <TouchableOpacity
               style={styles.closebuttondua}
               onPress={() => setVisible(false)}
@@ -153,15 +182,12 @@ const ChangeAvatarModal = ({ open, setIsOpen }: ModalProps) => {
           </View>
         </View>
       )}
-      {
-        popUpdiamondvisible && (
-          <View style={styles.modalChageAvatar}>
-            <DiamondModal setmodalOpen={setPopUpdiamondvisible}/>
-           
-
-          </View>
-        )
-      }
+      {popUpdiamondvisible && (
+        <View style={styles.modalChageAvatar}>
+          <DiamondModal setmodalOpen={setPopUpdiamondvisible} />
+        </View>
+      )}
+      
     </>
   );
 };
@@ -285,6 +311,11 @@ const styles = StyleSheet.create({
     height: verticalScale(100),
     resizeMode: "contain",
   },
+  lottieloading: {
+    width: horizontalScale(50),
+    height: verticalScale(50),
+    resizeMode: "contain",
+  },
   topupdiamond: {
     width: horizontalScale(150),
     height: verticalScale(40),
@@ -293,6 +324,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: verticalScale(20),
     backgroundColor: "#318CE7",
+  },
+  topupdiamondloading: {
+    width: horizontalScale(150),
+    height: verticalScale(40),
+    borderRadius: moderateScale(10),
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: verticalScale(20),
+    backgroundColor: "#808080",
   },
   topupText: {
     color: "white",
@@ -318,5 +358,16 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  overlay: {
+    position: "absolute",
+    backgroundColor: "rgba(0,0,0,0.5)",
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    zIndex: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

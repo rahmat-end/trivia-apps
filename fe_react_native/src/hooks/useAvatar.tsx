@@ -17,11 +17,20 @@ type editDataUSer = {
 };
 const useAvatar = () => {
   const [avatar, setAvatar] = useState("");
-  const {userlogin} = useUser()
+  const {userlogin, refetchUserlogin} = useUser()
   const [addDataUser, setAddDataUser] = useState<editDataUSer>({
     name: "",
     email: "",
     username: "",
+    avatar: "",
+    profile: "",
+    password: "",
+  });
+
+  const [updateAvatarOnly, setUpdateAvatarOnly] = useState({
+    name: "",
+    email: "",
+    username:"",
     avatar: "",
     profile: "",
     password: "",
@@ -39,7 +48,7 @@ const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
         const response = await apigolang.get(
           "/freeavatars", { headers }
         );
-        console.log(response.data.data);
+        // console.log(response.data.data);
         return response.data.data;
       } catch (error) {
         console.log(error.data);
@@ -47,7 +56,7 @@ const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
     }
   );
 
-  const {data:avatarpaid }= useQuery('avatarpaid', async ()=>{
+  const {data:avatarpaid}= useQuery('avatarpaid', async ()=>{
     try {
       const headers = {
         "Content-Type": "application/json",
@@ -71,10 +80,56 @@ const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
     });
   };
 
+  const handleUpdateAvatarOnly =()=>{
+    setUpdateAvatarOnly({
+      ...updateAvatarOnly,
+      name: "thisisrealme",
+      username:"helloworld",
+      email: userlogin?.email,
+      profile: userlogin?.profile,
+      password: "roottrivia",
+      avatar: avatar,
+    })
+  }
+
   useEffect(() => {
-    console.log("data submit aba",addDataUser);
-    console.log(avatar);
-  }, [addDataUser, avatar]);
+    if(avatar !== ""){
+      handleUpdateAvatarOnly()
+    }
+  }, [avatar]);
+
+  // useEffect(() => {
+  //   console.log("data submit data",addDataUser);
+  //   console.log("ini avatar",avatar);
+  //   console.log("ini update avatar only",updateAvatarOnly);
+  // }, [addDataUser, avatar, handleUpdateAvatarOnly, updateAvatarOnly]);
+
+  const {mutate:updateAvatar, isLoading:updateAvatarLoading } = useMutation(async ()=>{
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        
+      };
+      const response = await apilaravel.put(
+        `/userprofile/update/${userlogin?.user_id}`,
+        updateAvatarOnly,
+        {
+          headers,
+        }
+      );
+      console.log("ini response",response.data);
+      return response.data
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  },
+  {
+    onSuccess : ()=>{
+      refetchUserlogin()
+    }
+  }
+  
+  )
 
   const {
     mutate: createUser,
@@ -94,8 +149,6 @@ const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
           headers,
         }
       );
-      // dispatch(SAVEUSER_ASYNCSTORE(response.data.user));
-      // saveDataUser();
       console.log("ini response",response.data);
       return response.data;
     } catch (error) {
@@ -104,7 +157,7 @@ const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
   });
 
 
-  const {data:getUserPaidAvatar, refetch:refetchUserPaidAvatar} = useQuery('getUserPaidAvatar', async ()=>{
+  const {data:getUserPaidAvatar, refetch:refetchUserPaidAvatar, isLoading: isLoadingUserPaidAvatar} = useQuery('getUserPaidAvatar', async ()=>{
     try {
       const headers = {
         "Content-Type": "application/json",
@@ -116,6 +169,8 @@ const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
       console.log(error.response);
     }
   })
+
+  
 
   const saveDataUser = async () => {
     try {
@@ -143,7 +198,10 @@ const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
     avatar,
     createUserLoading,
     saveDataUser,
-    avatarpaid
+    avatarpaid,
+    isLoadingUserPaidAvatar,
+    updateAvatar,
+    updateAvatarLoading
   };
 };
 

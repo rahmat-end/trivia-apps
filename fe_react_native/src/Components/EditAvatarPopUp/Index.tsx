@@ -7,6 +7,7 @@ import {
 import React, { useEffect, useState } from "react";
 import useAvatar from "../../hooks/useAvatar";
 import { avatar } from "../../services/avatar";
+import LottieView from "lottie-react-native";
 
 type Props = {
   open?: boolean;
@@ -14,29 +15,26 @@ type Props = {
 };
 
 const EditAvatarPopUp = ({ open, setIsOpen }: Props) => {
-  const { dataAvatar, getUserPaidAvatar } = useAvatar();
+  const { dataAvatar, getUserPaidAvatar, isLoadingUserPaidAvatar, setAvatar, updateAvatar,updateAvatarLoading } =
+    useAvatar();
   const avatarSuggest = avatar.slice(0, 3);
   const [isActive, setIsActive] = useState(-1);
   const [isActiveFree, setIsActiveFree] = useState(-1);
   const [visibleSuggest, setVisibleSuggest] = useState(false);
-
-  const test = () => {
-    getUserPaidAvatar?.map((item: any) => {
-      console.log(item.buy_avatar);
-    });
-  };
 
   useEffect(() => {
     if (getUserPaidAvatar?.length < 6) {
       setVisibleSuggest(true);
     }
   }, [getUserPaidAvatar]);
-  const handleActive = (index: number) => {
+  const handleActive = (index: number, item: any) => {
+    setAvatar(item);
     setIsActive(index);
   };
 
-  const handleActiveFree = (index: number) => {
+  const handleActiveFree = (index: number, item: any) => {
     setIsActiveFree(index);
+    setAvatar(item);
   };
   return (
     <View style={styles.modalContent}>
@@ -51,20 +49,62 @@ const EditAvatarPopUp = ({ open, setIsOpen }: Props) => {
       </TouchableOpacity>
       <Text style={styles.text}>Change Your Avatar</Text>
       {/* Free avatar */}
-      {visibleSuggest && (
+      {isLoadingUserPaidAvatar ? (
         <>
-          <Text>Free Avatar Suggestions for you</Text>
-          <TouchableOpacity style={styles.avatarcontainer}>
-            {avatarSuggest.map((item: any, index: number) => {
-              const active = index === isActiveFree;
+          <LottieView
+            autoPlay
+            loop
+            style={styles.lottie}
+            source={require("../../../assets/Animatiom/loadinganimation.json")}
+          />
+        </>
+      ) : (
+        <>
+          {visibleSuggest && (
+            <>
+              <Text>Free Avatar Suggestions for you</Text>
+              <TouchableOpacity style={styles.avatarcontainer}>
+                {avatarSuggest.map((item: any, index: number) => {
+                  const active = index === isActiveFree;
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => handleActiveFree(index, item)}
+                      style={styles.avatarbackground}
+                    >
+                      <Image
+                        style={styles.avatarImage}
+                        source={{ uri: item.avatar }}
+                      />
+                      {active ? (
+                        <Image
+                          style={styles.avatarchoose}
+                          source={require("../../../assets/LogoAction/choose.png")}
+                        />
+                      ) : null}
+                    </TouchableOpacity>
+                  );
+                })}
+              </TouchableOpacity>
+            </>
+          )}
+          {/* Paid avatar collection */}
+
+          <Text>Your Collection</Text>
+          <View style={styles.avatarcontainer}>
+            {getUserPaidAvatar?.map((item: any, index: number) => {
+              const active = index === isActive;
               return (
                 <TouchableOpacity
-                  onPress={() => handleActiveFree(index)}
+                  key={index}
+                  onPress={() =>
+                    handleActive(index, item.buy_avatar.photo_buyavatar)
+                  }
                   style={styles.avatarbackground}
                 >
                   <Image
                     style={styles.avatarImage}
-                    source={{ uri: item.avatar }}
+                    source={{ uri: item.buy_avatar.photo_buyavatar }}
                   />
                   {active ? (
                     <Image
@@ -75,34 +115,25 @@ const EditAvatarPopUp = ({ open, setIsOpen }: Props) => {
                 </TouchableOpacity>
               );
             })}
-          </TouchableOpacity>
+          </View>
         </>
       )}
-      {/* Paid avatar collection */}
-
-      <Text>Your Collection</Text>
-      <View style={styles.avatarcontainer}>
-        {getUserPaidAvatar?.map((item: any, index: number) => {
-          const active = index === isActive;
-          return (
-            <TouchableOpacity
-              onPress={() => handleActive(index)}
-              style={styles.avatarbackground}
-            >
-              <Image
-                style={styles.avatarImage}
-                source={{ uri: item.buy_avatar.photo_buyavatar }}
-              />
-              {active ? (
-                <Image
-                  style={styles.avatarchoose}
-                  source={require("../../../assets/LogoAction/choose.png")}
-                />
-              ) : null}
-            </TouchableOpacity>
-          );
-        })}
-      </View>
+      <TouchableOpacity 
+      onPress={()=>updateAvatar()}
+      style={styles.topupdiamond}>
+        {
+          updateAvatarLoading?
+          <>
+          <LottieView
+            autoPlay
+            loop
+            style={styles.lottie}
+            source={require("../../../assets/Animatiom/loadinganimation.json")}
+          />
+        </>:
+        <Text style={styles.topuptext}>Update Avatar</Text>
+        }
+      </TouchableOpacity>
     </View>
   );
 };
@@ -118,7 +149,7 @@ const styles = StyleSheet.create({
     padding: moderateScale(10),
     position: "relative",
     alignItems: "center",
-    // justifyContent: "center",
+    justifyContent: "center",
   },
   avatarcontainer: {
     flexDirection: "row",
@@ -163,4 +194,22 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
+  lottie: {
+    width: horizontalScale(50),
+    height: verticalScale(50),
+  },
+  topupdiamond: {
+    width: horizontalScale(150),
+    height: verticalScale(40),
+    borderRadius: moderateScale(10),
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: verticalScale(50),
+    backgroundColor: "#AFE1AF",
+  },
+  topuptext: {
+    fontSize: moderateScale(15),
+    fontWeight: "bold",
+    color: "white",
+  }
 });
