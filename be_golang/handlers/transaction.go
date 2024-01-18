@@ -33,9 +33,6 @@ func HandlerTransaction(TransactionRepository repositories.TransactionRepository
 }
 
 func (h *handlerTransaction) FindTransactions(c echo.Context) error {
-	// userLogin := c.Get("userLogin")
-	// userId := userLogin.(jwt.MapClaims)["id"].(float64)
-
 	transactions, err := h.TransactionRepository.FindTransactions()
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
@@ -88,9 +85,8 @@ func (h *handlerTransaction) CreateTransaction(c echo.Context) error {
 		AmountDiamond: diamond.AmountDiamond,
 		TotalPrice:    diamond.PriceDiamond,
 		Status:        "pending",
-		// UserId:        int(userId),
-		UserId:    user.UserId,
-		IdDiamond: IdDiamond,
+		UserId:        user.UserId,
+		IdDiamond:     IdDiamond,
 	}
 
 	dataTransactions, err := h.TransactionRepository.CreateTransaction(transaction)
@@ -130,50 +126,49 @@ func (h *handlerTransaction) CreateTransaction(c echo.Context) error {
 	snapResp, _ := s.CreateTransaction(req)
 
 	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: snapResp})
-
 	// return c.JSON(http.StatusOK, dto.ErrorResult{Code: http.StatusOK, Message: "user id is : " + fmt.Sprintf("%.0f", userId) + " diamond price is : " + strconv.Itoa(diamond.PriceDiamond)})
 	// return c.JSON(http.StatusOK, dto.ErrorResult{Code: http.StatusOK, Message: "diamond is " + strconv.Itoa(diamond.PriceDiamond) + " session id is: " + userId})
 }
 
-// func (h *handlerTransaction) Notification(c echo.Context) error {
-// 	var notificationPayload map[string]interface{}
+func (h *handlerTransaction) Notification(c echo.Context) error {
+	var notificationPayload map[string]interface{}
 
-// 	if err := c.Bind(&notificationPayload); err != nil {
-// 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
-// 	}
+	if err := c.Bind(&notificationPayload); err != nil {
+		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
+	}
 
-// 	transactionStatus := notificationPayload["transaction_status"].(string)
-// 	fraudStatus := notificationPayload["fraud_status"].(string)
-// 	orderId := notificationPayload["order_id"].(string)
+	transactionStatus := notificationPayload["transaction_status"].(string)
+	fraudStatus := notificationPayload["fraud_status"].(string)
+	orderId := notificationPayload["order_id"].(string)
 
-// 	// order_id, _ := strconv.Atoi(orderId)
+	order_id, _ := strconv.Atoi(orderId)
 
-// 	fmt.Print("ini payloadnya", notificationPayload)
+	fmt.Print("ini payloadnya", notificationPayload)
 
-// 	// if transactionStatus == "capture" {
-// 	// 	if fraudStatus == "challenge" {
-// 	// 		// TODO set transaction status on your database to 'challenge'
-// 	// 		// e.g: 'Payment status challenged. Please take action on your Merchant Administration Portal
-// 	// 		h.TransactionRepository.UpdateTransaction("pending", order_id)
-// 	// 	} else if fraudStatus == "accept" {
-// 	// 		// TODO set transaction status on your database to 'success'
-// 	// 		h.TransactionRepository.UpdateTransaction("success", order_id)
-// 	// 	}
-// 	// } else if transactionStatus == "settlement" {
-// 	// 	// TODO set transaction status on your databaase to 'success'
-// 	// 	h.TransactionRepository.UpdateTransaction("success", order_id)
-// 	// } else if transactionStatus == "deny" {
-// 	// 	// TODO you can ignore 'deny', because most of the time it allows payment retries
-// 	// 	// and later can become success
-// 	// 	h.TransactionRepository.UpdateTransaction("failed", order_id)
-// 	// } else if transactionStatus == "cancel" || transactionStatus == "expire" {
-// 	// 	// TODO set transaction status on your databaase to 'failure'
-// 	// 	h.TransactionRepository.UpdateTransaction("failed", order_id)
-// 	// } else if transactionStatus == "pending" {
-// 	// 	// TODO set transaction status on your databaase to 'pending' / waiting payment
-// 	// 	h.TransactionRepository.UpdateTransaction("pending", order_id)
-// 	// }
+	if transactionStatus == "capture" {
+		if fraudStatus == "challenge" {
+			// TODO set transaction status on your database to 'challenge'
+			// e.g: 'Payment status challenged. Please take action on your Merchant Administration Portal
+			h.TransactionRepository.UpdateTransaction("pending", order_id)
+		} else if fraudStatus == "accept" {
+			// TODO set transaction status on your database to 'success'
+			h.TransactionRepository.UpdateTransaction("success", order_id)
+		}
+	} else if transactionStatus == "settlement" {
+		// TODO set transaction status on your databaase to 'success'
+		h.TransactionRepository.UpdateTransaction("success", order_id)
+	} else if transactionStatus == "deny" {
+		// TODO you can ignore 'deny', because most of the time it allows payment retries
+		// and later can become success
+		h.TransactionRepository.UpdateTransaction("failed", order_id)
+	} else if transactionStatus == "cancel" || transactionStatus == "expire" {
+		// TODO set transaction status on your databaase to 'failure'
+		h.TransactionRepository.UpdateTransaction("failed", order_id)
+	} else if transactionStatus == "pending" {
+		// TODO set transaction status on your databaase to 'pending' / waiting payment
+		h.TransactionRepository.UpdateTransaction("pending", order_id)
+	}
 
-// 	// return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: notificationPayload})
-// 	return c.JSON(http.StatusOK, dto.ErrorResult{Code: http.StatusOK, Message: "transaction status is : " + transactionStatus + " fraud status is: " + fraudStatus + " order id is: " + orderId})
-// }
+	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: notificationPayload})
+	// return c.JSON(http.StatusOK, dto.ErrorResult{Code: http.StatusOK, Message: "transaction status is : " + transactionStatus + " fraud status is: " + fraudStatus + " order id is: " + orderId})
+}
