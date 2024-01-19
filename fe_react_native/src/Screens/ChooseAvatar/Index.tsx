@@ -46,9 +46,9 @@ const ChooseAvatar = ({ navigation }: { navigation: any }) => {
   const [usernameAlertVisible, setUsernameAlertVisible] = useState(false);
   const [isActive, setIsActive] = useState(-1);
 
-useEffect(() => {
-  console.log("ini userlogin", dataAvatar)
-}, [dataAvatar])
+// useEffect(() => {
+//   console.log("ini userlogin", dataAvatar)
+// }, [dataAvatar])
 
 
   const handleSubmitAvatar = () => {

@@ -21,12 +21,13 @@ import {
 } from "../../themes/Metrixs";
 import useUser from "../../hooks/useUser";
 import useLogin from "../../hooks/useLogin";
-import { useAppSelector } from "../../Redux/hooks";
+import { useAppSelector, useAppDispatch } from "../../Redux/hooks";
 import { RootState } from "../../Redux/store";
 import EditAvatarPopUp from "../../Components/EditAvatarPopUp/Index";
 import useGetGolangToken from "../../hooks/useGetGolangToken";
 import { socket } from "../../Components/libs/socket";
-
+import { io } from "socket.io-client";
+import { SAVE_PLAYER } from "../../Redux/dataPlayerSlice";
 
 const StartGame = ({ navigation }: { navigation: any }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,40 +37,82 @@ const StartGame = ({ navigation }: { navigation: any }) => {
   const { userlogin, isLoadingUserLogin } = useUser();
   const { handleLogout } = useLogin();
   const { loginGolang } = useGetGolangToken();
-  const {user}= useAppSelector((state: RootState) => state.user)
- 
-  const handleCreateRoom = async () => {
-    
-    try {
-      const messageData = {
-        name: userlogin?.name,
-        email: userlogin?.email,
-        avatar: userlogin?.avatar
-      }
-      
-        socket.emit("view", messageData)
-        // navigation.navigate("Find People");
-    } catch (error) {
-      console.log(error)
-    }
- 
-  }
+  const { user } = useAppSelector((state: RootState) => state.user);
+  const { dataplayer } = useAppSelector((state: RootState) => state.dataplayer);
+  const dispatch = useAppDispatch();
+  const [dataPlayer, setDataPlayer] = useState([]);
+  // const [socket, setSocket] = useState(null);
+
+  // const handleCreateRoom = async () => {
+
+  //   try {
+  //     const messageData = {
+  //       name: userlogin?.name,
+  //       email: userlogin?.email,
+  //       avatar: userlogin?.avatar
+  //     }
+
+  //       socket.emit("sendDataProfile", messageData)
+  //       navigation.navigate("Find People");
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+
+  // }
+
+  // const [socket, setSocket] = useState(null);
+  const data = {
+    name: userlogin?.name,
+    email: userlogin?.email,
+    avatar: userlogin?.avatar,
+  };
+  // const connectToSocket = () => {
+  //   const newSocket = io("http://192.168.18.169:3000");
+  //   newSocket.on("connect", () => {
+  //     console.log("Terhubung ke server Socket.IO");
+  //   });
+  //   const data = {
+  //     name: userlogin?.name,
+  //     email: userlogin?.email,
+  //     avatar: userlogin?.avatar,
+  //   };
+  //   newSocket.emit("recive", data);
+  //   setSocket(newSocket);
+  //   navigation.navigate("Find People");
+
+  // };
 
   // useEffect(() => {
-  //   socket.emit('joinRoom', 'room1');
-  //   socket.on('message', (data) => {
-  //     console.log(data)
-  //   })
-  // }, [])
+  //   socket?.on("view", (data: any) => {
+  //     let users: any = [];
+  //     users.push(data.data);
+  //     setDataPlayer([...dataPlayer, ...users]);
+  //     dispatch(SAVE_PLAYER(dataPlayer));
+  //   });
 
+  // }, [connectToSocket]);
 
+  // useEffect(() => {
+  //  console.log(dataplayer, "ini data player");
+  //  if(dataplayer.length > 0){
+  //   navigation.navigate("Find People");
+  //  }
+  // }, [dataplayer]);
+
+  // useEffect(() => {
+  //   console.log(dataplayer, "ini data player");
+  // },[dataplayer])
+
+  const localSocket = () => {
+    socket.emit("sendDataProfile", data);
+    navigation.navigate("Find People");
+  };
 
   // untuk dapat token golang biar bisa masuk ke midtrans
+
   useEffect(() => {
     loginGolang();
-  },[user])
-  
-
+  }, [user]);
 
   return (
     <ImageBackground
@@ -110,10 +153,14 @@ const StartGame = ({ navigation }: { navigation: any }) => {
           <View style={styles.container}>
             <View style={styles.containerAvatar}>
               <TouchableOpacity onPress={() => setIsOpen(true)}>
-                <Image
-                  style={styles.avatar}
-                  source={{ uri: userlogin?.avatar }}
-                />
+                {userlogin?.avatar ? (
+                  <>
+                    <Image
+                      style={styles.avatar}
+                      source={{ uri: userlogin?.avatar }}
+                    />
+                  </>
+                ) : null}
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => setEditAvatarVisible(true)}
@@ -158,21 +205,24 @@ const StartGame = ({ navigation }: { navigation: any }) => {
         </TouchableOpacity>
 
         <View style={styles.containerButton}>
-          <Button
-          onPress={() => handleCreateRoom()}
-            // onPress={() => navigation.navigate("Find People")}
-            text="Let's Play"
-          />
+          <Button onPress={() => localSocket()} text="Let's Play" />
         </View>
       </View>
       {isOpen && (
         <View style={styles.modalChageAvatar}>
-          <ChangeAvatarModal open={isOpen} setIsOpen={setIsOpen} navigation={navigation} />
+          <ChangeAvatarModal
+            open={isOpen}
+            setIsOpen={setIsOpen}
+            navigation={navigation}
+          />
         </View>
       )}
       {isOpenModalDiamond && (
         <View style={styles.modalChageAvatar}>
-          <DiamondModal setmodalOpen={setIsOpenModalDiamond} navigation={navigation} />
+          <DiamondModal
+            setmodalOpen={setIsOpenModalDiamond}
+            navigation={navigation}
+          />
         </View>
       )}
       {isLoadingUserLogin && (
@@ -187,7 +237,10 @@ const StartGame = ({ navigation }: { navigation: any }) => {
       )}
       {editAvatarVisible && (
         <View style={styles.modalChageAvatar}>
-          <EditAvatarPopUp open={editAvatarVisible} setIsOpen={setEditAvatarVisible} />
+          <EditAvatarPopUp
+            open={editAvatarVisible}
+            setIsOpen={setEditAvatarVisible}
+          />
         </View>
       )}
     </ImageBackground>

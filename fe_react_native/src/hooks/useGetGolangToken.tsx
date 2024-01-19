@@ -11,7 +11,7 @@ const useGetGolangToken = () => {
     const dispatch = useAppDispatch();
     const data = {
         email: user.email,
-        password:"roottrivia"
+        password:"roottrivia",
     }
 
     const { mutate: loginGolang } = useMutation(async () => {

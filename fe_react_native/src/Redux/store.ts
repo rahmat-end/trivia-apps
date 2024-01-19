@@ -4,6 +4,7 @@ import userDataReducer from './dataUserSlice'
 import snapMidtransReducer from './snapMidtransSlice'
 import dataUserGolangReducer from './dataUserGolangSlice'
 import diamondReducer from './diamondSlice'
+import dataPlayerReducer from './dataPlayerSlice'
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
     dataUser: userDataReducer,
     snapMidtrans: snapMidtransReducer,
     dataUserGolang: dataUserGolangReducer,
-    diamond: diamondReducer
+    diamond: diamondReducer,
+    dataplayer: dataPlayerReducer
   
   },
 })

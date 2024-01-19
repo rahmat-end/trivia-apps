@@ -15,8 +15,9 @@ import {
   moderateScale,
   verticalScale,
 } from "../../themes/Metrixs";
-// import { question } from "../../services/avatar";
 import useQuestion from "../../hooks/useQuestion";
+import {socket} from "../../Components/libs/socket";
+import useUser from "../../hooks/useUser";
 
 const LetsPlay = () => {
   const { dataQuestion } = useQuestion();
@@ -26,6 +27,7 @@ const LetsPlay = () => {
   const [background, setBackground] = useState("#89CFF0");
   const [bgClientAnswer, setBgClientAnswer] = useState("#008080");
   const [score, setScore] = useState(0);
+  const {userlogin} = useUser()
 
 
   useEffect(() => {
@@ -41,7 +43,23 @@ const LetsPlay = () => {
 
   const handleAnswer = (index: number) => {
     setClientAnswer(index);
+    // const data = {
+    //   email: userlogin?.email,
+    //   name: userlogin?.name,
+    //   avatar: userlogin?.avatar,
+    //   answer: index,
+    //   currentQuestion: currentPage
+    // }
+    // socket.emit("answerClient", data)
   };
+
+
+  // useEffect(() => {
+  //   socket.on("collectAnswer", (data)=>
+  //   {
+  //     console.log("ini collect answer", data)
+  //   })
+  // }, []);
 
   const [currentPage, setCurrentPage] = useState(1);
   const ITEM_PERPAGE: number = 1;
@@ -71,7 +89,7 @@ const LetsPlay = () => {
         setCountDown(9);
         setClientAnswer(-1);
         setRightAnswer(-1);
-      }, 1500);
+      }, 10000);
       return () => clearInterval(interval);
     }
   }, [countDown, currentPage]);
@@ -79,7 +97,7 @@ const LetsPlay = () => {
   useEffect(() => {
     if (clientAnswer === rightAnswer) {
       if (rightAnswer >= 0) {
-        // Alert.alert("Correct Answer");
+
         setScore(score + 1);
         setBgClientAnswer("#00A36C");
       }
@@ -114,6 +132,7 @@ const LetsPlay = () => {
 
                 return (
                   <TouchableOpacity
+                  key={index}
                     onPress={() => handleAnswer(index)}
                     style={[
                       styles.button,
@@ -126,9 +145,9 @@ const LetsPlay = () => {
                       },
                     ]}
                   >
-                    <Image 
+                    {/* <Image 
                     style={styles.avatar}
-                    source={require("../../../assets/Avatar/avatar.png")} />
+                    source={require("../../../assets/Avatar/avatar.png")} /> */}
                     <Text style={styles.textAnswer}>{item.answer}</Text>
                   </TouchableOpacity>
                 );
@@ -255,6 +274,7 @@ const styles = StyleSheet.create({
     width: horizontalScale(30),
     borderRadius: moderateScale(100),
     position: "absolute",
-    top: verticalScale(-15),
+    top: verticalScale(0),
+    left: horizontalScale(0),
   }
 });

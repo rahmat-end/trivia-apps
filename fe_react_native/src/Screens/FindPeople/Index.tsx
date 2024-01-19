@@ -9,7 +9,6 @@ import {
 import React from "react";
 import { StatusBar } from "expo-status-bar";
 import LottieView from "lottie-react-native";
-import { findPeople } from "../../services/avatar";
 import {
   horizontalScale,
   verticalScale,
@@ -17,6 +16,8 @@ import {
 } from "../../themes/Metrixs";
 import { useEffect, useState } from "react";
 import useUser from "../../hooks/useUser";
+import { useAppSelector } from "../../Redux/hooks";
+import { RootState } from "../../Redux/store";
 import { socket } from "../../Components/libs/socket";
 
 const FindPeople = ({ navigation }: { navigation: any }) => {
@@ -24,10 +25,11 @@ const FindPeople = ({ navigation }: { navigation: any }) => {
   const [visibleSatu, setVisibleSatu] = useState(false);
   const [visibleDua, setVisibleDua] = useState(false);
   const [visibleTiga, setVisibleTiga] = useState(false);
-  const [visibleEmpat, setVisibleEmpat] = useState(false);  
+  const [visibleEmpat, setVisibleEmpat] = useState(false);
   const [dataPlayer, setDataPlayer] = useState([]);
-  const {userlogin} = useUser();
- 
+  const { userlogin } = useUser();
+// const {dataplayer} = useAppSelector((state: RootState) => state.dataplayer)
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (countDown > 0) {
@@ -37,42 +39,40 @@ const FindPeople = ({ navigation }: { navigation: any }) => {
     return () => clearInterval(interval);
   }, [countDown]);
 
-// useEffect (() => {
-//   if (countDown === 0) {
-//     navigation.navigate("LetsPlay");
-//   }
-// }, [countDown])
+  // useEffect (() => {
+  //   if (countDown === 0) {
+  //     navigation.navigate("LetsPlay");
+  //   }
+  // }, [countDown])
 
-useEffect (() => {
-  socket.on('getAllPlayers', (data) => {
-    setDataPlayer(data);
-  });
+  useEffect(() => {
+    // socket.on('view', (data) => {
+    //   console.log(data.data)
+    //   setDataPlayer(data.data);
+    // });
 
-  return () => {
-    socket.disconnect();
-  };
+    socket.on("getAllPlayers", (data) => {
+      setDataPlayer(data.data);
+      console.log(data);
+    });
+    return () => {
+      socket.disconnect();
+    };
+    console.log(dataPlayer, "dataplayer");
+  }, []);
  
-},[])
 
-useEffect (() => {
-  console.log(dataPlayer)
-},[dataPlayer])
-
-
-useEffect(() => {
-  
+  useEffect(() => {
     if (countDown === 7) {
-      setVisibleSatu(true);}
-      else if (countDown === 5) {
-        setVisibleDua(true);
-      }
-      else if (countDown === 4) {
-        setVisibleTiga(true);
-      }
-      else if (countDown === 3) {
-        setVisibleEmpat(true);
-      }
-}, [countDown])
+      setVisibleSatu(true);
+    } else if (countDown === 5) {
+      setVisibleDua(true);
+    } else if (countDown === 4) {
+      setVisibleTiga(true);
+    } else if (countDown === 3) {
+      setVisibleEmpat(true);
+    }
+  }, [countDown]);
 
   return (
     <ImageBackground
@@ -89,31 +89,39 @@ useEffect(() => {
           />
         </View>
         <StatusBar style="light" />
-        {
-          countDown === 0 ?
+        {countDown === 0 ? (
           <View style={styles.overlayCountDown}>
             <View style={styles.countDownContainer}>
-            <Text style={styles.textCountDown}>Time Is Up!!</Text>
-            <Text> {dataPlayer.length === 0 ? 'No Opponent Found' : `You Found ${dataPlayer.length-1} Opponents`} </Text>
-            <Image 
-            style={styles.timeIcon}
-            source = {require('../../../assets/LogoAction/time-hourglass-svgrepo-com.png')}
-            />
-            <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("LetsPlay")}
-            >
-              <Text style={{color: 'white', fontWeight: 'bold'}}>Play Now</Text>
-            </TouchableOpacity>
+              <Text style={styles.textCountDown}>Time Is Up!!</Text>
+              <Text>
+                {" "}
+                {dataPlayer.length === 0
+                  ? "No Opponent Found"
+                  : `You Found ${dataPlayer.length - 1} Opponents`}{" "}
+              </Text>
+              <Image
+                style={styles.timeIcon}
+                source={require("../../../assets/LogoAction/time-hourglass-svgrepo-com.png")}
+              />
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate("LetsPlay")}
+              >
+                <Text style={{ color: "white", fontWeight: "bold" }}>
+                  Play Now
+                </Text>
+              </TouchableOpacity>
             </View>
-          </View> 
-        :
+          </View>
+        ) : (
           <>
-        <Text style={styles.textTimer}>00:{countDown < 10 ? `0${countDown}` : countDown}</Text>
-        <Text style={styles.textTitle}>Finding Opponent...</Text>
+            <Text style={styles.textTimer}>
+              00:{countDown < 10 ? `0${countDown}` : countDown}
+            </Text>
+            <Text style={styles.textTitle}>Finding Opponent...</Text>
           </>
-        }
-        {dataPlayer.map((item: any, index: number) => {
+        )}
+        {dataPlayer?.map((item: any, index: number) => {
           return (
             <View
               key={index}
@@ -122,7 +130,16 @@ useEffect(() => {
                 justifyContent: "center",
                 alignItems: "center",
                 zIndex: 1,
-                display: visibleSatu && index === 0 ? "flex" : visibleDua && index === 1 ? "flex" : visibleTiga && index === 2 ? "flex" : visibleEmpat && index === 3 ? "flex" : "none",
+                display:
+                  visibleSatu && index === 0
+                    ? "flex"
+                    : visibleDua && index === 1
+                    ? "flex"
+                    : visibleTiga && index === 2
+                    ? "flex"
+                    : visibleEmpat && index === 3
+                    ? "flex"
+                    : "none",
                 top:
                   index === 0
                     ? 200
@@ -144,18 +161,16 @@ useEffect(() => {
             >
               <TouchableOpacity>
                 <View style={styles.coverAvatar}>
-                  <Image
-                    style={styles.Avatar}
-                    source={{uri:item.avatar}}
-                  />
+                  <Image style={styles.Avatar} source={{ uri: item.avatar }} />
                 </View>
               </TouchableOpacity>
-              <Text style={styles.textName}>{item.email === userlogin?.email ? "You" : item.name}</Text>
+              <Text style={styles.textName}>
+                {item.email === userlogin?.email ? "You" : item.name}
+              </Text>
             </View>
           );
         })}
       </View>
-
     </ImageBackground>
   );
 };
@@ -190,7 +205,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: moderateScale(10),
     justifyContent: "center",
-    alignItems:"center"
+    alignItems: "center",
   },
   textCountDown: {
     color: "black",
@@ -203,11 +218,11 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(20),
     resizeMode: "contain",
   },
-  button:{
+  button: {
     width: horizontalScale(200),
     height: verticalScale(40),
     marginTop: verticalScale(20),
-    backgroundColor:"#318CE7",
+    backgroundColor: "#318CE7",
     borderRadius: moderateScale(10),
     justifyContent: "center",
     alignItems: "center",
