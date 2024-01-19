@@ -16,7 +16,7 @@ import {
   verticalScale,
 } from "../../themes/Metrixs";
 import useQuestion from "../../hooks/useQuestion";
-import {socket} from "../../Components/libs/socket";
+import { socket } from "../../Components/libs/socket";
 import useUser from "../../hooks/useUser";
 
 const LetsPlay = () => {
@@ -27,8 +27,8 @@ const LetsPlay = () => {
   const [background, setBackground] = useState("#89CFF0");
   const [bgClientAnswer, setBgClientAnswer] = useState("#008080");
   const [score, setScore] = useState(0);
-  const {userlogin} = useUser()
-
+  const { userlogin } = useUser();
+  const [playerAnswersVisible, setPlayerAnswersVisible] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,27 +39,61 @@ const LetsPlay = () => {
     return () => clearInterval(interval);
   }, [countDown]);
 
-  
-
   const handleAnswer = (index: number) => {
     setClientAnswer(index);
-    // const data = {
-    //   email: userlogin?.email,
-    //   name: userlogin?.name,
-    //   avatar: userlogin?.avatar,
-    //   answer: index,
-    //   currentQuestion: currentPage
-    // }
-    // socket.emit("answerClient", data)
+    const data = {
+      email: userlogin?.email,
+      name: userlogin?.name,
+      avatar: userlogin?.avatar,
+      answer: index,
+    };
+    socket.emit(`answer${currentPage}`, data);
   };
 
+  useEffect(() => {
+    socket.on("collectAnswer1", (data) => {
+      console.log(data);
+    });
+  }, []);
+
+  let answerQuestion1: any = [
+    {
+      answer: 0,
+      avatar:
+        "https://lh3.googleusercontent.com/a/ACg8ocJNztzbwBveNRkrJtGPH78f_ZZ9NcChY7SAB9Eldzno=s96-c",
+      email: "kikijak487@gmail.com",
+      name: "Tu Yul",
+    },
+    {
+      answer: 2,
+      avatar:
+        "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671124.jpg?size=626&ext=jpg&ga=GA1.2.714462566.1697981532&semt=ais",
+      email: "dian@gmail.com",
+      name: "dian",
+    },
+    {
+      answer: 3,
+      avatar:
+        "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671124.jpg?size=626&ext=jpg&ga=GA1.2.714462566.1697981532&semt=ais",
+      email: "dian@gmail.com",
+      name: "dian",
+    },
+    {
+      answer: 3,
+      avatar:
+        "https://lh3.googleusercontent.com/a/ACg8ocJNztzbwBveNRkrJtGPH78f_ZZ9NcChY7SAB9Eldzno=s96-c",
+      email: "kikijak487@gmail.com",
+      name: "Tu Yul",
+    },
+  ];
 
   // useEffect(() => {
-  //   socket.on("collectAnswer", (data)=>
-  //   {
-  //     console.log("ini collect answer", data)
+  //   const sameAnswer = answerQuestion1.filter((item:any)=>{
+  //     return item.answer === 3
   //   })
-  // }, []);
+  //   console.log(sameAnswer.length, 'sameAnswer')
+  // },[])
+  
 
   const [currentPage, setCurrentPage] = useState(1);
   const ITEM_PERPAGE: number = 1;
@@ -70,13 +104,14 @@ const LetsPlay = () => {
 
   useEffect(() => {
     if (countDown === 0) {
-      const data = questionToShow?.map((item:any)=>{
-        item.answers.filter((key:any, index:number)=>{
+      const data = questionToShow?.map((item: any) => {
+        item.answers.filter((key: any, index: number) => {
           if (key.isTrue === true) {
             setRightAnswer(index);
           }
-        })
-      })
+        });
+      });
+      setPlayerAnswersVisible(true);
     }
   }, [countDown]);
 
@@ -85,10 +120,11 @@ const LetsPlay = () => {
       const interval = setInterval(() => {
         setCurrentPage(currentPage + 1);
         setBackground("#89CFF0");
-        setBgClientAnswer("#008080")
+        setBgClientAnswer("#008080");
         setCountDown(9);
         setClientAnswer(-1);
         setRightAnswer(-1);
+        setPlayerAnswersVisible(false);
       }, 10000);
       return () => clearInterval(interval);
     }
@@ -97,7 +133,6 @@ const LetsPlay = () => {
   useEffect(() => {
     if (clientAnswer === rightAnswer) {
       if (rightAnswer >= 0) {
-
         setScore(score + 1);
         setBgClientAnswer("#00A36C");
       }
@@ -121,7 +156,7 @@ const LetsPlay = () => {
               <Image
                 style={styles.imageQuestion}
                 source={{
-                  uri: item.profile
+                  uri: item.profile,
                 }}
               />
 
@@ -132,7 +167,7 @@ const LetsPlay = () => {
 
                 return (
                   <TouchableOpacity
-                  key={index}
+                    key={index}
                     onPress={() => handleAnswer(index)}
                     style={[
                       styles.button,
@@ -145,9 +180,29 @@ const LetsPlay = () => {
                       },
                     ]}
                   >
-                    {/* <Image 
-                    style={styles.avatar}
-                    source={require("../../../assets/Avatar/avatar.png")} /> */}
+                    {playerAnswersVisible &&
+                      answerQuestion1.map((item: any) => {
+                        const sameAnswer = answerQuestion1.filter((item:any)=>{
+                          return item.answer === index
+                        })
+                        if (item.answer === index)
+                     
+                        {
+                          return (
+                            <>
+                          
+                              <Image
+                                key={item.answer}
+                                style={styles.avatar}
+                                source={{
+                                  uri: item.avatar,
+                                }}
+                              />
+                            </>
+                          );
+                        }
+                      })}
+
                     <Text style={styles.textAnswer}>{item.answer}</Text>
                   </TouchableOpacity>
                 );
@@ -269,12 +324,28 @@ const styles = StyleSheet.create({
     position: "relative",
     borderRadius: moderateScale(15),
   },
-  avatar:{
+  avatar: {
+    height: verticalScale(30),
+    width: horizontalScale(30),
+    borderRadius: moderateScale(100),
+    position: "absolute",
+    top: verticalScale(-10),
+    left: horizontalScale(0),
+  },
+  avatar1: {
     height: verticalScale(30),
     width: horizontalScale(30),
     borderRadius: moderateScale(100),
     position: "absolute",
     top: verticalScale(0),
-    left: horizontalScale(0),
-  }
+    left: horizontalScale(30),
+  },
+  avatar2: {
+    height: verticalScale(30),
+    width: horizontalScale(30),
+    borderRadius: moderateScale(100),
+    position: "absolute",
+    top: verticalScale(0),
+    left: horizontalScale(60),
+  },
 });

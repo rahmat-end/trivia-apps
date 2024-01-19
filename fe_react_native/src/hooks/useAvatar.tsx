@@ -83,8 +83,8 @@ const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
   const handleUpdateAvatarOnly =()=>{
     setUpdateAvatarOnly({
       ...updateAvatarOnly,
-      name: "thisisrealme",
-      username:"helloworld",
+      name:userlogin?.name,
+      username:"tuyuldepok",
       email: userlogin?.email,
       profile: userlogin?.profile,
       password: "roottrivia",

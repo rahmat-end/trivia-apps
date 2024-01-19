@@ -28,7 +28,7 @@ const FindPeople = ({ navigation }: { navigation: any }) => {
   const [visibleEmpat, setVisibleEmpat] = useState(false);
   const [dataPlayer, setDataPlayer] = useState([]);
   const { userlogin } = useUser();
-// const {dataplayer} = useAppSelector((state: RootState) => state.dataplayer)
+  // const {dataplayer} = useAppSelector((state: RootState) => state.dataplayer)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -53,14 +53,11 @@ const FindPeople = ({ navigation }: { navigation: any }) => {
 
     socket.on("getAllPlayers", (data) => {
       setDataPlayer(data.data);
-      console.log(data);
     });
     return () => {
       socket.disconnect();
     };
-    console.log(dataPlayer, "dataplayer");
   }, []);
- 
 
   useEffect(() => {
     if (countDown === 7) {
