@@ -2,7 +2,7 @@
 
 // Import tambahan
 // import { createBrowserHistory, History } from "history";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Table,
   Thead,
@@ -15,12 +15,12 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { FaTrash } from "react-icons/fa";
-import Avatar from "../assets/image/AvatarBerbayar1.png";
+
 import { useFetchUserData } from "../auth/hooks/useDataUser";
 import useUser from "../auth/hooks/useUser";
 
 const Players: React.FC = () => {
-  const { getAllUser, deleteUser, getAllUserRefetch } = useUser();
+  const { getAllUser, handleDeleteUser, getAllUserRefetch } = useUser();
 
   const { handleFetchUserData } = useFetchUserData();
 
@@ -35,17 +35,20 @@ const Players: React.FC = () => {
   return (
     <>
       <Box
+        mr={20}
         bgColor={"gray.800"}
         p={5}
-        borderRadius={"lg"}
+        marginRight={"70px"}
         fontWeight={"bold"}
         color={"grey"}
-        border={"10px inset  #dcfcfe"}>
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}>
         <Table
           variant='striped'
           size={"sm"}
-          colorScheme={"gray"}
-          overflow={"auto"}>
+          flexWrap={"wrap"}
+          alignItems={"center"}>
           <Thead>
             <Tr>
               <Th color={"white"}>Avatar</Th>
@@ -58,10 +61,17 @@ const Players: React.FC = () => {
           </Thead>
           <Tbody p={10}>
             {getAllUser?.map((item: any, index: number) => (
-              <Tr key={index}>
+              <Tr
+                key={index}
+                p={10}
+                borderRadius={"lg"}
+                flexDirection={"column"}
+                gap={2}
+                alignItems={"center"}
+                justifyContent={"center"}>
                 <Td>
                   <Image
-                    src={Avatar}
+                    src={item.avatar}
                     alt={`Avatar of ${item.name}`}
                     boxSize='40px'
                     borderRadius='full'
@@ -70,28 +80,18 @@ const Players: React.FC = () => {
                 <Td>{index}</Td>
                 <Td>{item.name}</Td>
                 <Td>{item.email}</Td>
-                <Td>{item.throphy}</Td>
                 <Td>{item.diamond}</Td>
+                <Td>{item.throphy}</Td>
                 <Td
                   alignItems={"center"}
                   justifyContent={"end"}>
                   <Button
                     colorScheme='red'
                     size='sm'
-                    onClick={() => deleteUser(item.user_id)}>
+                    onClick={() => handleDeleteUser(item.user_id)}>
                     <FaTrash />
                     Delete
                   </Button>
-                  {/* <Button
-                    colorScheme='teal'
-                    size='sm'
-                    ml={2}
-                    // onClick={() => handleEdit(player.no)}
-                    
-                    >
-                    <FaEdit />
-                    Edit
-                  </Button> */}
                 </Td>
               </Tr>
             ))}

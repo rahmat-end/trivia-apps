@@ -39,13 +39,7 @@ export default function Register() {
   }, [isRegisterSuccess]);
 
   return (
-    <Box
-      minH={"100vh"}
-      bgSize='cover'
-      overflowY='auto'
-      bgImage={
-        "https://i.pinimg.com/originals/86/87/ed/8687eddeeb660a2b0b9fba7cc43d2459.jpg"
-      }>
+    <Box>
       <Heading>
         <Box>
           <Image

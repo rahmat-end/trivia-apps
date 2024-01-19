@@ -16,8 +16,7 @@ const SidebarDrawer = () => {
         borderBottomRightRadius={"150px"}
         px={9}
         py={4}
-        borderRight={"10px ridge #dcfcfe"}
-        borderTop={"5px ridge #dcfcfe"}
+        
         w={"100%"}
         h={"100%"}>
         <Box

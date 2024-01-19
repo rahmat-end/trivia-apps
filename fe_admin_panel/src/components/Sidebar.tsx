@@ -11,13 +11,12 @@ import {
   DrawerContent,
   DrawerCloseButton,
   useDisclosure,
-  Flex,
   Text,
   HStack,
   VStack,
   UnorderedList,
   Image,
-  Spacer,
+  Box,
   ListItem,
   Button,
 } from "@chakra-ui/react";
@@ -75,42 +74,38 @@ const Sidebar: React.FC = () => {
 
   return (
     <>
-      <Flex
-        align={"center"}
-        justifyContent={"space-between"}
-        gap={20}
-        p={1}>
+      <Box
+        display={"flex"}
+        alignItems={"center"}
+        p={1}
+        justifyContent={"space-between"}>
         <Image
           alignContent={"center"}
+          align={"center"}
           src={logo}
-          alt=''
+          alt='logo'
           color={"white"}
           w={"100px"}
-          objectFit={"contain"}
           marginLeft={"60px"}
           justifyContent={"start"}
           display={["none", "flex"]}
           flexDirection={"row"}
         />
-        <Spacer />
+
         <Button
           onClick={onOpen}
           border={"none"}
-          borderRadius={"full"}
           _hover={{ bg: "transparent", color: "red.500" }}
-          className='flexDirection-end'
-          bgColor={"transparent"}>
-          <Flex
-            align='end'
-            justifyContent='end'
-            display={["flex"]}>
+          bgColor={"transparent"}
+          display={"flex"}>
+          <Box ml={"-230px"}>
             <FaBars
               size='2em'
               color='white'
             />
-          </Flex>
+          </Box>
         </Button>
-      </Flex>
+      </Box>
 
       <AddFreeAvatarModal
         isOpen={freeavatarModalVisible}
@@ -138,8 +133,6 @@ const Sidebar: React.FC = () => {
         setNewUserData={setNewUserData}
         handleSubmit={() => setAddUserModalOpen(false)}
       />
-      {/* 
-      <AddSettings /> */}
 
       <Drawer
         isOpen={isOpen}

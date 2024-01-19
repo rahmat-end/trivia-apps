@@ -11,8 +11,8 @@ const useAvatar = () => {
     console.log("ini token avatar", token);
   });
 
-  const { data: dataUser, isLoading: lodingUser } = useQuery(
-    "users",
+  const { data: dataAvatar, isLoading: lodingUser } = useQuery(
+    "avatar",
     async () => {
       try {
         const headers = {
@@ -20,17 +20,17 @@ const useAvatar = () => {
           Authorization: `Bearer ${token}`,
         };
 
-        const response = await apigolang.get("/freeavatars", { headers });
+        const response = await apigolang.get("/users", { headers });
 
-        console.log(response.data);
-        return response.data;
+        console.log(response.data.data);
+        return response.data.data;
       } catch (error) {
         console.log(error);
       }
     }
   );
 
-  return { dataUser, lodingUser };
+  return { dataAvatar, lodingUser };
 };
 
 export default useAvatar;

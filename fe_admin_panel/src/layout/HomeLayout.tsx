@@ -3,7 +3,7 @@
 import { Box, Flex, Heading } from "@chakra-ui/react";
 // import { useEffect } from "react";
 // import useAddDiamond from "../../src/modals/hooks/useAddDiamond";
-import Search from "../serch/components/serch";
+import Search from "../serch/components/Serch";
 import Sidebar from "../components/Sidebar";
 import SidebarDrawer from "../components/SidebarDrawer";
 import RightBar from "../components/RightBar";
@@ -17,33 +17,22 @@ const HomeLayout = () => {
   //   console.log(getDataDiamond);
   // }, [getDataDiamond]);
   return (
-    <Box
-      minH={"100vh"}
-      bgImage={
-        "https://i.pinimg.com/originals/86/87/ed/8687eddeeb660a2b0b9fba7cc43d2459.jpg"
-      }
-      bgSize='cover'
-      overflowY='auto'>
+    <Box>
       <Flex
         bg='gray.800'
         align='center'
         display={["none", "none", "flex", "flex"]}>
         <Box
-          flex={"1"}
           display={"flex"}
           alignItems={""}
           flexDirection={"column"}
-          w={"100%"}>
+          w={"40%"}>
           <Sidebar />
         </Box>
         <Box
-          flexDirection={"row"}
-          gap={2}
-          flex={"2"}
-          ml={"200"}
-          w={"100%"}
-          justifyContent={"flex-start"}
-          display={["none", "flex"]}>
+          display={"flex"}
+          w={"30%"}
+          ml={"100px"}>
           <Search />
         </Box>
 
@@ -51,8 +40,8 @@ const HomeLayout = () => {
           display='flex'
           alignItems='center'
           justifyContent={"flex-end"}
-          flex={"1"}
-          marginRight={"70px"}>
+          marginRight={"70px"}
+          w={"30%"}>
           <RightBar />
         </Box>
       </Flex>
@@ -73,7 +62,6 @@ const HomeLayout = () => {
           alignItems='center'
           justifyContent={"start"}
           flexDirection={"column"}
-          flex={"1"}
           w={"100%"}>
           <Box
             display={"flex"}
@@ -104,7 +92,11 @@ const HomeLayout = () => {
             </Box>
           </Box>
         </Box>
-        <Box flex={"1"}>
+        <Box
+          display={"flex"}
+          w={"100%"}
+          flexWrap={"wrap"}
+          alignItems={"center"}>
           <AvatarCard />
         </Box>
       </Flex>

@@ -6,6 +6,11 @@ function useSearch() {
   // State untuk menyimpan nilai pencarian
   const [searchValue, setSearchValue] = useState("");
 
+  // Fungsi untuk menyimpan nilai pencarian
+   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
+   }
+
   // Fungsi untuk mengubah nilai pencarian
   const updateSearchValue = (newValue: string) => {
     setSearchValue(newValue);
@@ -21,6 +26,7 @@ function useSearch() {
     searchValue,
     updateSearchValue,
     resetSearchValue,
+    handleSearchChange,
   };
 }
 

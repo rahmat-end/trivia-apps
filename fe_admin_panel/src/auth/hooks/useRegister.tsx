@@ -52,7 +52,7 @@ export function useRegister() {
     }
   }
   useEffect(() => {
-    console.log(form);
+    // console.log(form);
   }, [form]);
 
   return {

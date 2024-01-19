@@ -40,13 +40,7 @@ export default function Login() {
     }
   }, [isLoginSuccess]);
   return (
-    <Box
-      minH={"100vh"}
-      bgSize='cover'
-      overflowY='auto'
-      bgImage={
-        "https://i.pinimg.com/originals/86/87/ed/8687eddeeb660a2b0b9fba7cc43d2459.jpg"
-      }>
+    <Box>
       <Heading>
         <Box>
           <Image
@@ -88,7 +82,10 @@ export default function Login() {
                   bg={"#FF6969"}
                   mb={3}
                   borderRadius={5}>
-                  <AlertIcon color={"black"} />
+                  <AlertIcon 
+                  color={"black"}
+                        
+                   />
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}

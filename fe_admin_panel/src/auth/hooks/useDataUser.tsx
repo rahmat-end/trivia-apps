@@ -38,7 +38,7 @@ export const useFetchUserData = () => {
   const { mutate: fetchDataUser } = useMutation(async () => {
     try {
       const response = await apilaravel.get("/user");
-      console.log(response.data);
+      // console.log(response.data);
       // Jika ingin mengambil data dari respons dan mengubah state atau melakukan operasi lain, tambahkan kode di sini.
     } catch (error) {
       console.error("Error fetching or parsing data:", error);

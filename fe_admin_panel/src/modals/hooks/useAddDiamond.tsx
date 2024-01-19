@@ -37,13 +37,13 @@ export const useAddDiamond = () => {
     } catch (error) {
       console.log(error);
     }
-    console.log(dataDiamond);
+    // console.log(dataDiamond);
   });
 
   const { data: getDataDiamond } = useQuery("diamond", async () => {
     try {
       const response = await apilaravel.get("/diamond/");
-      console.log(response.data);
+      // console.log(response.data);
       return response.data;
     } catch (error) {
       console.log(error);

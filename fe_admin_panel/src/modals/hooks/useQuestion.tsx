@@ -85,20 +85,36 @@ export const Question = () => {
     setQuestion({
       ...question,
       [name]: files ? files[0] : value,
-      answers: [answer1Obj, answer2Obj, answer3Obj, answer4Obj],
     });
   };
  
 
+  const putDatatoArray = () => {
+    setQuestion({
+      ...question,
+      answers: [answer1Obj, answer2Obj, answer3Obj, answer4Obj],
+    });
+  }
+
+  const getDatatoArray = () => {
+    setQuestion({
+      ...question,
+      answers: [answer1Obj, answer2Obj, answer3Obj, answer4Obj],
+    });
+  }
 
   useEffect(() => {
-    console.log(answer1Obj);
-  }, [ answer1Obj]);
+  putDatatoArray()
+  }, [ answer1Obj, answer2Obj, answer3Obj, answer4Obj]);
+
+  useEffect(() => {
+    getDatatoArray();
+  }, [answer1Obj, answer2Obj, answer3Obj, answer4Obj]);
 
 
   useEffect(() => {
-    console.log(question);
-  }, [question, answer1Obj, answer2Obj, answer3Obj, answer4Obj]);
+    // console.log(question);
+  }, [putDatatoArray]);
 
   const { mutate: handleSubmitQuestion } = useMutation(async (e: any) => {
     e.preventDefault();
@@ -116,7 +132,7 @@ export const Question = () => {
       const res = await apilaravel.post("/question", dataQuestion, {
         headers,
       });
-      console.log(res);
+      // console.log(res);
     } catch (error) {
       console.log(error);
     }
