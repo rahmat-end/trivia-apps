@@ -11,13 +11,14 @@ import {
   DrawerContent,
   DrawerCloseButton,
   useDisclosure,
-  Flex,
   Text,
   HStack,
   VStack,
-  Avatar,
+  UnorderedList,
   Image,
-  Spacer,
+  Box,
+  ListItem,
+  Button,
 } from "@chakra-ui/react";
 import {
   FaBars,
@@ -27,15 +28,23 @@ import {
   FaUserPlus,
   FaHome,
   FaDailymotion,
+  FaUserClock,
+  FaHouseDamage,
 } from "react-icons/fa";
 import logo from "../assets/image/logo.png";
-import AddUserModal from "../modals/components/AddAvatar";
+import AddFreeAvatarModal from "../modals/components/AddFreeAvatar";
 import AddQuestionModal from "../modals/components/AddQuestionModal";
 import AddDiamondsModal from "../modals/components/AddDiamonds";
+import AddBuyAvatar from "../modals/components/AddBuyAvatar";
+import { REMOVE_TOKEN } from "../redux/authSlice";
+import { useAppDispatch } from "../redux/hook";
+// import AddSettings from "../modals/components/AddSettings";
 
 const Sidebar: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const [freeavatarModalVisible, setFreeAvatarModalVisible] =
+    React.useState(false);
   const [isQuestionModalOpen, setQuestionModalOpen] = React.useState(false);
 
   const [newQuestion, setNewQuestion] = React.useState({
@@ -49,67 +58,80 @@ const Sidebar: React.FC = () => {
     answer: 0,
   });
 
+  const [isBuyAvatarModalOpen, setBuyAvatarModalOpen] = React.useState(false);
+
   const [isAddUserModalOpen, setAddUserModalOpen] = React.useState(false);
   const [newUserData, setNewUserData] = React.useState({
     username: "",
     avatarUrl: "",
   });
+  const dispatch = useAppDispatch();
 
   const handleLogout = () => {
-    localStorage.clear();
+    dispatch(REMOVE_TOKEN());
     window.location.reload();
   };
 
   return (
     <>
-      <Flex
-        align={"center"}
-        justifyContent={"space-between"}
-        p={2}
-        gap={20}>
+      <Box
+        display={"flex"}
+        alignItems={"center"}
+        p={1}
+        justifyContent={"space-between"}>
         <Image
+          alignContent={"center"}
+          align={"center"}
           src={logo}
-          alt=''
+          alt='logo'
           color={"white"}
           w={"100px"}
-          objectFit={"contain"}
           marginLeft={"60px"}
           justifyContent={"start"}
           display={["none", "flex"]}
           flexDirection={"row"}
         />
-        <Spacer />
-        <button
+
+        <Button
           onClick={onOpen}
-          className='flexDirection-end'>
-          <Flex
-            align='end'
-            justifyContent='end'
-            display={["flex"]}>
+          border={"none"}
+          _hover={{ bg: "transparent", color: "red.500" }}
+          bgColor={"transparent"}
+          display={"flex"}>
+          <Box ml={"-230px"}>
             <FaBars
               size='2em'
               color='white'
             />
-          </Flex>
-        </button>
-      </Flex>
+          </Box>
+        </Button>
+      </Box>
 
-      <AddUserModal
-        isOpen={isAddUserModalOpen}
-        onClose={() => setAddUserModalOpen(false)}
-        newUserData={newUserData}
-        setNewUserData={setNewUserData}
-        handleSubmit={() => setAddUserModalOpen(false)}
+      <AddFreeAvatarModal
+        isOpen={freeavatarModalVisible}
+        onClose={() => setFreeAvatarModalVisible(false)}
       />
 
       <AddQuestionModal
         isOpen={isQuestionModalOpen}
         onClose={() => setQuestionModalOpen(false)}
+        newQuestion={newQuestion}
+        setNewQuestion={setNewQuestion}
       />
 
       <AddDiamondsModal
         isOpen={isDiamondsModalOpen}
         onClose={() => setDiamondsModalOpen(false)}
+        newDiamondsData={newDiamondsData}
+        setNewDiamondsData={setNewDiamondsData}
+      />
+
+      <AddBuyAvatar
+        isOpen={isAddUserModalOpen}
+        onClose={() => setAddUserModalOpen(false)}
+        newUserData={newUserData}
+        setNewUserData={setNewUserData}
+        handleSubmit={() => setAddUserModalOpen(false)}
       />
 
       <Drawer
@@ -120,126 +142,163 @@ const Sidebar: React.FC = () => {
         <DrawerOverlay />
         <DrawerContent
           bg={"gray.800"}
-          color={"white"}>
+          color={"white"}
+          borderRadius={"30px"}
+          boxShadow={"lg"}
+          className='rounded-tl-[60px] rounded-br-[60px]'
+          borderEnd={"7px ridge #dcfcfe"}>
           <DrawerCloseButton />
 
           <DrawerHeader
             color='white'
-            mt={4}
             fontSize={"2xl"}>
-            Trivia Games
+            <Image
+              src={logo}
+              alt='logo'
+              w={"150px"}
+              objectFit={"contain"}
+              justifyContent={"start"}
+              display={["none", "flex"]}
+              flexDirection={"row"}
+              className='rounded-tl-[60px] rounded-br-[60px]'
+              borderRadius={"30px"}
+              boxShadow={"lg"}
+            />
           </DrawerHeader>
           <HStack
             align='center'
-            spacing={4}>
+            gap={4}>
             <VStack
               align='center'
-              spacing={4}
-              mt={4}>
-              <HStack>
-                <Avatar
-                  size='lg'
-                  name={"John Doe"}
-                  src={
-                    "https://i.pinimg.com/564x/f9/c6/58/f9c65832a1d731843b423e0f42a18098.jpg"
-                  }
-                />
-                <VStack align='start'>
-                  <Text
-                    color='white'
-                    fontSize='lg'>
-                    John Doe
-                  </Text>
-                </VStack>
-              </HStack>
-
+              spacing={2}
+              mt={1}>
               <DrawerBody mt={8}>
-                <ul className='space-y-2'>
-                  <li>
+                <UnorderedList listStyleType='none'>
+                  <ListItem>
                     <Link to={`/`}>
                       <button>
                         <HStack spacing={2}>
-                          <FaHome size='1.5em' />
                           <Text
                             fontSize='md'
+                            display={["none", "flex"]}
                             color='white'
-                            _hover={{ color: "blue.600" }}>
+                            _hover={{ color: "blue.600" }}
+                            textDecoration={"none"}
+                            decoration={"none"}
+                            gap={2}>
+                            <FaHome
+                              size='1.5em'
+                              Text
+                            />
                             Home
                           </Text>
                         </HStack>
                       </button>
                     </Link>
-                  </li>
+                  </ListItem>
 
-                  <li>
+                  <ListItem>
+                    <Link to={`/dahsboard`}>
+                      <button>
+                        <HStack mt={6}>
+                          <Text
+                            fontSize='md'
+                            color='white'
+                            _hover={{ color: "blue.600" }}
+                            gap={2}
+                            display={["none", "flex"]}>
+                            <FaHouseDamage size='1.5em' />
+                            Dahsboard
+                          </Text>
+                        </HStack>
+                      </button>
+                    </Link>
+                  </ListItem>
+
+                  <ListItem>
                     <button onClick={() => setQuestionModalOpen(true)}>
-                      <HStack
-                        spacing={2}
-                        mt={4}>
-                        <FaQuestion size='1.5em' />
+                      <HStack mt={6}>
                         <Text
                           fontSize='md'
                           color='white'
-                          _hover={{ color: "blue.600" }}>
+                          display={["none", "flex"]}
+                          _hover={{ color: "blue.600" }}
+                          gap={2}>
+                          <FaQuestion size='1.5em' />
                           Add Question
                         </Text>
                       </HStack>
                     </button>
-                  </li>
-                  <li>
+                  </ListItem>
+
+                  <ListItem>
                     <button onClick={() => setDiamondsModalOpen(true)}>
-                      <HStack
-                        spacing={2}
-                        mt={4}>
-                        <FaDailymotion size='1.5em' />
+                      <HStack mt={6}>
                         <Text
                           fontSize='md'
                           color='white'
-                          _hover={{ color: "blue.600" }}>
+                          _hover={{ color: "blue.600" }}
+                          display={["none", "flex"]}
+                          gap={2}>
+                          <FaDailymotion size='1.5em' />
                           Add Diamond
                         </Text>
                       </HStack>
                     </button>
-                  </li>
+                  </ListItem>
 
-                  <li>
-                    <button onClick={() => setAddUserModalOpen(true)}>
-                      <HStack
-                        spacing={2}
-                        mt={4}>
-                        <FaUserPlus size='1.5em' />
+                  <ListItem>
+                    <button onClick={() => setFreeAvatarModalVisible(true)}>
+                      <HStack mt={6}>
                         <Text
                           fontSize='md'
                           color='white'
-                          _hover={{ color: "blue.600" }}>
-                          Add Avatar
+                          _hover={{ color: "blue.600" }}
+                          display={"flex"}
+                          gap={2}>
+                          <FaUserPlus size='1.5em' />
+                          Add Free Avatar
                         </Text>
                       </HStack>
                     </button>
-                  </li>
+                  </ListItem>
 
-                  <li>
-                    <button>
-                      <HStack
-                        spacing={2}
-                        mt={60}>
-                        <FaCog size='1.5em' />
+                  <ListItem>
+                    <button onClick={() => setAddUserModalOpen(true)}>
+                      <HStack mt={6}>
                         <Text
                           fontSize='md'
                           color='white'
-                          _hover={{ color: "blue.600" }}>
+                          _hover={{ color: "blue.600" }}
+                          display={"flex"}
+                          gap={2}>
+                          <FaUserClock size='1.5em' />
+                          Add buy Avatar
+                        </Text>
+                      </HStack>
+                    </button>
+                  </ListItem>
+
+                  <ListItem>
+                    <button>
+                      <HStack mt={6}>
+                        <Text
+                          fontSize='md'
+                          color='white'
+                          _hover={{ color: "blue.600" }}
+                          display={["none", "flex"]}
+                          gap={4}>
+                          <FaCog size='1.5em' />
                           Settings
                         </Text>
                       </HStack>
                     </button>
-                  </li>
+                  </ListItem>
 
-                  <li>
+                  <ListItem>
                     <Link to={`/login`}>
                       <button>
-                        <HStack
-                          spacing={2}
-                          mt={5}>
+                        <HStack mt={20}>
                           <FaSignOutAlt
                             size='1.5em'
                             color='red'
@@ -249,8 +308,8 @@ const Sidebar: React.FC = () => {
                         </HStack>
                       </button>
                     </Link>
-                  </li>
-                </ul>
+                  </ListItem>
+                </UnorderedList>
               </DrawerBody>
             </VStack>
           </HStack>

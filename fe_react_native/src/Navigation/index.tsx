@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, TouchableOpacity, StyleSheet, Image, Text } from "react-native";
 import {
   verticalScale,
   horizontalScale,
@@ -16,21 +16,25 @@ import StartGame from "../Screens/StartGame/Index";
 import FindPeople from "../Screens/FindPeople/Index";
 import LetsPlay from "../Screens/LetsPlay/Index";
 import ResultMatch from "../Screens/Result/Index";
+import TestWebView from "../Screens/MidtransWebView";
+import MidtransWebView from "../Screens/MidtransWebView";
+import PaymentDetail from "../Screens/PaymentDetail/Index";
+import { StatusBar } from "expo-status-bar";
 const Stack = createNativeStackNavigator();
-import { useAppSelector } from "../Redux/hooks";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import useUser from "../hooks/useUser";
+import { useAppDispatch } from "../Redux/hooks";
+import { REMOVE_SNAP } from "../Redux/snapMidtransSlice";
 
 export default function Navigation() {
-    
-    
 
+  const {refetchUserlogin}=useUser()
   const CostumHeader = ({ navigation }: { navigation: any }) => {
     const [isSettingOpen, setIsSettingOpen] = useState(false);
     return (
       <View style={styles.container}>
         <Image
           style={styles.logo}
-          source={require("../../assets/BackgroundImage/logo.png")}
+          source={require("../../assets/BackgroundImage/newlogo.png")}
         />
         <TouchableOpacity onPress={() => setIsSettingOpen(true)}>
           <LottieView
@@ -41,8 +45,59 @@ export default function Navigation() {
         </TouchableOpacity>
 
         {isSettingOpen && (
-          <SettingModal navigation={navigation} setIsOpen={() => setIsSettingOpen(false)} />
+          <SettingModal
+            navigation={navigation}
+            setIsOpen={() => setIsSettingOpen(false)}
+          />
         )}
+      </View>
+    );
+  };
+
+ 
+
+  const headerPayment = ({ navigation }: { navigation: any }) => {
+    const dispatch = useAppDispatch();
+    const handleBackAfterPayment = () => {
+      refetchUserlogin();
+      navigation.navigate("Start Game");
+      dispatch(REMOVE_SNAP());
+    }
+    return (
+      <View style={styles.containerPayment}>
+        <StatusBar style="light" />
+        <View style={styles.containerBottom}>
+          <TouchableOpacity
+          onPress={() => handleBackAfterPayment()}
+          >
+            <Image
+              style={styles.back}
+              source={require("../../assets/LogoAction/arrow-back-simple-svgrepo-com.png")}
+            />
+          </TouchableOpacity>
+          <Text style={styles.textPayment}>Pembayaran</Text>
+        </View>
+      </View>
+    );
+  };
+
+  
+
+  const headerDetailPayment = ({ navigation }: { navigation: any }) => {
+    return (
+      <View style={styles.containerPayment}>
+        <StatusBar style="light" />
+        <View style={styles.containerBottom}>
+          <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          >
+            <Image
+              style={styles.back}
+              source={require("../../assets/LogoAction/arrow-back-simple-svgrepo-com.png")}
+            />
+          </TouchableOpacity>
+          <Text style={styles.textPayment}>Detail Pesanan</Text>
+        </View>
       </View>
     );
   };
@@ -50,14 +105,26 @@ export default function Navigation() {
   const styles = StyleSheet.create({
     container: {
       height: verticalScale(150),
+      justifyContent: "space-between",  
+      alignItems: "center",
       flexDirection: "row",
-      justifyContent: "space-between",
+      paddingHorizontal: horizontalScale(10),
+    },
+    containerPayment: {
+      height: verticalScale(100),
+      backgroundColor: "#002D62",
+      flexDirection: "row",
       alignItems: "center",
       paddingHorizontal: horizontalScale(10),
     },
+    textPayment: {
+      color: "white",
+      fontSize: moderateScale(17),
+      fontWeight: "bold",
+    },
     logo: {
-      width: horizontalScale(100),
-      height: verticalScale(100),
+      width: horizontalScale(70),
+      height: verticalScale(70),
       resizeMode: "contain",
     },
     settingButton: {
@@ -65,76 +132,101 @@ export default function Navigation() {
       height: horizontalScale(50),
       resizeMode: "contain",
     },
+    containerBottom: {
+      marginTop: verticalScale(30),
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      gap:moderateScale(10)
+    },
+    back: {
+      width: horizontalScale(20),
+      height: verticalScale(20),
+    },
   });
 
   return (
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Splash Screen">
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="LetsPlay">
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="SplashScreen"
+          component={SplashScreen}
+        />
 
-          
-                     <Stack.Screen
-                options={{ headerShown: false }}
-                name="SpalashScreen"
-                component={SplashScreen}
-              />
-              <Stack.Screen
-                options={{ headerShown: false }}
-                name="Login Screen"
-                component={Login}
-              />
-                    
-                       <Stack.Screen
-                options={{
-                  header: CostumHeader,
-                  headerTransparent: true,
-                  headerShown: true,
-                }}
-                name="Choose Avatar"
-                component={ChooseAvatar}
-              />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Login Screen"
+          component={Login}
+        />
 
-              <Stack.Screen
-                options={{
-                  headerShown: false,
-                }}
-                name="Start Game"
-                component={StartGame}
-              />
+        <Stack.Screen
+          options={{
+            header: CostumHeader,
+            headerTransparent: true,
+            headerShown: true,
+          }}
+          name="Choose Avatar"
+          component={ChooseAvatar}
+        />
 
-              <Stack.Screen
-                options={{
-                  header: CostumHeader,
-                  headerTransparent: true,
-                  headerShown: true,
-                }}
-                name="Find People"
-                component={FindPeople}
-              />
-              <Stack.Screen
-                options={{
-                  header: CostumHeader,
-                  headerTransparent: true,
-                  headerShown: true,
-                }}
-                name="Lets Play"
-                component={LetsPlay}
-              />
-              <Stack.Screen
-                options={{
-                  header: CostumHeader,
-                  headerTransparent: true,
-                  headerShown: true,
-                }}
-                name="Result Match"
-                component={ResultMatch}
-              />
-                  
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="Start Game"
+          component={StartGame}
+        />
+
+        <Stack.Screen
+          options={{
+            header: CostumHeader,
+            headerTransparent: true,
+            headerShown: true,
+          }}
+          name="Find People"
+          component={FindPeople}
+        />
+        <Stack.Screen
+          options={{
+            header: CostumHeader,
+            headerTransparent: true,
+            headerShown: true,
+          }}
+          name="LetsPlay"
+          component={LetsPlay}
+        />
+        <Stack.Screen
+          options={{
+            header: CostumHeader,
+            headerTransparent: true,
+            headerShown: true,
+          }}
+          name="Result Match"
+          component={ResultMatch}
+        />
+        <Stack.Screen
+          options={{
+            header: headerPayment,
+            headerShown: true,
           
-             
-         
-           
-          
-        </Stack.Navigator>
-      </NavigationContainer>
+            // headerTitleAlign: "center",
+            headerTransparent: true,
+          }}
+          name="Payment"
+          component={MidtransWebView}
+        />
+        <Stack.Screen
+          options={{
+            header: headerDetailPayment,
+            headerShown: true,
+          }}
+          name="PaymentDetail"
+          component={PaymentDetail}
+        />
+
+        
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }

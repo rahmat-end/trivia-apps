@@ -1,149 +1,351 @@
 import {
-    ImageBackground,
-    StyleSheet,
-    Text,
-    View,
-    Image,
-    TouchableOpacity,
-  } from "react-native";
-  import React from "react";
-  import { StatusBar } from "expo-status-bar";
-  import { horizontalScale, moderateScale, verticalScale } from "../../themes/Metrixs";
-  const answer = [
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import React, { useEffect } from "react";
+import { useState } from "react";
+import { StatusBar } from "expo-status-bar";
+import {
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from "../../themes/Metrixs";
+import useQuestion from "../../hooks/useQuestion";
+import { socket } from "../../Components/libs/socket";
+import useUser from "../../hooks/useUser";
+
+const LetsPlay = () => {
+  const { dataQuestion } = useQuestion();
+  const [countDown, setCountDown] = useState(9);
+  const [clientAnswer, setClientAnswer] = useState(-1);
+  const [rightAnswer, setRightAnswer] = useState(-1);
+  const [background, setBackground] = useState("#89CFF0");
+  const [bgClientAnswer, setBgClientAnswer] = useState("#008080");
+  const [score, setScore] = useState(0);
+  const { userlogin } = useUser();
+  const [playerAnswersVisible, setPlayerAnswersVisible] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (countDown > 0) {
+        setCountDown(countDown - 1);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [countDown]);
+
+  const handleAnswer = (index: number) => {
+    setClientAnswer(index);
+    const data = {
+      email: userlogin?.email,
+      name: userlogin?.name,
+      avatar: userlogin?.avatar,
+      answer: index,
+    };
+    socket.emit(`answer${currentPage}`, data);
+  };
+
+  useEffect(() => {
+    socket.on("collectAnswer1", (data) => {
+      console.log(data);
+    });
+  }, []);
+
+  let answerQuestion1: any = [
     {
-      name: "Joy",
-      isTrue: true,
+      answer: 0,
+      avatar:
+        "https://lh3.googleusercontent.com/a/ACg8ocJNztzbwBveNRkrJtGPH78f_ZZ9NcChY7SAB9Eldzno=s96-c",
+      email: "kikijak487@gmail.com",
+      name: "Tu Yul",
     },
     {
-      name: "Veksana",
-      isTrue: false,
+      answer: 2,
+      avatar:
+        "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671124.jpg?size=626&ext=jpg&ga=GA1.2.714462566.1697981532&semt=ais",
+      email: "dian@gmail.com",
+      name: "dian",
     },
     {
-      name: "Karina",
-      isTrue: false,
+      answer: 3,
+      avatar:
+        "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671124.jpg?size=626&ext=jpg&ga=GA1.2.714462566.1697981532&semt=ais",
+      email: "dian@gmail.com",
+      name: "dian",
     },
     {
-      name: "Faramis",
-      isTrue: false,
+      answer: 3,
+      avatar:
+        "https://lh3.googleusercontent.com/a/ACg8ocJNztzbwBveNRkrJtGPH78f_ZZ9NcChY7SAB9Eldzno=s96-c",
+      email: "kikijak487@gmail.com",
+      name: "Tu Yul",
     },
   ];
+
+  // useEffect(() => {
+  //   const sameAnswer = answerQuestion1.filter((item:any)=>{
+  //     return item.answer === 3
+  //   })
+  //   console.log(sameAnswer.length, 'sameAnswer')
+  // },[])
   
-  const LetsPlay = () => {
-    return (
-      <ImageBackground
-        source={require("../../../assets/BackgroundImage/playgame.png")}
-        style={styles.container}
-      >
-        <View style={styles.overlay}>
-          <View style={styles.container}>
-            <StatusBar style="light" />
-            <Text style={styles.timer}>00:05</Text>
-            <Image
-              style={styles.imageQuestion}
-              source={{
-                uri: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d2633b97-4158-44c7-ae9e-60deb0af8370/dfgers6-115f22be-2417-41ad-97e4-5fa2c267c737.png/v1/fill/w_1192,h_670,q_70,strp/joy___mobile_legends_bang_bang_by_mrerei_dfgers6-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzIwIiwicGF0aCI6IlwvZlwvZDI2MzNiOTctNDE1OC00NGM3LWFlOWUtNjBkZWIwYWY4MzcwXC9kZmdlcnM2LTExNWYyMmJlLTI0MTctNDFhZC05N2U0LTVmYTJjMjY3YzczNy5wbmciLCJ3aWR0aCI6Ijw9MTI4MCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.TzRBL4N52nY6GwZji1iVLL2JC1V-NKGZ4rPANM1v0fI",
-              }}
-            />
-  
-            <Text style={styles.text}>siapakah nama hero ini?</Text>
-            {answer.map((item: any, index: number) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  style={{
-                    backgroundColor: item.isTrue ? "#AFE1AF" : "#89CFF0",
-                    padding:moderateScale(10),
-                    marginBottom:verticalScale(15),
-                    width:horizontalScale(300),
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius:moderateScale(15),
-                  }}
-                >
-                  <Text style={styles.textAnswer}>{item.name}</Text>
-                </TouchableOpacity>
-              );
-            })}
-          <View style={styles.footer}>
-              <View style={styles.footerTextContainer}>
-              <Text style={styles.footerText}>4/10</Text>
-              <Text style={styles.footerText}>Questions</Text>    
-              </View>
-              <View style={styles.footerTextContainer}>
-              <Text style={styles.footerText}>4</Text>
-              <Text style={styles.footerText}>Correct</Text>    
-              </View>
-              
-             
-              
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEM_PERPAGE: number = 1;
+  const questionToShow = dataQuestion?.slice(
+    currentPage - 1,
+    currentPage - 1 + ITEM_PERPAGE
+  );
+
+  useEffect(() => {
+    if (countDown === 0) {
+      const data = questionToShow?.map((item: any) => {
+        item.answers.filter((key: any, index: number) => {
+          if (key.isTrue === true) {
+            setRightAnswer(index);
+          }
+        });
+      });
+      setPlayerAnswersVisible(true);
+    }
+  }, [countDown]);
+
+  useEffect(() => {
+    if (currentPage < Math.ceil(dataQuestion?.length / ITEM_PERPAGE)) {
+      const interval = setInterval(() => {
+        setCurrentPage(currentPage + 1);
+        setBackground("#89CFF0");
+        setBgClientAnswer("#008080");
+        setCountDown(9);
+        setClientAnswer(-1);
+        setRightAnswer(-1);
+        setPlayerAnswersVisible(false);
+      }, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [countDown, currentPage]);
+
+  useEffect(() => {
+    if (clientAnswer === rightAnswer) {
+      if (rightAnswer >= 0) {
+        setScore(score + 1);
+        setBgClientAnswer("#00A36C");
+      }
+    } else {
+      // Alert.alert("Wrong Answer");
+      setBgClientAnswer("red");
+    }
+  }, [rightAnswer]);
+
+  return (
+    <ImageBackground
+      source={require("../../../assets/BackgroundImage/playgame.png")}
+      style={styles.container}
+    >
+      <View style={styles.overlay}>
+        <StatusBar style="light" />
+        {questionToShow?.map((item: any, index: number) => {
+          return (
+            <View style={styles.container} key={index}>
+              <Text style={styles.timer}>00:0{countDown}</Text>
+              <Image
+                style={styles.imageQuestion}
+                source={{
+                  uri: item.profile,
+                }}
+              />
+
+              <Text style={styles.text}>{item.the_question}</Text>
+              {item.answers?.map((item: any, index: number) => {
+                const active = clientAnswer === index;
+                const right = rightAnswer === index;
+
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => handleAnswer(index)}
+                    style={[
+                      styles.button,
+                      {
+                        backgroundColor: active
+                          ? bgClientAnswer
+                          : right
+                          ? "#00A36C"
+                          : background,
+                      },
+                    ]}
+                  >
+                    {playerAnswersVisible &&
+                      answerQuestion1.map((item: any) => {
+                        const sameAnswer = answerQuestion1.filter((item:any)=>{
+                          return item.answer === index
+                        })
+                        if (item.answer === index)
+                     
+                        {
+                          return (
+                            <>
+                          
+                              <Image
+                                key={item.answer}
+                                style={styles.avatar}
+                                source={{
+                                  uri: item.avatar,
+                                }}
+                              />
+                            </>
+                          );
+                        }
+                      })}
+
+                    <Text style={styles.textAnswer}>{item.answer}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          );
+        })}
+
+        {/* <TouchableOpacity
+            style={[
+              styles.button,
+              {
+                backgroundColor: background,
+              },
+            ]}
+          >
+            <Text style={styles.textAnswer}>Vekasana</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {
+                backgroundColor: background,
+              },
+            ]}
+          >
+            <Text style={styles.textAnswer}>Kari</Text>
+          </TouchableOpacity> */}
+
+        <View style={styles.footer}>
+          <View style={styles.footerTextContainer}>
+            <Text style={styles.footerText}>
+              {currentPage}/{dataQuestion?.length}
+            </Text>
+            <Text style={styles.footerText}>Questions</Text>
           </View>
+          <View style={styles.footerTextContainer}>
+            <Text style={styles.footerText}>{score}</Text>
+            <Text style={styles.footerText}>Correct</Text>
           </View>
         </View>
-      
-      </ImageBackground>
-    );
-  };
-  
-  export default LetsPlay;
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    overlay: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: "rgba(0,0,0,0.7)",
-    },
-    imageQuestion: {
-      width:horizontalScale(300),
-      height:verticalScale(200),
-      resizeMode: "cover",
-      borderRadius:moderateScale(15),
-    },
-    text: {
-      color: "#fff",
-      fontSize:moderateScale(23),
-      textTransform: "capitalize",
-      fontWeight: "bold",
-      marginTop:verticalScale(20),
-      marginBottom:verticalScale(50),
-    },
-    timer: {
-      color: "#fff",
-      fontSize:moderateScale(25),
-      textTransform: "capitalize",
-      fontWeight: "bold",
-      marginTop:moderateScale(20),
-      marginBottom:moderateScale(20),
-    },
-  
-    textAnswer: {
-      color: "#fff",
-      fontSize: 23,
-      textTransform: "capitalize",
-      fontWeight: "bold",
-    },
-    footer:{
-      flexDirection:"row",
-      justifyContent:"space-between",
-      width:horizontalScale(300),
-      marginTop:moderateScale(30)
-    },
-    footerText:{
-      color:"#fff",
-      fontSize:moderateScale(20),
-      textTransform:"capitalize",
-    },
-    footerTextContainer:{
-      flexDirection:"column",
-      justifyContent:"center",
-      alignItems:"center"
-    }
-  });
-  
+      </View>
+    </ImageBackground>
+  );
+};
+
+export default LetsPlay;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: moderateScale(20),
+  },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0,0,0,0.7)",
+  },
+  imageQuestion: {
+    width: horizontalScale(300),
+    height: verticalScale(200),
+    resizeMode: "cover",
+    borderRadius: moderateScale(15),
+  },
+  text: {
+    color: "#fff",
+    fontSize: moderateScale(20),
+    textTransform: "capitalize",
+    fontWeight: "bold",
+    marginTop: verticalScale(20),
+    marginBottom: verticalScale(50),
+    textAlign: "center",
+  },
+  timer: {
+    color: "#fff",
+    fontSize: moderateScale(25),
+    textTransform: "capitalize",
+    fontWeight: "bold",
+    marginTop: moderateScale(20),
+    marginBottom: moderateScale(20),
+  },
+
+  textAnswer: {
+    color: "#fff",
+    fontSize: moderateScale(18),
+    textTransform: "capitalize",
+    fontWeight: "bold",
+  },
+  footer: {
+    flexDirection: "row",
+    position: "absolute",
+    bottom: verticalScale(20),
+    left: horizontalScale(20),
+    right: horizontalScale(20),
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  footerText: {
+    color: "#fff",
+    fontSize: moderateScale(15),
+    textTransform: "capitalize",
+  },
+  footerTextContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    padding: moderateScale(10),
+    marginBottom: verticalScale(15),
+    width: horizontalScale(300),
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    borderRadius: moderateScale(15),
+  },
+  avatar: {
+    height: verticalScale(30),
+    width: horizontalScale(30),
+    borderRadius: moderateScale(100),
+    position: "absolute",
+    top: verticalScale(-10),
+    left: horizontalScale(0),
+  },
+  avatar1: {
+    height: verticalScale(30),
+    width: horizontalScale(30),
+    borderRadius: moderateScale(100),
+    position: "absolute",
+    top: verticalScale(0),
+    left: horizontalScale(30),
+  },
+  avatar2: {
+    height: verticalScale(30),
+    width: horizontalScale(30),
+    borderRadius: moderateScale(100),
+    position: "absolute",
+    top: verticalScale(0),
+    left: horizontalScale(60),
+  },
+});

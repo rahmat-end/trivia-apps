@@ -6,9 +6,11 @@ import { useState, useEffect } from 'react'
 type InputProps = {
  handleChange?:(key:string, value:string)=>void;
  dataUser?:any;
+ placeholder?:string
+ namakey?:string
 }
 
-const Input = ({handleChange, dataUser}:InputProps) => {
+const Input = ({handleChange, dataUser, placeholder, namakey}:InputProps) => {
 
 
   return (
@@ -18,10 +20,10 @@ const Input = ({handleChange, dataUser}:InputProps) => {
      source={require("../../../assets/LogoAction/edit-4-svgrepo-com.png")}
     />
       <TextInput
-      onChangeText={(value) => handleChange("username",value)}
-      value={dataUser?.username}
+      onChangeText={(value) => handleChange(`${namakey}`,value)}
+      value={dataUser?.[namakey]}
       style={styles.input}
-      placeholder='Type your name here...'
+      placeholder={placeholder}
       />
     </View>
    
@@ -36,6 +38,7 @@ container:{
   backgroundColor: "white",
   alignItems: "center",
   gap: 3,
+  marginBottom: verticalScale(10),
   paddingHorizontal: horizontalScale(10),
   borderRadius:moderateScale(10),
   width:horizontalScale(350),

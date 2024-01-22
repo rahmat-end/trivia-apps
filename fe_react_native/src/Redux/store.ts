@@ -1,9 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from './userSlice'
+import userDataReducer from './dataUserSlice'
+import snapMidtransReducer from './snapMidtransSlice'
+import dataUserGolangReducer from './dataUserGolangSlice'
+import diamondReducer from './diamondSlice'
+import dataPlayerReducer from './dataPlayerSlice'
 
 export const store = configureStore({
   reducer: {
-    user: userReducer
+    user: userReducer,
+    dataUser: userDataReducer,
+    snapMidtrans: snapMidtransReducer,
+    dataUserGolang: dataUserGolangReducer,
+    diamond: diamondReducer,
+    dataplayer: dataPlayerReducer
   
   },
 })

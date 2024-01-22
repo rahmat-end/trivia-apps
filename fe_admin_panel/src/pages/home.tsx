@@ -2,6 +2,7 @@
 
 import HomeLayout from "../layout/HomeLayout";
 
+
 const home = () => {
   return (
     <>

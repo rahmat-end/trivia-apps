@@ -3,10 +3,10 @@ package models
 import "time"
 
 type User struct {
-	UserId          int       `json:"userId" gorm:"primaryKey:autoIncrement"`
+	UserId          int       `json:"user_id" gorm:"primaryKey:autoIncrement"`
 	Name            string    `json:"name" gorm:"type: varchar(255)"`
 	Email           string    `json:"email" gorm:"type: varchar(255)"`
-	EmailVerifiedAt time.Time `json:"emailVerifiedAt"`
+	EmailVerifiedAt time.Time `json:"email_verified_at"`
 	Password        string    `json:"password" gorm:"type: varchar(255)"`
 	Profile         string    `json:"profile" gorm:"type: varchar(255)"`
 	Username        string    `json:"username" gorm:"type: varchar(255)"`
@@ -14,9 +14,9 @@ type User struct {
 	Diamond         int       `json:"diamond" gorm:"type: int"`
 	Throphy         int       `json:"throphy" gorm:"type: int"`
 	Avatar          string    `json:"avatar" gorm:"type: varchar(255)"`
-	RememberToken   string    `json:"rememberToken" gorm:"type: varchar(100)"`
-	CreatedAt       time.Time `json:"createdAt"`
-	UpdatedAt       time.Time `json:"updatedAt"`
+	RememberToken   string    `json:"remember_token" gorm:"type: varchar(100)"`
+	CreatedAt       time.Time `json:"created_at"`
+	UpdatedAt       time.Time `json:"updated_at"`
 	// Transaction     []Transaction `gorm:"foreignKey:UserId;references:IdUser;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	// Transaction []Transaction `json:"transaction"`
 }
