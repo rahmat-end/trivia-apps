@@ -14,20 +14,22 @@ return new class extends Migration
     public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
-            // Use bigIncrements for auto-incrementing primary key
             $table->id('id_transaction');
             $table->integer('amount_diamond');
             $table->integer('total_price');
             $table->string('status');
-
-            // Use UUID type for user_id
             $table->bigInteger('user_id')->index();
-
-            // Define other columns without auto-incrementing for composite primary key
             $table->bigInteger('id_diamond')->index();
 
-            $table->foreign('user_id')->references('user_id')->on('users');
-            $table->foreign('id_diamond')->references('id_diamond')->on('diamonds');
+            $table->foreign('user_id')
+                ->references('user_id')
+                ->on('users')
+                ->onDelete('cascade'); // Menambahkan onDelete('cascade') di sini
+
+            $table->foreign('id_diamond')
+                ->references('id_diamond')
+                ->on('diamonds')
+                ->onDelete('cascade'); // Menambahkan onDelete('cascade') di sini
 
             $table->timestamps();
         });
