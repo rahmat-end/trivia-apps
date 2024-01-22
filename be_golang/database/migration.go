@@ -9,10 +9,13 @@ import (
 func RunMigration() {
 	err := postgres.DB.AutoMigrate(
 		&models.User{},
+		&models.Diamond{},
+		&models.Transaction{},
 	)
 
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		panic("Migration Failed")
 	}
 
 	fmt.Println("Migration success")

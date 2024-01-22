@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "376331575913",
+    "project_id": "triviaauthnew",
+    "storage_bucket": "triviaauthnew.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:376331575913:android:fc296e2632d7b69dc978f8",
+        "android_client_info": {
+          "package_name": "com.dianpayno2023.trivaGames"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "376331575913-gvs63586bvit5j10lefdidvc5c03ubbc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dianpayno2023.trivaGames",
+            "certificate_hash": "8a954240ee1572ac0586f30aa7fbe370b73ae8de"
+          }
+        },
+        {
+          "client_id": "376331575913-mt7lsu7as42a681ctc6ri1kb2al6tbob.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dianpayno2023.trivaGames",
+            "certificate_hash": "f717986bbfa575737432bd30469fbd18f17b9890"
+          }
+        },
+        {
+          "client_id": "376331575913-tlpvfh7etmo5m57dto6e1bm6p7dear16.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUnMvdMjCReF67rgr0K7W-FzMAMWhtCMM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "376331575913-tlpvfh7etmo5m57dto6e1bm6p7dear16.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
