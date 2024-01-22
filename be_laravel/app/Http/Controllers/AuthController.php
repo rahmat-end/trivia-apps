@@ -49,10 +49,9 @@ class AuthController extends Controller
 
     public function registerNewUser(Request $request)
     {
-
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email',
             'password' => 'required|string|min:8',
             'profile' => 'string',
         ]);
@@ -61,27 +60,35 @@ class AuthController extends Controller
             return response()->json($validator->messages());
         }
 
-        $lastUserId = User::max('user_id');
+        $user = User::where('email', $request->email)->first();
 
-        $user = User::create([
-            'user_id' => $lastUserId + 1,
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make(request('password')),
-            'profile' => $this->removeImageSizeFromUrl($request->profile),
-            'role' => 'user',
-            'username' => $request->name,
-            'avatar' => $request->profile,
-            'diamond' => 0,
-            'throphy' => 0,
-        ]);
+        if (!$user) {
+            $lastUserId = User::max('user_id');
 
-        $token = JWTAuth::fromUser($user);
+            $user = User::create([
+                'user_id' => $lastUserId + 1,
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'profile' => $this->removeImageSizeFromUrl($request->profile),
+                'role' => 'user',
+                'username' => $request->name,
+                'avatar' => $request->profile,
+                'diamond' => 0,
+                'throphy' => 0,
+            ]);
 
-        return response()->json([
-            'token' => $token,
-            'user' => $user->user_id,
-        ]);
+            $token = JWTAuth::fromUser($user);
+
+            return response()->json([
+                'token' => $token,
+                'user' => $user->user_id,
+                'data' => $user,
+                'Success' => "Done Register"
+            ]);
+        } else {
+            return $this->login();
+        }
     }
 
     private function removeImageSizeFromUrl($avatarUrl)
@@ -97,7 +104,12 @@ class AuthController extends Controller
         if (!$token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-        return $this->respondWithToken($token);
+        // return $this->respondWithToken($token);
+        return response()->json([
+            'token' => $token,
+            'user' => auth()->user()->user_id,
+            'Success' => "Done login"
+        ]);
     }
 
     protected function respondWithToken($token)

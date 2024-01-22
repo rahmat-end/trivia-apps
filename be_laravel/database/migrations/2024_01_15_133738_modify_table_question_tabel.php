@@ -16,11 +16,8 @@ return new class extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id('id_question');
             $table->text('the_question');
-            $table->string('photo_question')->nullable();
-            $table->string('answer_1');
-            $table->string('answer_2');
-            $table->string('answer_3');
-            $table->string('answer_4');
+            $table->string('profile');
+            $table->json('answers'); // Store answers as JSON
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('question');
+        Schema::dropIfExists('questions');
     }
 };

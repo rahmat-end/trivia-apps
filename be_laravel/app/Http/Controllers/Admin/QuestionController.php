@@ -7,9 +7,84 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Question;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Illuminate\Support\Facades\Validator;
 
 class QuestionController extends Controller
 {
+    // public function index()
+    // {
+    //     $questions = Question::getAllData();
+    //     return response()->json($questions);
+    // }
+
+    // public function getQuestionById($id)
+    // {
+    //     $Question = Question::getQuestionById($id);
+
+    //     if (!$Question) {
+    //         return response()->json(['message' => 'User not found'], 404);
+    //     }
+
+    //     return response()->json(['user' => $Question], 200);
+    // }
+
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'the_question' => 'required',
+    //         'photo_question' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+    //         'answer_1' => 'required',
+    //         'answer_2' => 'required',
+    //         'answer_3' => 'required',
+    //         'answer_4' => 'required',
+    //     ]);
+
+    //     $data = $request->all();
+
+    //     if ($request->hasFile('photo_question')) {
+    //         $imagePath = $request->file('photo_question')->getRealPath();
+    //         $cloudinary = Cloudinary::upload($imagePath);
+    //         $data['photo_question'] = $cloudinary->getSecurePath();
+    //     }
+
+    //     $quest = Question::create($data);
+
+    //     return response()->json(['question' => $quest], 200);
+    // }
+
+    // public function update(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'the_question' => 'required',
+    //         'photo_question' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+    //         'answer_1' => 'required',
+    //         'answer_2' => 'required',
+    //         'answer_3' => 'required',
+    //         'answer_4' => 'required',
+    //     ]);
+
+    //     $question = Question::findOrFail($id);
+    //     $data = $request->all();
+
+    //     if ($request->hasFile('photo_question')) {
+    //         $imagePath = $request->file('photo_question')->getRealPath();
+    //         $cloudinary = Cloudinary::upload($imagePath);
+    //         $data['photo_question'] = $cloudinary->getSecurePath();
+    //     }
+
+    //     $question->update($data);
+
+    //     return redirect()->route('questions.index')->with('success', 'Question updated successfully.');
+    // }
+
+    // public function destroy($id)
+    // {
+    //     $question = Question::findOrFail($id);
+    //     $question->delete();
+
+    //     return redirect()->route('questions.index')->with('success', 'Question deleted successfully.');
+    // }
+
     public function index()
     {
         $questions = Question::getAllData();
@@ -18,48 +93,61 @@ class QuestionController extends Controller
 
     public function getQuestionById($id)
     {
-        $Question = Question::getQuestionById($id);
+        $question = Question::getQuestionById($id);
 
-        if (!$Question) {
-            return response()->json(['message' => 'User not found'], 404);
+        if (!$question) {
+            return response()->json(['message' => 'Question not found'], 404);
         }
 
-        return response()->json(['user' => $Question], 200);
+        return response()->json(['question' => $question], 200);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'the_question' => 'required',
-            'photo_question' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // adjust file types and size as needed
-            'answer_1' => 'required',
-            'answer_2' => 'required',
-            'answer_3' => 'required',
-            'answer_4' => 'required',
+        $validator = Validator::make($request->all(), [
+            'the_question' => 'required|string',
+            'profile' => 'required|image|mimes:jpeg,png,jpg,gif',
+            'answers' => 'required|array',
+            'answers.*.answer' => 'required|string',
+            'answers.*.isTrue' => 'required|string',
         ]);
 
         $data = $request->all();
 
-        if ($request->hasFile('photo_question')) {
-            $imagePath = $request->file('photo_question')->getRealPath();
-            $cloudinary = Cloudinary::upload($imagePath);
-            $data['photo_question'] = $cloudinary->getSecurePath();
+        if ($request->hasFile('profile')) {
+            $imagePath = $request->file('profile')->getRealPath();
+            $uploadResult = Cloudinary::upload($imagePath, ['folder' => 'Question']);
+            $data['profile'] = $uploadResult->getSecurePath();
         }
 
-        Question::create($data);
+        $answers = [];
 
-        return redirect()->route('questions.index')->with('success', 'Question created successfully.');
+        if (is_array($data['answers'])) {
+            foreach ($data['answers'] as $answer) {
+                if (isset($answer['answer']) && isset($answer['isTrue'])) {
+                    $answers[] = [
+                        'answer' => $answer['answer'],
+                        'isTrue' => filter_var($answer['isTrue'], FILTER_VALIDATE_BOOLEAN),
+                    ];
+                }
+            }
+        }
+
+        $data['answers'] = $answers;
+
+        $question = Question::create($data);
+
+        return response()->json(['question' => $question], 201);
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'the_question' => 'required',
-            'photo_question' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // adjust file types and size as needed
-            'answer_1' => 'required',
-            'answer_2' => 'required',
-            'answer_3' => 'required',
-            'answer_4' => 'required',
+            'the_question' => 'required|string',
+            'profile' => 'required|string',
+            'answers' => 'required|array|min:4',
+            'answers.*.answer' => 'required|string',
+            'answers.*.isTrue' => 'required|boolean',
         ]);
 
         $question = Question::findOrFail($id);
@@ -73,7 +161,7 @@ class QuestionController extends Controller
 
         $question->update($data);
 
-        return redirect()->route('questions.index')->with('success', 'Question updated successfully.');
+        return response()->json(['message' => 'Question updated successfully.']);
     }
 
     public function destroy($id)
@@ -81,6 +169,6 @@ class QuestionController extends Controller
         $question = Question::findOrFail($id);
         $question->delete();
 
-        return redirect()->route('questions.index')->with('success', 'Question deleted successfully.');
+        return response()->json(['message' => 'Question deleted successfully.']);
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\GoogleLoginController;
 use App\Http\Controllers\Admin\BuyAvatarController;
 use App\Http\Controllers\Admin\FreeAvatarController;
 use App\Http\Controllers\Admin\DiamondController;
+use App\Http\Controllers\Admin\QuestionController;
 
 use App\Http\Controllers\UseByUser\UserAvatarShop;
 use App\Http\Controllers\UseByUser\UserProfile;
@@ -55,12 +56,21 @@ Route::prefix('freeavatar')->group(function () {
     Route::delete('/{id}', [FreeAvatarController::class, 'destroy']);
 });
 
+Route::prefix('question')->group(function () {
+    Route::get('/', [QuestionController::class, 'index']);
+    Route::get('/{id}', [QuestionController::class, 'getQuestionById']);
+    Route::post('/', [QuestionController::class, 'store']);
+    Route::put('/{id}', [QuestionController::class, 'update']);
+    Route::delete('/{id}', [QuestionController::class, 'destroy']);
+});
+
 // -------------------------------------USER IN GAME ROUTES-----------------------------------
 
 Route::prefix('transaction')->group(function () {
     Route::get('/', [UserAvatarShop::class, 'index']);
     Route::get('/{id}', [UserAvatarShop::class, 'getTransactionData']);
     Route::post('/userbuyavatar/{id}', [UserAvatarShop::class, 'BuyAvatarByUser']);
+    Route::get('/userbuyavatar/{id}', [UserAvatarShop::class, 'GetBuyAvatarByUser']);
 });
 
 Route::prefix('userprofile')->group(function () {
