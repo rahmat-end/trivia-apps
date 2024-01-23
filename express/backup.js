@@ -11,6 +11,10 @@ app.use(express.json());
 const ROOM_CAPACITY = 5;
 const COUNTDOWN_SECONDS = 20;
 const botAdded = {};
+const dataArray = [];
+let clearDataInterval;
+const roomDataArray = {};
+const answerArray = {};
 
 io.on('connection', (socket) => {
     const userId = socket.id;
@@ -18,21 +22,44 @@ io.on('connection', (socket) => {
 
     socket.join(availableRoom);
 
-
     console.log(`User ID ${userId} bergabung dalam ruangan ${availableRoom}`);
 
     startCountdown(availableRoom);
+
+    socket.room = availableRoom;
 
     socket.on('recive', (data) => {
         console.log(`Data JSON diterima dari User ID ${userId} di ruangan ${availableRoom}:`, data);
 
         const responseData = {
             ...data,
-            socketId: socket.id
+            socketId: socket.id,
+            availableRoom
         };
 
         io.to(availableRoom).emit('view', { status: 'Data JSON diterima pada socket', data: responseData });
-        console.log(responseData);
+        // dataArray.push(responseData);
+
+        if (!roomDataArray[availableRoom]) {
+            roomDataArray[availableRoom] = [];
+        }
+        roomDataArray[availableRoom].push(responseData);
+    });
+
+    socket.on('answer', (answers) => {
+        console.log(`Jawaban diterima dari User ID ${userId} di ruangan ${availableRoom}:`, answers);
+
+        const answerData = {
+            ...answers,
+            socketId: socket.id,
+            availableRoom
+        }
+
+        io.to(availableRoom).emit('jawaban', { status: 'Data JSON diterima pada socket', data: answerData });
+        if (!answerArray[availableRoom]) {
+            answerArray[availableRoom] = [];
+        }
+        answerArray[availableRoom].push(answerData);
     });
 
 
@@ -47,12 +74,10 @@ io.on('connection', (socket) => {
 
             console.log(`Jumlah orang dalam ruangan ${availableRoom} setelah disconnect: ${remainingUsers - remainingBots.length}`);
 
-            // Hentikan countdown jika tidak ada pengguna lagi di ruangan
             if (remainingUsers - remainingBots.length === 0) {
                 stopCountdown(availableRoom);
             }
 
-            // Reset status ruangan jika tidak ada pengguna lagi di ruangan
             if (remainingUsers === 0) {
                 resetRoomStatus(availableRoom);
             }
@@ -67,29 +92,13 @@ io.on('connection', (socket) => {
             roomData.countdownStarted = false;
             clearInterval(roomData.countdownInterval);
             roomData.hasBot = false;
-            // botAdded[room] = false;
         }
     }
 });
 
-function findOrCreateAvailableRoom(userId) {
-    const userRooms = io.sockets.adapter.sids.get(userId);
-
-    if (userRooms) {
-        return Array.from(userRooms).find((room) => io.sockets.adapter.rooms.get(room).size < ROOM_CAPACITY);
-    }
-
-    const newRoom = `Room-${generateRoomId()}`;
-    io.in(newRoom).emit('message', { user: 'System', text: 'Ruangan telah dibuat untuk game baru.' });
-    io.in(newRoom).emit('userJoined', { userId: userId });
-
-    io.sockets.adapter.sids.set(userId, new Set([newRoom]));
-    io.sockets.adapter.rooms.set(newRoom, new Set([userId]));
-    startCountdown(newRoom);
-
-    return newRoom;
+function generateRoomId() {
+    return Math.random().toString(36).substring(7);
 }
-
 
 function findOrCreateAvailableRoom() {
     const availableRoom = [...io.sockets.adapter.rooms.keys()].find(
@@ -104,65 +113,6 @@ function findOrCreateAvailableRoom() {
     }
 }
 
-function generateRoomId() {
-    return Math.random().toString(36).substring(7);
-}
-
-// ---------------------------------------------------------------------------------------
-// function startCountdown(room) {
-//     const roomData = io.sockets.adapter.rooms.get(room);
-
-//     if (!roomData.countdownStarted) {
-//         roomData.countdownStarted = true;
-
-//         botAdded[room] = false;
-
-//         let countdown = COUNTDOWN_SECONDS;
-//         roomData.countdownInterval = setInterval(() => {
-//             console.log(`Countdown di ruangan ${room}: ${countdown} detik`);
-
-//             const roomSize = io.sockets.adapter.rooms.get(room).size;
-
-//             const botCount = Array.from(roomData).filter((userId) => userId.startsWith('Bot-')).length;
-
-//             const actualRoomSize = roomSize - botCount;
-
-//             if (countdown === 0 && actualRoomSize >= 4) {
-//                 clearInterval(roomData.countdownInterval);
-
-//                 if (actualRoomSize === 4) {
-//                     console.log('Game start! With 1 Bot');
-//                     setTimeout(() => {
-//                         addBotToRoom(room);
-//                     }, 0);
-//                 } else {
-//                     console.log('Game start!');
-//                 }
-//             }
-//             else if (countdown === 0 && actualRoomSize < 4) {
-//                 clearInterval(roomData.countdownInterval);
-//                 console.log('Gagal memulai game');
-//                 io.in(room).emit('message', { user: 'System', text: 'Gagal memulai game karena kurang pemain' });
-
-//                 const allSockets = Array.from(roomData);
-
-//                 for (const userToKick of allSockets) {
-//                     const socketToKick = io.sockets.sockets.get(userToKick);
-//                     if (socketToKick) {
-//                         socketToKick.disconnect(true);
-//                     }
-//                 }
-//             }
-//             countdown--;
-
-//             if (countdown < 0) {
-//                 clearInterval(roomData.countdownInterval);
-//             }
-
-//         }, 1000);
-//     }
-// }
-// ---------------------------------------------------------------------------------------
 
 function startCountdown(room) {
     const roomData = io.sockets.adapter.rooms.get(room);
@@ -186,7 +136,7 @@ function startCountdown(room) {
                 clearInterval(roomData.countdownInterval);
 
                 if (actualRoomSize >= 4) {
-                    if (actualRoomSize === 4) {
+                    if (roomSize === 4) {
                         console.log('Game start! With 1 Bot');
                         setTimeout(() => {
                             addBotToRoom(room);
@@ -195,15 +145,18 @@ function startCountdown(room) {
                         console.log('Game start!');
                     }
 
-                    // Tunggu 10 detik setelah game dimulai, lalu putuskan semua pengguna
+                    // clearDataInterval = setInterval(() => {
+                    //     clearData(room);
+                    // }, 11000);
+
                     setTimeout(() => {
                         disconnectAllUsers(room);
-                    }, 5000);
+                        // clearInterval(clearDataInterval);
+                    }, 150000);
+
                 } else {
                     console.log('Gagal memulai game');
                     io.in(room).emit('message', { user: 'System', text: 'Gagal memulai game karena kurang pemain' });
-
-                    // Putuskan semua pengguna ketika game gagal dimulai
                     disconnectAllUsers(room);
                 }
             }
@@ -216,6 +169,14 @@ function startCountdown(room) {
         }, 1000);
     }
 }
+
+// function clearData(room) {
+//     if (answerArray[room]) {
+//         answerArray[room].length = 0;
+//         console.log(`DataAnswerArray dihapus untuk room ${room}`);
+//     }
+// }
+
 
 function disconnectAllUsers(room) {
     const roomData = io.sockets.adapter.rooms.get(room);
@@ -248,6 +209,7 @@ function stopCountdown(room) {
     const roomData = io.sockets.adapter.rooms.get(room);
     if (roomData && roomData.countdownStarted) {
         clearInterval(roomData.countdownInterval);
+        clearInterval(clearDataInterval);
     }
 }
 
@@ -256,4 +218,30 @@ const host = '192.168.18.169';
 
 server.listen(port, host, () => {
     console.log(`Server berjalan di http://${host}:${port}`);
+});
+
+app.get('/getAnswerArray/:room', (req, res) => {
+    const room = req.params.room;
+    const data = answerArray[room] || [];
+
+    // Menyusun objek dengan kunci "answer 1", "answer 2", dst.
+    const result = {};
+    data.forEach((item, index) => {
+        result[`answer ${index + 1}`] = {
+            "users": data.map(user => ({ "user": user }))
+        };
+    });
+
+    res.json(result);
+});
+
+
+
+
+
+
+app.get('/getDataArray/:room', (req, res) => {
+    const room = req.params.room;
+    const data = roomDataArray[room] || [];
+    res.json({ "users": data });
 });
