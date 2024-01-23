@@ -4,10 +4,11 @@
   "description": "s.io/tvg",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "nodemon dian.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "axios": "^1.6.5",
     "express": "^4.18.2",
     "nodemon": "^3.0.2",
     "socket.io": "^4.7.4"

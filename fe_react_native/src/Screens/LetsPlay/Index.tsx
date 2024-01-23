@@ -17,15 +17,15 @@ import {
 } from "../../themes/Metrixs";
 import useQuestion from "../../hooks/useQuestion";
 import useUser from "../../hooks/useUser";
-// import { socket } from "../../Components/libs/socket";
+import { socket } from "../../Components/libs/socket";
 import { useAppSelector } from "../../Redux/hooks";
 import { RootState } from "../../Redux/store";
 import { useQuery } from "react-query";
 import { apinodejs } from "../../Components/libs/api";
 
-const LetsPlay = () => {
+const LetsPlay = ({ route }: { route: any }) => {
   const { dataQuestion } = useQuestion();
-  const [countDown, setCountDown] = useState(9);
+  const [countDown, setCountDown] = useState(0);
   const [clientAnswer, setClientAnswer] = useState(-1);
   const [rightAnswer, setRightAnswer] = useState(-1);
   const [background, setBackground] = useState("#89CFF0");
@@ -33,16 +33,18 @@ const LetsPlay = () => {
   const [score, setScore] = useState(0);
   const { userlogin } = useUser();
   const [playerAnswersVisible, setPlayerAnswersVisible] = useState(false);
-  const {idRoom} = useAppSelector((state: RootState) => state.idRoom);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (countDown > 0) {
-        setCountDown(countDown - 1);
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [countDown]);
+  const { newSocket } = route.params;
+  const [dataAnswer, setDataAnswer] = useState([]);
+  const [limitTimer, setlimitTimer] = useState(0);
+const {idRoom}= useAppSelector((state: RootState) => state.idRoom);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     if (countDown > 0) {
+  //       setCountDown(countDown - 1);
+  //     }
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, [countDown]);
 
   const handleAnswer = (index: number) => {
     setClientAnswer(index);
@@ -52,55 +54,23 @@ const LetsPlay = () => {
       avatar: userlogin?.avatar,
       answer: index,
     };
-    // socket.emit(`answer`, answer);
-    // console.log(answer);
+    socket.emit(`answer`, answer);
   };
 
-const {data:getDataAnswer}= useQuery("getAnswer", async ()=>{
-  try {
-    const response = await apinodejs.get(`/getAnswerArray/${idRoom}`);
-    console.log("ini response",response.data.answer)
-   return response.data.answer
-  } catch (error) {
-    console.log(error)
-  }
-})
-
   useEffect(() => {
-    console.log("ini useEffect",getDataAnswer)
-  });
-
-  let answerQuestion1: any = [
-    {
-      answer: 2,
-      avatar:
-        "https://lh3.googleusercontent.com/a/ACg8ocJNztzbwBveNRkrJtGPH78f_ZZ9NcChY7SAB9Eldzno=s96-c",
-      email: "kikijak487@gmail.com",
-      name: "Tu Yul",
-    },
-    {
-      answer: 2,
-      avatar:
-        "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671124.jpg?size=626&ext=jpg&ga=GA1.2.714462566.1697981532&semt=ais",
-      email: "dian@gmail.com",
-      name: "dian",
-    },
-    {
-      answer: 2,
-      avatar:
-        "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671124.jpg?size=626&ext=jpg&ga=GA1.2.714462566.1697981532&semt=ais",
-      email: "dian@gmail.com",
-      name: "dian",
-    },
-    {
-      answer: 3,
-      avatar:
-        "https://lh3.googleusercontent.com/a/ACg8ocJNztzbwBveNRkrJtGPH78f_ZZ9NcChY7SAB9Eldzno=s96-c",
-      email: "kikijak487@gmail.com",
-      name: "Tu Yul",
-    },
-  ];
-
+    socket.on("collectAnswer", (data: any) => {
+      console.log("data answer", data);
+      setDataAnswer(data);
+    });
+    socket.on("timer", (data: any) => {
+      console.log("data timer", data);
+      setCountDown(data);
+    });
+    socket.on("limitTimer", (data: any) => {
+      console.log("data limitTimer", data);
+      setlimitTimer(data);
+    })
+  }, []);
 
   const [currentPage, setCurrentPage] = useState(1);
   const ITEM_PERPAGE: number = 1;
@@ -110,8 +80,8 @@ const {data:getDataAnswer}= useQuery("getAnswer", async ()=>{
   );
 
   useEffect(() => {
-    if (countDown === 0) {
-      const data = questionToShow?.map((item: any) => {
+    if (countDown === 1) {
+      questionToShow?.map((item: any) => {
         item.answers.filter((key: any, index: number) => {
           if (key.isTrue === true) {
             setRightAnswer(index);
@@ -119,23 +89,32 @@ const {data:getDataAnswer}= useQuery("getAnswer", async ()=>{
         });
       });
       setPlayerAnswersVisible(true);
-    }
-  }, [countDown]);
-
-  useEffect(() => {
-    if (currentPage < Math.ceil(dataQuestion?.length / ITEM_PERPAGE)) {
-      const interval = setInterval(() => {
+    } else if(countDown === 0){
+       if (currentPage < Math.ceil(dataQuestion?.length / ITEM_PERPAGE)) {
         setCurrentPage(currentPage + 1);
         setBackground("#89CFF0");
         setBgClientAnswer("#008080");
-        setCountDown(9);
         setClientAnswer(-1);
         setRightAnswer(-1);
         setPlayerAnswersVisible(false);
-      }, 10000);
-      return () => clearInterval(interval);
+      }
     }
-  }, [countDown, currentPage]);
+  }, [countDown]);
+
+
+  useEffect (() => {
+    const user = {
+      email: userlogin?.email,
+      name: userlogin?.name,
+      avatar: userlogin?.avatar,
+      score: score
+    };
+    if (limitTimer === 1 ){
+      Alert.alert("Game Finish", `Your Score is ${score}`)
+      newSocket?.emit("finishGame", user);
+    }
+  },[currentPage, limitTimer])
+
 
   useEffect(() => {
     if (clientAnswer === rightAnswer) {
@@ -144,7 +123,6 @@ const {data:getDataAnswer}= useQuery("getAnswer", async ()=>{
         setBgClientAnswer("#00A36C");
       }
     } else {
-      // Alert.alert("Wrong Answer");
       setBgClientAnswer("red");
     }
   }, [rightAnswer]);
@@ -159,7 +137,9 @@ const {data:getDataAnswer}= useQuery("getAnswer", async ()=>{
         {questionToShow?.map((item: any, index: number) => {
           return (
             <View style={styles.container} key={index}>
-              <Text style={styles.timer}>00:0{countDown}</Text>
+              <Text style={styles.timer}>
+                00:{`${countDown < 10 ? `0${countDown}` : countDown}`}
+              </Text>
               <Image
                 style={styles.imageQuestion}
                 source={{
@@ -188,12 +168,10 @@ const {data:getDataAnswer}= useQuery("getAnswer", async ()=>{
                     ]}
                   >
                     {playerAnswersVisible &&
-                      getDataAnswer?.map((item: any, key: number) => {
-                        const sameAnswer = getDataAnswer?.filter(
-                          (item: any) => {
-                            return item.answer === index;
-                          }
-                        );
+                      dataAnswer?.map((item: any, key: number) => {
+                        const sameAnswer = dataAnswer?.filter((item: any) => {
+                          return item.answer === index;
+                        });
 
                         if (item.answer === index) {
                           return (
@@ -212,36 +190,32 @@ const {data:getDataAnswer}= useQuery("getAnswer", async ()=>{
                                   }}
                                 />
                               )}
-                              {sameAnswer.length > 1 && 
-                              sameAnswer.map((item:any, keySome:number)=>{
-                                return (
-                                  <View key={keySome}>
-                                    <Image
-                                    style={[
-                                      styles.avatar,
-                                      {
-                                        top: verticalScale(-20),
-                                        left:
-                                          keySome === 0
-                                            ? horizontalScale(10)
-                                            : keySome === 1
-                                            ? horizontalScale(50)
-                                            : keySome === 2
-                                            ? horizontalScale(90)
-                                            : horizontalScale(130),
-                                      },
-                                    ]}
-                                    source={{
-                                      uri: item.avatar,
-                                    }}
-                                  />
-
-                                  </View>
-
-
-                                )
-                              })
-    }
+                              {sameAnswer.length > 1 &&
+                                sameAnswer.map((item: any, keySome: number) => {
+                                  return (
+                                    <View key={keySome}>
+                                      <Image
+                                        style={[
+                                          styles.avatar,
+                                          {
+                                            top: verticalScale(-20),
+                                            left:
+                                              keySome === 0
+                                                ? horizontalScale(10)
+                                                : keySome === 1
+                                                ? horizontalScale(50)
+                                                : keySome === 2
+                                                ? horizontalScale(90)
+                                                : horizontalScale(130),
+                                          },
+                                        ]}
+                                        source={{
+                                          uri: item.avatar,
+                                        }}
+                                      />
+                                    </View>
+                                  );
+                                })}
                             </View>
                           );
                         }
@@ -374,9 +348,9 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(100),
     position: "absolute",
   },
-  containerAvatar:{
-   position:"absolute",
-   left:horizontalScale(0),
-   bottom:verticalScale(0),
-  }
+  containerAvatar: {
+    position: "absolute",
+    left: horizontalScale(0),
+    bottom: verticalScale(0),
+  },
 });

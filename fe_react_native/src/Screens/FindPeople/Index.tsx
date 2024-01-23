@@ -20,9 +20,10 @@ import { apinodejs } from "../../Components/libs/api";
 import { useQuery } from "react-query";
 import { useAppSelector } from "../../Redux/hooks";
 import { RootState } from "../../Redux/store";
+import { socket } from "../../Components/libs/socket";
 
 
-const FindPeople = ({ navigation }: { navigation: any }) => {
+const FindPeople = ({ navigation, route }: { navigation: any, route: any }) => {
   const [Timer, setTimer] = useState(15);
   const [visibleSatu, setVisibleSatu] = useState(false);
   const [visibleDua, setVisibleDua] = useState(false);
@@ -31,6 +32,8 @@ const FindPeople = ({ navigation }: { navigation: any }) => {
   const { userlogin } = useUser();
   const [move, setMove] = useState(false);
   const { idRoom } = useAppSelector((state: RootState) => state.idRoom);
+  const {newSocket}= route.params;
+  const [dataPlayer, setDataPlayer] = useState([]);
  
 
   useEffect(() => {
@@ -47,14 +50,21 @@ const FindPeople = ({ navigation }: { navigation: any }) => {
 
   useEffect(() => {
     console.log("idRoom di find people", idRoom);
+    console.log(Timer)
   },[])
+
+  // useEffect(() => {
+  //   socket.on("dataUser", (data: any) => {
+  //     console.log("data user", data);
+  //     setDataPlayer(data);
+  //   })
+  // },[])
 
  
 
   const { data: getDataPlayers } = useQuery("dataPlayer", async () => {
     try {
       const res = await apinodejs.get(`/getDataArray/${idRoom}`);
-      console.log("data player", res.data.users);
       return res.data.users;
     } catch (error) {
       console.log(error);
@@ -62,8 +72,12 @@ const FindPeople = ({ navigation }: { navigation: any }) => {
   });
 
   useEffect(() => {
+    console.log("ini data players",getDataPlayers );
+  })
+
+  useEffect(() => {
     if (move) {
-      navigation.navigate("Let's Play");
+      navigation.navigate("Let's Play", { newSocket: newSocket });
     }
   }, [move]);
 
@@ -76,7 +90,7 @@ const FindPeople = ({ navigation }: { navigation: any }) => {
       setVisibleTiga(true);
     } else if (Timer === 3) {
       setVisibleEmpat(true);
-    } else if (Timer === 0) {
+    } else if (Timer === 1) {
       setMove(true);
     }
   }, [Timer]);

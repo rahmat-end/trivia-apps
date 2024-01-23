@@ -9,7 +9,7 @@ const io = socketIO(server);
 app.use(express.json());
 
 const ROOM_CAPACITY = 2;
-const COUNTDOWN_SECONDS =5;
+const COUNTDOWN_SECONDS =10;
 const botAdded = {};
 let clearDataInterval;
 const roomDataArray = {};

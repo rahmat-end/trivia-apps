@@ -26,8 +26,8 @@ import { useAppSelector, useAppDispatch } from "../../Redux/hooks";
 import { RootState } from "../../Redux/store";
 import EditAvatarPopUp from "../../Components/EditAvatarPopUp/Index";
 import useGetGolangToken from "../../hooks/useGetGolangToken";
-// import { socket } from "../../Components/libs/socket";
-import { io } from "socket.io-client";
+import { socket } from "../../Components/libs/socket";
+// import { io } from "socket.io-client";
 import { SAVE_ID_ROOM } from "../../Redux/IdRoomSlice";
 import { apinodejs } from "../../Components/libs/api";
 
@@ -43,6 +43,7 @@ const StartGame = ({ navigation }: { navigation: any }) => {
   const { idRoom } = useAppSelector((state: RootState) => state.idRoom);
   const dispatch = useAppDispatch();
   const [dataPlayer, setDataPlayer] = useState([]);
+  const [newSocket, setNewSocket] = useState(null);
 
   const [availableRooms, setAvailableRooms] = useState();
 
@@ -71,7 +72,8 @@ const StartGame = ({ navigation }: { navigation: any }) => {
   };
   const connectToSocket = async () => {
     try {
-      const socket = io("http://192.168.18.230:3001");
+      // const socket = io("http://192.168.18.230:3001");
+      // setNewSocket(socket);
       socket.on("connect", () => {
         console.log("Terhubung ke server Socket.IO");
       });
@@ -89,7 +91,7 @@ const StartGame = ({ navigation }: { navigation: any }) => {
 
   useEffect(() => {
     if (idRoom) {
-      navigation.navigate("Find People");
+      navigation.navigate("Find People",{newSocket:newSocket});
     }
   }, [idRoom]);
 
