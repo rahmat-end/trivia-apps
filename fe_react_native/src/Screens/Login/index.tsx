@@ -21,32 +21,19 @@ import { useAppSelector } from "../../Redux/hooks";
 import { RootState } from "../../Redux/store";
 
 const Login = ({ navigation }: { navigation: any }) => {
-  const { submitLogin, initializing } = useLogin();
-  const { user } = useAppSelector((state: RootState) => state.user);
+  const { submitLogin, initializing} = useLogin();
+const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
+  const [visible, setvisible] = useState(false);
 
   useEffect(() => {
-    if (user.token) {
+    if (dataUser.status === "Done Register") {
       navigation.navigate("Choose Avatar");
+    } else if (dataUser.status === "Done login") {
+      navigation.navigate("Start Game");
     }
-  }, [user, submitLogin]);
+  }, [dataUser])
 
-  // if (initializing && !user.token) {
-  //   return (
-  //     <ImageBackground
-  //     source={require("../../../assets/BackgroundImage/splashScreen.png")}
-  //     style={styles.backgroundLoading}
-  //   >
-  //     <View style={styles.animationContainer}>
-  //       <LottieView
-  //         source={require("../../../assets/Animatiom/loading.json")}
-  //         loop
-  //         autoPlay
-  //         style={styles.animationlogo}
-  //       />
-  //     </View>
-  //     </ImageBackground>
-  //   );
-  // }
+ 
 
   return (
     <ImageBackground
@@ -55,9 +42,16 @@ const Login = ({ navigation }: { navigation: any }) => {
     >
       <StatusBar style="light" />
       <View style={styles.heroLogo}>
+        {
+          visible?
+        <View style={styles.containerconfirm}>
+        
+        </View>:
+        <>
         <View>
+          
           <TouchableOpacity
-            onPress={() => submitLogin()}
+            onPress={() =>submitLogin()}
             style={styles.loginButton}
           >
             <Image
@@ -67,7 +61,15 @@ const Login = ({ navigation }: { navigation: any }) => {
             <Text style={styles.loginText}>sign in with google</Text>
           </TouchableOpacity>
         </View>
-        {initializing && !user.token ? (
+       {/* <TouchableOpacity
+        onPress={()=>handleLogout()}
+        >
+          <Text>Logoout</Text>
+        </TouchableOpacity>  */}
+        </>
+        }
+        {initializing? (
+          <View style={styles.overlay}>
           <View style={styles.animationContainer}>
             <LottieView
               source={require("../../../assets/Animatiom/loading.json")}
@@ -75,6 +77,7 @@ const Login = ({ navigation }: { navigation: any }) => {
               autoPlay
               style={styles.animationlogo}
             />
+          </View>
           </View>
         ) : null}
       </View>
@@ -93,18 +96,26 @@ const styles = StyleSheet.create({
     height: verticalScale(33),
     resizeMode: "contain",
   },
+  overlay:{
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+  },
   animationContainer: {
     position: "absolute",
     zIndex: -1,
     left: 0,
-    top: 0,
+    top: 60,
     right: 0,
     justifyContent: "center",
     alignItems: "center",
   },
   animationlogo: {
-    width: horizontalScale(200),
-    height: verticalScale(200),
+    width: horizontalScale(100),
+    height: verticalScale(100),
   },
   heroLogo: {
     flex: 1,
@@ -129,5 +140,11 @@ const styles = StyleSheet.create({
     textTransform: "capitalize",
     color: "black",
     fontWeight: "bold",
+  },
+  containerconfirm: {
+    width: horizontalScale(300),
+    height: verticalScale(300),
+    backgroundColor: "white",
+    borderRadius: moderateScale(10),
   },
 });

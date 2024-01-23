@@ -1,52 +1,98 @@
 /** @format */
 
-// src/components/PlayersManagement.tsx
-import React from "react";
-import { Table, Thead, Tbody, Tr, Th, Td, Box } from "@chakra-ui/react";
+// Import tambahan
+// import { createBrowserHistory, History } from "history";
+import React, { useEffect } from "react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Box,
+  Button,
+  Image,
+} from "@chakra-ui/react";
+import { FaTrash } from "react-icons/fa";
+
+import { useFetchUserData } from "../auth/hooks/useDataUser";
+import useUser from "../auth/hooks/useUser";
 
 const Players: React.FC = () => {
-  const playersData = [
-    { id: 1, name: "Player 1", level: 10, diamonds: 1000 },
-    { id: 2, name: "Player 2", level: 15, diamonds: 1500 },
-    { id: 2, name: "Player 2", level: 15, diamonds: 1500 },
-    { id: 2, name: "Player 2", level: 15, diamonds: 1500 },
-    { id: 2, name: "Player 2", level: 15, diamonds: 1500 },
-    { id: 2, name: "Player 2", level: 15, diamonds: 1500 },
-    { id: 2, name: "Player 2", level: 15, diamonds: 1500 },
-    { id: 2, name: "Player 2", level: 15, diamonds: 1500 },
+  const { getAllUser, handleDeleteUser, getAllUserRefetch } = useUser();
 
-    // ... data pemain lainnya
-  ];
+  const { handleFetchUserData } = useFetchUserData();
+
+  useEffect(() => {
+    handleFetchUserData();
+  }, []);
+
+  useEffect(() => {
+    getAllUserRefetch();
+  }, [getAllUser]);
 
   return (
     <>
       <Box
+        mr={20}
         bgColor={"gray.800"}
         p={5}
-        borderRadius={"lg"}
+        marginRight={"70px"}
         fontWeight={"bold"}
         color={"grey"}
-        border={"10px inset  #dcfcfe"}>
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}>
         <Table
           variant='striped'
           size={"sm"}
-          colorScheme={"gray"}
-          overflow={"auto"}>
+          flexWrap={"wrap"}
+          alignItems={"center"}>
           <Thead>
             <Tr>
-              <Th color={"white"}>ID</Th>
+              <Th color={"white"}>Avatar</Th>
+              <Th color={"white"}>Number</Th>
               <Th color={"white"}>Nama</Th>
-              <Th color={"white"}>Level</Th>
+              <Th color={"white"}>Email</Th>
               <Th color={"white"}>Diamonds</Th>
+              <Th color={"white"}>Trhopy</Th>
             </Tr>
           </Thead>
-          <Tbody>
-            {playersData.map((player) => (
-              <Tr key={player.id}>
-                <Td>{player.id}</Td>
-                <Td>{player.name}</Td>
-                <Td>{player.level}</Td>
-                <Td>{player.diamonds}</Td>
+          <Tbody p={10}>
+            {getAllUser?.map((item: any, index: number) => (
+              <Tr
+                key={index}
+                p={10}
+                borderRadius={"lg"}
+                flexDirection={"column"}
+                gap={2}
+                alignItems={"center"}
+                justifyContent={"center"}>
+                <Td>
+                  <Image
+                    src={item.avatar}
+                    alt={`Avatar of ${item.name}`}
+                    boxSize='40px'
+                    borderRadius='full'
+                  />
+                </Td>
+                <Td>{index}</Td>
+                <Td>{item.name}</Td>
+                <Td>{item.email}</Td>
+                <Td>{item.diamond}</Td>
+                <Td>{item.throphy}</Td>
+                <Td
+                  alignItems={"center"}
+                  justifyContent={"end"}>
+                  <Button
+                    colorScheme='red'
+                    size='sm'
+                    onClick={() => handleDeleteUser(item.user_id)}>
+                    <FaTrash />
+                    Delete
+                  </Button>
+                </Td>
               </Tr>
             ))}
           </Tbody>

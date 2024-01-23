@@ -3,9 +3,9 @@ package models
 import "time"
 
 type BuyAvatar struct {
-	IdBuyavatar    int       `json:"idBuyavatar" gorm:"primaryKey:autoIncrement"`
-	PhotoBuyavatar string    `json:"photoBuyavatar" gorm:"type:varchar(255)"`
-	PriceBuyavatar int       `json:"priceBuyavatar" gorm:"type: int"`
-	CreatedAt      time.Time `json:"createdAt"`
-	UpdatedAt      time.Time `json:"updatedAt"`
+	IdBuyavatar    int       `json:"id_buyavatar" gorm:"primaryKey:autoIncrement"`
+	PhotoBuyavatar string    `json:"photo_buyavatar" gorm:"type:varchar(255)"`
+	PriceBuyavatar int       `json:"price_buyavatar" gorm:"type: int"`
+	CreatedAt      time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
 }

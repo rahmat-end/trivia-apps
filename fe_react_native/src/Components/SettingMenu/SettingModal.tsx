@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { horizontalScale, moderateScale, verticalScale } from '../../themes/Metrixs'
 import useLogin from '../../hooks/useLogin'
 import { useAppSelector } from '../../Redux/hooks'  
+import { RootState } from '../../Redux/store'
 
 type SettingModalProps = {
     setIsOpen : ()=>void
@@ -12,12 +13,14 @@ type SettingModalProps = {
 
 const SettingModal = ({setIsOpen, navigation}:SettingModalProps) => {
     const {handleLogout} = useLogin()
-    const {user} = useAppSelector((state: any) => state.user);
+    const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
+   
     useEffect(() => {
-       if(user.token===""){
+       if(dataUser.token===""){
         navigation.navigate("Login Screen")
        }
-    }, [user]);
+    }, [dataUser,handleLogout]);
+    
   return (
     <View style={styles.overlay}>
     <View style={styles.container}>

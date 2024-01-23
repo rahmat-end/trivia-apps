@@ -1,6 +1,5 @@
 /** @format */
 
-// AddUserModal.tsx
 import React from "react";
 import {
   Modal,
@@ -12,6 +11,9 @@ import {
   Input,
   Button,
   Box,
+  Text,
+  Radio,
+  InputGroup,
 } from "@chakra-ui/react";
 import { Question } from "../hooks/useQuestion";
 
@@ -29,7 +31,6 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
   isOpen,
   onClose,
   setNewUserData,
-  handleSubmit,
 }) => {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
@@ -44,77 +45,146 @@ const AddQuestionModal: React.FC<AddUserModalProps> = ({
       };
     }
   };
-  const { question, handleChange } = Question();
+  const {
+    question,
+    handleChange,
+    answer1Obj,
+    answer2Obj,
+    answer3Obj,
+    answer4Obj,
+    handleAnswerSatu,
+    handleAnswerDua,
+    handleAnswerEmpat,
+    handleAnswerTiga,
+    handleSubmitQuestion,
+  } = Question();
 
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}>
+      onClose={onClose}
+      scrollBehavior='inside'>
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Add Question</ModalHeader>
+      <ModalContent
+        bgColor={"gray.800"}
+        gap={4}>
+        <ModalHeader color={"white"}>Add Question</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <form
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmitQuestion}
             encType='multipart/form-data'>
             <Input
               type='Text'
-              accept='text/*'
               placeholder='question'
-              value={question.question}
-              name='question'
+              value={question.the_question}
+              name='the_question'
               onChange={(e) => handleChange(e)}
               mt={4}
               alignItems={"center"}
               display={"flex"}
+              color={"white"}
             />
 
             <Input
               type='file'
-              accept='image/*'
-              name='image'
-              onChange={(e) => handleImageUpload(e)}
+              name='profile'
+              onChange={(e) => handleChange(e)}
+              color={"white"}
               mt={4}
               alignItems={"center"}
               display={"flex"}
             />
+            <Text color={"white"}>Pilihan Jawaban</Text>
             <Input
               type='Text'
               placeholder='answer 1'
-              onChange={(e) => handleChange(e)}
+              onChange={(e) => handleAnswerSatu(e)}
+              color={"white"}
+              value={answer1Obj.answer}
               name='answer'
               mt={4}
               alignItems={"center"}
               display={"flex"}
             />
+            <InputGroup
+              display={"flex"}
+              gap={2}
+              alignItems={"center"}>
+              <Radio
+                value='true'
+                color={"white"}
+                name='isTrue'
+                onChange={(e) => handleAnswerSatu(e)}></Radio>
+              <Text color={"white"}>Kunci Jawaban</Text>
+            </InputGroup>
+
             <Input
               type='Text'
-              placeholder='answer2'
-              name='answer2'
-              onChange={(e) => handleChange(e)}
+              placeholder='answer 2'
+              onChange={(e) => handleAnswerDua(e)}
+              color={"white"}
+              value={answer2Obj.answer}
+              name='answer'
               mt={4}
               alignItems={"center"}
               display={"flex"}
             />
+            <InputGroup
+              display={"flex"}
+              gap={2}
+              alignItems={"center"}>
+              <Radio
+                value='true'
+                color={"white"}
+                name='isTrue'
+                onChange={(e) => handleAnswerDua(e)}>
+                <Text color={"white"}>Kunci Jawaban</Text>
+              </Radio>
+            </InputGroup>
+
             <Input
               type='Text'
               placeholder='answer 3'
-              name='answer3'
-              onChange={(e) => handleChange(e)}
+              onChange={(e) => handleAnswerTiga(e)}
+              color={"white"}
+              value={answer3Obj.answer}
+              name='answer'
               mt={4}
               alignItems={"center"}
               display={"flex"}
             />
+            <InputGroup className='flex gap-2 items-center'>
+              <Radio
+                value='true'
+                color={"white"}
+                onChange={(e) => handleAnswerTiga(e)}
+                name='isTrue'>
+                <Text color={"white"}>Kunci Jawaban</Text>
+              </Radio>
+            </InputGroup>
+
             <Input
               type='Text'
-              onChange={(e) => handleChange(e)}
               placeholder='answer 4'
-              name='answer4'
+              color={"white"}
+              onChange={(e) => handleAnswerEmpat(e)}
+              value={answer4Obj.answer}
+              name='answer'
               mt={4}
               alignItems={"center"}
               display={"flex"}
             />
+            <InputGroup className='flex gap-2 items-center'>
+              <Radio
+                value='true'
+                onChange={(e) => handleAnswerEmpat(e)}
+                color={"white"}
+                name='isTrue'>
+                {" "}
+                <Text color={"white"}>Kunci Jawaban</Text>
+              </Radio>
+            </InputGroup>
 
             <Box
               mt={4}

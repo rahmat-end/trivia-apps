@@ -10,6 +10,7 @@ type TransactionRepository interface {
 	FindTransactions() ([]models.Transaction, error)
 	GetTransaction(transactionId int) (models.Transaction, error)
 	CreateTransaction(transaction models.Transaction) (models.Transaction, error)
+	UpdateTransaction(status string, orderId int) (models.Transaction, error)
 }
 
 func RepositoryTransaction(db *gorm.DB) *repository {
@@ -36,18 +37,18 @@ func (r *repository) CreateTransaction(transaction models.Transaction) (models.T
 	return transaction, err
 }
 
-// func (r *repository) UpdateTransaction(status string, orderId int) (models.Transaction, error) {
-// 	var transaction models.Transaction
-// 	r.db.Preload("User").Preload("Diamond").First(&transaction, orderId)
+func (r *repository) UpdateTransaction(status string, orderId int) (models.Transaction, error) {
+	var transaction models.Transaction
+	r.db.Preload("User").Preload("Diamond").First(&transaction, orderId)
 
-// 	if status != transaction.Status && status == "success" {
-// 		var user models.User
-// 		r.db.First(&user, transaction.UserId)
-// 		user.Diamond = user.Diamond +
-// 		r.db.Save(&transaction)
-// 	}
+	if status != transaction.Status && status == "success" {
+		var user models.User
+		r.db.First(&user, transaction.UserId)
+		user.Diamond = user.Diamond + transaction.AmountDiamond
+		r.db.Save(&user)
+	}
 
-// 	transaction.Status = status
-// 	err := r.db.Save(&transaction).Error
-// 	return transaction, err
-// }
+	transaction.Status = status
+	err := r.db.Save(&transaction).Error
+	return transaction, err
+}

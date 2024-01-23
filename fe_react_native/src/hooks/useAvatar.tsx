@@ -1,87 +1,208 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
-import axios from "axios";
+import {apigolang, apilaravel} from "../Components/libs/api";
 import { useQuery, useMutation } from "react-query";
 import { useState, useEffect } from "react";
-import useLogin from "./useLogin";
 import { useAppSelector } from "../Redux/hooks";
-import { useNavigation } from "@react-navigation/native";
-type createDataUSer = {
+import { useAppDispatch } from "../Redux/hooks";
+import { SAVE_USER, SAVEUSER_ASYNCSTORE } from "../Redux/dataUserSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { RootState } from "../Redux/store";
+import useUser from "./useUser";
+type editDataUSer = {
   name: string;
   email: string;
   username: string;
   avatar: string;
   password: string;
+  profile: string;
 };
-const useAvatar =() => {
-  const user = useAppSelector((state: any) => state.user.user);
-  const[avatar, setAvatar]=useState("");
-  const [addDataUser, setAddDataUser] = useState({
-    name:"",
-    email:"",
-    username:"",
+const useAvatar = () => {
+  const [avatar, setAvatar] = useState("");
+  const {userlogin, refetchUserlogin} = useUser()
+  const [addDataUser, setAddDataUser] = useState<editDataUSer>({
+    name: "",
+    email: "",
+    username: "",
     avatar: "",
-    profile:"",
-    password:""
+    profile: "",
+    password: "",
   });
 
-  const navigation = useNavigation();
+  const [updateAvatarOnly, setUpdateAvatarOnly] = useState({
+    name: "",
+    email: "",
+    username:"",
+    avatar: "",
+    profile: "",
+    password: "",
+  });
+  const dispatch = useAppDispatch();
+const {dataUser} = useAppSelector((state: RootState) => state.dataUser);
   const { data: dataAvatar, isLoading: dataFreevatarLoading } = useQuery(
-    "user",
-    async () => {
-      try {
-        const response = await axios.get(
-          "http://192.168.18.169:8001/api/freeavatar"
-        );
-        return response.data;
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  );
-
-  const handleChange = (key: string, value: string)=>{
-    setAddDataUser({
-      ...addDataUser,
-      name: user.displayName,
-      email: user.email,
-      profile: user.photoURL,
-      password:"roottrivia",
-      avatar: avatar,
-     [key]: value
-    })
-  }
-
-  useEffect(() => {
-    console.log(addDataUser)
-  },[addDataUser,avatar])
-
-
-
-  const { mutate: createUser, isLoading: createUserLoading } = useMutation(
+    "dataAvatar",
     async () => {
       try {
         const headers = {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${dataUser?.token}`,
         }
-        const response = await axios.post(
-          "http://192.168.18.169:8001/api/auth/registeruser", addDataUser, {
-            headers,
-          }
+        const response = await apigolang.get(
+          "/freeavatars", { headers }
         );
-        console.log(response.data);
-        return response.data;
+        // console.log(response.data.data);
+        return response.data.data;
       } catch (error) {
-        console.log(error);
+        console.log(error.data);
       }
-    },{
-      onSuccess: () => {
-        navigation.goBack();
-      },
     }
   );
 
-  return { dataAvatar, dataFreevatarLoading, handleChange, createUser, addDataUser, setAvatar };
+  const {data:avatarpaid}= useQuery('avatarpaid', async ()=>{
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${dataUser?.token}`,
+      }
+      const response = await apigolang.get("/buyavatars", { headers })
+      return response.data.data
+    } catch (error) {
+      console.log(error.data);
+    }
+  })
+
+  const handleChange = (key: string, value: string) => {
+    setAddDataUser({
+      ...addDataUser,
+      email: userlogin?.email,
+      profile: userlogin?.profile,
+      password: "roottrivia",
+      avatar: avatar,
+      [key]: value,
+    });
+  };
+
+  const handleUpdateAvatarOnly =()=>{
+    setUpdateAvatarOnly({
+      ...updateAvatarOnly,
+      name:userlogin?.name,
+      username:"tuyuldepok",
+      email: userlogin?.email,
+      profile: userlogin?.profile,
+      password: "roottrivia",
+      avatar: avatar,
+    })
+  }
+
+  useEffect(() => {
+    if(avatar !== ""){
+      handleUpdateAvatarOnly()
+    }
+  }, [avatar]);
+
+  // useEffect(() => {
+  //   console.log("data submit data",addDataUser);
+  //   console.log("ini avatar",avatar);
+  //   console.log("ini update avatar only",updateAvatarOnly);
+  // }, [addDataUser, avatar, handleUpdateAvatarOnly, updateAvatarOnly]);
+
+  const {mutate:updateAvatar, isLoading:updateAvatarLoading } = useMutation(async ()=>{
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        
+      };
+      const response = await apilaravel.put(
+        `/userprofile/update/${userlogin?.user_id}`,
+        updateAvatarOnly,
+        {
+          headers,
+        }
+      );
+      console.log("ini response",response.data);
+      return response.data
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  },
+  {
+    onSuccess : ()=>{
+      refetchUserlogin()
+    }
+  }
+  
+  )
+
+  const {
+    mutate: createUser,
+    isLoading: createUserLoading,
+    isSuccess: createUserSuccess,
+    isError: createUserError,
+  } = useMutation(async () => {
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        
+      };
+      const response = await apilaravel.put(
+        `/userprofile/update/${userlogin?.user_id}`,
+        addDataUser,
+        {
+          headers,
+        }
+      );
+      console.log("ini response",response.data);
+      return response.data;
+    } catch (error) {
+      console.log("ini pesan error",error.response.data.message);
+    }
+  });
+
+
+  const {data:getUserPaidAvatar, refetch:refetchUserPaidAvatar, isLoading: isLoadingUserPaidAvatar} = useQuery('getUserPaidAvatar', async ()=>{
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${dataUser?.token}`,
+      }
+      const response = await apilaravel.get(`/transaction/userbuyavatar/${dataUser?.userid}`, { headers })
+      return response.data
+    } catch (error) {
+      console.log(error.response);
+    }
+  })
+
+  
+
+  const saveDataUser = async () => {
+    try {
+    const dataString =  await AsyncStorage.getItem("dataUser");
+    const payload = JSON.parse(dataString);
+    dispatch(SAVE_USER(payload));
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+    
+  };
+
+  return {
+    dataAvatar,
+    getUserPaidAvatar,
+    dataFreevatarLoading,
+    createUserError,
+    createUserSuccess,
+    handleChange,
+    createUser,
+    addDataUser,
+    setAvatar,
+    avatar,
+    createUserLoading,
+    saveDataUser,
+    avatarpaid,
+    isLoadingUserPaidAvatar,
+    updateAvatar,
+    updateAvatarLoading
+  };
 };
 
 export default useAvatar;
