@@ -11,7 +11,6 @@ app.use(express.json());
 const ROOM_CAPACITY = 2;
 const COUNTDOWN_SECONDS =5;
 const botAdded = {};
-const dataArray = [];
 let clearDataInterval;
 const roomDataArray = {};
 const answerArray = {};
@@ -143,13 +142,8 @@ function startCountdown(room) {
                         console.log('Game start!');
                     }
 
-                    clearDataInterval = setInterval(() => {
-                        clearData(room);
-                    }, 11000);
-
                     setTimeout(() => {
                         disconnectAllUsers(room);
-                        clearInterval(clearDataInterval);
                     }, 150000);
 
                 } else {
@@ -167,14 +161,6 @@ function startCountdown(room) {
         }, 1000);
     }
 }
-
-function clearData(room) {
-    if (answerArray[room]) {
-        answerArray[room].length = 0;
-        console.log(`DataAnswerArray dihapus untuk room ${room}`);
-    }
-}
-
 
 function disconnectAllUsers(room) {
     const roomData = io.sockets.adapter.rooms.get(room);
@@ -221,8 +207,29 @@ server.listen(port, host, () => {
 app.get('/getAnswerArray/:room', (req, res) => {
     const room = req.params.room;
     const data = answerArray[room] || [];
-    res.json({ "answer": data });
+
+    const result = {};
+    let answerIndex = 1;
+
+    data.forEach((item, index) => {
+        if (index > 0 && index % 5 === 0) {
+            answerIndex++;
+        }
+
+        if (!result[`answer ${answerIndex}`]) {
+            result[`answer ${answerIndex}`] = {
+                "users": []
+            };
+        }
+
+        result[`answer ${answerIndex}`]["users"].push({
+            "user": item
+        });
+    });
+
+    res.json(result);
 });
+
 
 app.get('/getDataArray/:room', (req, res) => {
     const room = req.params.room;
