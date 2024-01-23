@@ -8,3 +8,7 @@ export const apigolang = axios.create({
 export const apilaravel = axios.create({
     baseURL: `http://192.168.18.169:8001/api`,
 })
+
+export const apinodejs = axios.create({
+    baseURL: `http://192.168.18.230:3001`,
+})

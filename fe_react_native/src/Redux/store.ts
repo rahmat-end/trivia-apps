@@ -5,6 +5,7 @@ import snapMidtransReducer from './snapMidtransSlice'
 import dataUserGolangReducer from './dataUserGolangSlice'
 import diamondReducer from './diamondSlice'
 import dataPlayerReducer from './dataPlayerSlice'
+import idRoomReducer from './IdRoomSlice'
 
 export const store = configureStore({
   reducer: {
@@ -13,7 +14,8 @@ export const store = configureStore({
     snapMidtrans: snapMidtransReducer,
     dataUserGolang: dataUserGolangReducer,
     diamond: diamondReducer,
-    dataplayer: dataPlayerReducer
+    dataplayer: dataPlayerReducer,
+    idRoom: idRoomReducer
   
   },
 })

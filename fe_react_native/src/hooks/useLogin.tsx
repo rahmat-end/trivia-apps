@@ -101,10 +101,10 @@ const useLogin = () => {
     try {
       dispatch(REMOVE_ASYNCSTORE());
       dispatch(REMOVE_DATAUSER());
-      console.log("User signed out!", dataUser);
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
       await auth().signOut();
+      console.log("User signed out!", dataUser);
     } catch (error) {
       console.log(error);
     }

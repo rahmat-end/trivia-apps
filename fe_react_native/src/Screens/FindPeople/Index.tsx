@@ -16,60 +16,70 @@ import {
 } from "../../themes/Metrixs";
 import { useEffect, useState } from "react";
 import useUser from "../../hooks/useUser";
+import { apinodejs } from "../../Components/libs/api";
+import { useQuery } from "react-query";
 import { useAppSelector } from "../../Redux/hooks";
 import { RootState } from "../../Redux/store";
-import { socket } from "../../Components/libs/socket";
+
 
 const FindPeople = ({ navigation }: { navigation: any }) => {
-  const [countDown, setCountDown] = useState(10);
+  const [Timer, setTimer] = useState(15);
   const [visibleSatu, setVisibleSatu] = useState(false);
   const [visibleDua, setVisibleDua] = useState(false);
   const [visibleTiga, setVisibleTiga] = useState(false);
   const [visibleEmpat, setVisibleEmpat] = useState(false);
-  const [dataPlayer, setDataPlayer] = useState([]);
   const { userlogin } = useUser();
-  // const {dataplayer} = useAppSelector((state: RootState) => state.dataplayer)
+  const [move, setMove] = useState(false);
+  const { idRoom } = useAppSelector((state: RootState) => state.idRoom);
+ 
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (countDown > 0) {
-        setCountDown(countDown - 1);
-      }
+      setTimer((prevTimer) => {
+        if (prevTimer > 0) {
+          return prevTimer - 1;
+        }
+        return prevTimer; // Jangan mengubah nilai jika sudah 0
+      });
     }, 1000);
     return () => clearInterval(interval);
-  }, [countDown]);
-
-  // useEffect (() => {
-  //   if (countDown === 0) {
-  //     navigation.navigate("LetsPlay");
-  //   }
-  // }, [countDown])
-
-  useEffect(() => {
-    // socket.on('view', (data) => {
-    //   console.log(data.data)
-    //   setDataPlayer(data.data);
-    // });
-
-    socket.on("getAllPlayers", (data) => {
-      setDataPlayer(data.data);
-    });
-    return () => {
-      socket.disconnect();
-    };
   }, []);
 
   useEffect(() => {
-    if (countDown === 7) {
-      setVisibleSatu(true);
-    } else if (countDown === 5) {
-      setVisibleDua(true);
-    } else if (countDown === 4) {
-      setVisibleTiga(true);
-    } else if (countDown === 3) {
-      setVisibleEmpat(true);
+    console.log("idRoom di find people", idRoom);
+  },[])
+
+ 
+
+  const { data: getDataPlayers } = useQuery("dataPlayer", async () => {
+    try {
+      const res = await apinodejs.get(`/getDataArray/${idRoom}`);
+      console.log("data player", res.data.users);
+      return res.data.users;
+    } catch (error) {
+      console.log(error);
     }
-  }, [countDown]);
+  });
+
+  useEffect(() => {
+    if (move) {
+      navigation.navigate("Let's Play");
+    }
+  }, [move]);
+
+  useEffect(() => {
+    if (Timer === 7) {
+      setVisibleSatu(true);
+    } else if (Timer === 5) {
+      setVisibleDua(true);
+    } else if (Timer === 4) {
+      setVisibleTiga(true);
+    } else if (Timer === 3) {
+      setVisibleEmpat(true);
+    } else if (Timer === 0) {
+      setMove(true);
+    }
+  }, [Timer]);
 
   return (
     <ImageBackground
@@ -86,39 +96,12 @@ const FindPeople = ({ navigation }: { navigation: any }) => {
           />
         </View>
         <StatusBar style="light" />
-        {countDown === 0 ? (
-          <View style={styles.overlayCountDown}>
-            <View style={styles.countDownContainer}>
-              <Text style={styles.textCountDown}>Time Is Up!!</Text>
-              <Text>
-                {" "}
-                {dataPlayer.length === 0
-                  ? "No Opponent Found"
-                  : `You Found ${dataPlayer.length - 1} Opponents`}{" "}
-              </Text>
-              <Image
-                style={styles.timeIcon}
-                source={require("../../../assets/LogoAction/time-hourglass-svgrepo-com.png")}
-              />
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigation.navigate("LetsPlay")}
-              >
-                <Text style={{ color: "white", fontWeight: "bold" }}>
-                  Play Now
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ) : (
-          <>
-            <Text style={styles.textTimer}>
-              00:{countDown < 10 ? `0${countDown}` : countDown}
-            </Text>
-            <Text style={styles.textTitle}>Finding Opponent...</Text>
-          </>
-        )}
-        {dataPlayer?.map((item: any, index: number) => {
+
+        <Text style={styles.textTimer}>
+          00:{Timer < 10 ? `0${Timer}` : Timer}
+        </Text>
+        <Text style={styles.textTitle}>Finding Opponent...</Text>
+        {getDataPlayers?.map((item: any, index: number) => {
           return (
             <View
               key={index}
@@ -185,7 +168,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
   },
-  overlayCountDown: {
+  overlayTimer: {
     position: "absolute",
     backgroundColor: "rgba(0,0,0,0.7)",
     top: 0,

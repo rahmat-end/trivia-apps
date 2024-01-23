@@ -8,8 +8,8 @@ const io = socketIO(server);
 
 app.use(express.json());
 
-const ROOM_CAPACITY = 2;
-const COUNTDOWN_SECONDS =5;
+const ROOM_CAPACITY = 1;
+const COUNTDOWN_SECONDS = 100;
 const botAdded = {};
 const dataArray = [];
 let clearDataInterval;

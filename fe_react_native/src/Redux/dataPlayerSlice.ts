@@ -5,6 +5,7 @@ type dataPlayerType = {
         name:string
         avatar:string
         socketId:string
+        availableRoom:string
         email:string
     }]
 }
@@ -14,6 +15,7 @@ const initialState: dataPlayerType = {
 name:"",
 avatar:"",
 socketId:"",
+availableRoom:"",
 email:""
     }]
 }

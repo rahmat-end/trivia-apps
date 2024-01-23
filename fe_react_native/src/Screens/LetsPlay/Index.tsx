@@ -16,8 +16,12 @@ import {
   verticalScale,
 } from "../../themes/Metrixs";
 import useQuestion from "../../hooks/useQuestion";
-import { socket } from "../../Components/libs/socket";
 import useUser from "../../hooks/useUser";
+// import { socket } from "../../Components/libs/socket";
+import { useAppSelector } from "../../Redux/hooks";
+import { RootState } from "../../Redux/store";
+import { useQuery } from "react-query";
+import { apinodejs } from "../../Components/libs/api";
 
 const LetsPlay = () => {
   const { dataQuestion } = useQuestion();
@@ -29,6 +33,7 @@ const LetsPlay = () => {
   const [score, setScore] = useState(0);
   const { userlogin } = useUser();
   const [playerAnswersVisible, setPlayerAnswersVisible] = useState(false);
+  const {idRoom} = useAppSelector((state: RootState) => state.idRoom);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -41,24 +46,33 @@ const LetsPlay = () => {
 
   const handleAnswer = (index: number) => {
     setClientAnswer(index);
-    const data = {
+    const answer = {
       email: userlogin?.email,
       name: userlogin?.name,
       avatar: userlogin?.avatar,
       answer: index,
     };
-    socket.emit(`answer${currentPage}`, data);
+    // socket.emit(`answer`, answer);
+    // console.log(answer);
   };
 
+const {data:getDataAnswer}= useQuery("getAnswer", async ()=>{
+  try {
+    const response = await apinodejs.get(`/getAnswerArray/${idRoom}`);
+    console.log("ini response",response.data.answer)
+   return response.data.answer
+  } catch (error) {
+    console.log(error)
+  }
+})
+
   useEffect(() => {
-    socket.on("collectAnswer1", (data) => {
-      console.log(data);
-    });
-  }, []);
+    console.log("ini useEffect",getDataAnswer)
+  });
 
   let answerQuestion1: any = [
     {
-      answer: 0,
+      answer: 2,
       avatar:
         "https://lh3.googleusercontent.com/a/ACg8ocJNztzbwBveNRkrJtGPH78f_ZZ9NcChY7SAB9Eldzno=s96-c",
       email: "kikijak487@gmail.com",
@@ -72,7 +86,7 @@ const LetsPlay = () => {
       name: "dian",
     },
     {
-      answer: 3,
+      answer: 2,
       avatar:
         "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671124.jpg?size=626&ext=jpg&ga=GA1.2.714462566.1697981532&semt=ais",
       email: "dian@gmail.com",
@@ -87,13 +101,6 @@ const LetsPlay = () => {
     },
   ];
 
-  // useEffect(() => {
-  //   const sameAnswer = answerQuestion1.filter((item:any)=>{
-  //     return item.answer === 3
-  //   })
-  //   console.log(sameAnswer.length, 'sameAnswer')
-  // },[])
-  
 
   const [currentPage, setCurrentPage] = useState(1);
   const ITEM_PERPAGE: number = 1;
@@ -181,24 +188,61 @@ const LetsPlay = () => {
                     ]}
                   >
                     {playerAnswersVisible &&
-                      answerQuestion1.map((item: any) => {
-                        const sameAnswer = answerQuestion1.filter((item:any)=>{
-                          return item.answer === index
-                        })
-                        if (item.answer === index)
-                     
-                        {
+                      getDataAnswer?.map((item: any, key: number) => {
+                        const sameAnswer = getDataAnswer?.filter(
+                          (item: any) => {
+                            return item.answer === index;
+                          }
+                        );
+
+                        if (item.answer === index) {
                           return (
-                            <>
-                          
-                              <Image
-                                key={item.answer}
-                                style={styles.avatar}
-                                source={{
-                                  uri: item.avatar,
-                                }}
-                              />
-                            </>
+                            <View style={styles.containerAvatar} key={key}>
+                              {sameAnswer.length === 1 && (
+                                <Image
+                                  style={[
+                                    styles.avatar,
+                                    {
+                                      top: verticalScale(-20),
+                                      left: horizontalScale(10),
+                                    },
+                                  ]}
+                                  source={{
+                                    uri: item.avatar,
+                                  }}
+                                />
+                              )}
+                              {sameAnswer.length > 1 && 
+                              sameAnswer.map((item:any, keySome:number)=>{
+                                return (
+                                  <View key={keySome}>
+                                    <Image
+                                    style={[
+                                      styles.avatar,
+                                      {
+                                        top: verticalScale(-20),
+                                        left:
+                                          keySome === 0
+                                            ? horizontalScale(10)
+                                            : keySome === 1
+                                            ? horizontalScale(50)
+                                            : keySome === 2
+                                            ? horizontalScale(90)
+                                            : horizontalScale(130),
+                                      },
+                                    ]}
+                                    source={{
+                                      uri: item.avatar,
+                                    }}
+                                  />
+
+                                  </View>
+
+
+                                )
+                              })
+    }
+                            </View>
                           );
                         }
                       })}
@@ -329,23 +373,10 @@ const styles = StyleSheet.create({
     width: horizontalScale(30),
     borderRadius: moderateScale(100),
     position: "absolute",
-    top: verticalScale(-10),
-    left: horizontalScale(0),
   },
-  avatar1: {
-    height: verticalScale(30),
-    width: horizontalScale(30),
-    borderRadius: moderateScale(100),
-    position: "absolute",
-    top: verticalScale(0),
-    left: horizontalScale(30),
-  },
-  avatar2: {
-    height: verticalScale(30),
-    width: horizontalScale(30),
-    borderRadius: moderateScale(100),
-    position: "absolute",
-    top: verticalScale(0),
-    left: horizontalScale(60),
-  },
+  containerAvatar:{
+   position:"absolute",
+   left:horizontalScale(0),
+   bottom:verticalScale(0),
+  }
 });

@@ -14,6 +14,7 @@ import { useState, useEffect } from "react";
 import ChangeAvatarModal from "../../Components/BuyAvatarModal/Index";
 import DiamondModal from "../../Components/DiamondPopUp";
 import LottieView from "lottie-react-native";
+import { useQuery } from "react-query";
 import {
   horizontalScale,
   verticalScale,
@@ -25,9 +26,10 @@ import { useAppSelector, useAppDispatch } from "../../Redux/hooks";
 import { RootState } from "../../Redux/store";
 import EditAvatarPopUp from "../../Components/EditAvatarPopUp/Index";
 import useGetGolangToken from "../../hooks/useGetGolangToken";
-import { socket } from "../../Components/libs/socket";
+// import { socket } from "../../Components/libs/socket";
 import { io } from "socket.io-client";
-import { SAVE_PLAYER } from "../../Redux/dataPlayerSlice";
+import { SAVE_ID_ROOM } from "../../Redux/IdRoomSlice";
+import { apinodejs } from "../../Components/libs/api";
 
 const StartGame = ({ navigation }: { navigation: any }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,10 +40,11 @@ const StartGame = ({ navigation }: { navigation: any }) => {
   const { handleLogout } = useLogin();
   const { loginGolang } = useGetGolangToken();
   const { user } = useAppSelector((state: RootState) => state.user);
-  const { dataplayer } = useAppSelector((state: RootState) => state.dataplayer);
+  const { idRoom } = useAppSelector((state: RootState) => state.idRoom);
   const dispatch = useAppDispatch();
   const [dataPlayer, setDataPlayer] = useState([]);
-  // const [socket, setSocket] = useState(null);
+
+  const [availableRooms, setAvailableRooms] = useState();
 
   // const handleCreateRoom = async () => {
 
@@ -66,47 +69,29 @@ const StartGame = ({ navigation }: { navigation: any }) => {
     email: userlogin?.email,
     avatar: userlogin?.avatar,
   };
-  // const connectToSocket = () => {
-  //   const newSocket = io("http://192.168.18.169:3000");
-  //   newSocket.on("connect", () => {
-  //     console.log("Terhubung ke server Socket.IO");
-  //   });
-  //   const data = {
-  //     name: userlogin?.name,
-  //     email: userlogin?.email,
-  //     avatar: userlogin?.avatar,
-  //   };
-  //   newSocket.emit("recive", data);
-  //   setSocket(newSocket);
-  //   navigation.navigate("Find People");
+  const connectToSocket = async () => {
+    try {
+      const socket = io("http://192.168.18.230:3001");
+      socket.on("connect", () => {
+        console.log("Terhubung ke server Socket.IO");
+      });
 
-  // };
-
-  // useEffect(() => {
-  //   socket?.on("view", (data: any) => {
-  //     let users: any = [];
-  //     users.push(data.data);
-  //     setDataPlayer([...dataPlayer, ...users]);
-  //     dispatch(SAVE_PLAYER(dataPlayer));
-  //   });
-
-  // }, [connectToSocket]);
-
-  // useEffect(() => {
-  //  console.log(dataplayer, "ini data player");
-  //  if(dataplayer.length > 0){
-  //   navigation.navigate("Find People");
-  //  }
-  // }, [dataplayer]);
-
-  // useEffect(() => {
-  //   console.log(dataplayer, "ini data player");
-  // },[dataplayer])
-
-  const localSocket = () => {
-    socket.emit("sendDataProfile", data);
-    navigation.navigate("Find People");
+      socket.emit("recive", data);
+      socket.on("view", (data: any) => {
+        dispatch(SAVE_ID_ROOM(data.data.availableRoom));
+      });
+      // if (idRoom) {
+      // navigation.navigate("Find People");}
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  useEffect(() => {
+    if (idRoom) {
+      navigation.navigate("Find People");
+    }
+  }, [idRoom]);
 
   // untuk dapat token golang biar bisa masuk ke midtrans
 
@@ -205,7 +190,7 @@ const StartGame = ({ navigation }: { navigation: any }) => {
         </TouchableOpacity>
 
         <View style={styles.containerButton}>
-          <Button onPress={() => localSocket()} text="Let's Play" />
+          <Button onPress={() => connectToSocket()} text="Let's Play" />
         </View>
       </View>
       {isOpen && (

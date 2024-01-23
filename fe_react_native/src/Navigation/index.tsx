@@ -147,7 +147,7 @@ export default function Navigation() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="LetsPlay">
+      <Stack.Navigator initialRouteName="SplashScreen">
         <Stack.Screen
           options={{ headerShown: false }}
           name="SplashScreen"
@@ -193,7 +193,7 @@ export default function Navigation() {
             headerTransparent: true,
             headerShown: true,
           }}
-          name="LetsPlay"
+          name="Let's Play"
           component={LetsPlay}
         />
         <Stack.Screen

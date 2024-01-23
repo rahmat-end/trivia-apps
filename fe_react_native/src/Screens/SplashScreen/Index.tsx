@@ -25,7 +25,7 @@ const SplashScreen = ({ navigation }: { navigation: any }) => {
         const dataString = await AsyncStorage.getItem("dataUser");
         const payload = JSON.parse(dataString);
         console.log("payload displashscren",payload)
-        if (payload === undefined || payload === null) {
+        if (payload=== undefined || payload=== null) {
           setTimeout(() => {
             navigation.dispatch(StackActions.replace("Login Screen"));
           }, 9000);
