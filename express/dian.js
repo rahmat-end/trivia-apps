@@ -9,8 +9,8 @@ const apigolang = require("./api");
 
 app.use(express.json());
 
-const ROOM_CAPACITY = 3;
-const COUNTDOWN_SECONDS = 30;
+const ROOM_CAPACITY = 2;
+const COUNTDOWN_SECONDS = 15;
 const botAdded = {};
 let clearDataInterval;
 const roomDataArray = {};
@@ -23,9 +23,6 @@ io.on("connection", (socket) => {
 
   socket.join(availableRoom);
   console.log(`User ID ${userId} bergabung dalam ruangan ${availableRoom}`);
-
-  startCountdown(availableRoom);
-
 
   socket.room = availableRoom;
 
@@ -46,6 +43,8 @@ io.on("connection", (socket) => {
       data: responseData,
     });
     // dataArray.push(responseData);
+    // startCount buat kirim data users
+    startCountdown(availableRoom);
 
     if (!roomDataArray[availableRoom]) {
       roomDataArray[availableRoom] = [];
@@ -55,7 +54,7 @@ io.on("connection", (socket) => {
 
   
 
-  socket.on("answer", (answers) => {
+  socket.on(`answer${availableRoom}`, (answers) => {
     console.log(
       `Jawaban diterima dari User ID ${userId} di ruangan ${availableRoom}:`,
       answers
@@ -77,12 +76,12 @@ io.on("connection", (socket) => {
     answerArray[availableRoom].push(answerData);
   });
 
-  socket.on("finishGame", (data) => {
+  socket.on(`finishGame${availableRoom}`, (data) => {
     if (!usersScore[availableRoom]) {
       usersScore[availableRoom] = [];
     }
     usersScore[availableRoom].push(data);
-    console.log("ini user score", usersScore);
+    console.log("ini user score", usersScore[availableRoom]);
   });
 
   let timer = 10;
@@ -91,15 +90,16 @@ io.on("connection", (socket) => {
   const setAnswer = () => {
     const intervalId = setInterval(() => {
       if (timer >= 0 && limitTimer >= 0) {
-        io.emit("timer", timer);
+        io.emit(`timer${availableRoom}`, timer);
         console.log("timer", timer, availableRoom);
-        io.emit("limitTimer", limitTimer);
-        io.emit("collectAnswer", answerArray[availableRoom]);
+        io.emit(`limitTimer${availableRoom}`, limitTimer);
+        io.emit(`collectAnswer${availableRoom}`, answerArray[availableRoom]);
       } else {
         clearInterval(intervalId);
         timer = 10;
         answerArray[availableRoom] = [];
         if (limitTimer === 0) {
+          io.emit(`usersScore${availableRoom}`, usersScore[availableRoom]);
           clearInterval(intervalId);
         } else {
           setAnswer();
@@ -112,7 +112,7 @@ io.on("connection", (socket) => {
 
   function startCountdown(room) {
     const roomData = io.sockets.adapter.rooms.get(room);
-
+  
     if (!roomData.countdownStarted) {
       roomData.countdownStarted = true;
 
@@ -121,7 +121,11 @@ io.on("connection", (socket) => {
       let countdown = COUNTDOWN_SECONDS;
       roomData.countdownInterval = setInterval(() => {
         console.log(`Countdown di ruangan ${room}: ${countdown} detik`);
-        io.emit("dataUser", roomDataArray[availableRoom]);
+       
+
+        if (countdown === 10 ){
+          io.emit(`dataUser${availableRoom}`, roomDataArray[availableRoom]);
+        }
         const roomSize = io.sockets.adapter.rooms.get(room).size;
 
         const botCount = Array.from(roomData).filter((userId) =>
@@ -133,7 +137,7 @@ io.on("connection", (socket) => {
         if (countdown === 0) {
           setAnswer();
           clearInterval(roomData.countdownInterval);
-          if (roomSize === 3) {
+          if (roomSize === 2) {
             // setAnswer();
             console.log("Game start!");
             // if (roomSize === 2) {
@@ -220,58 +224,58 @@ function findOrCreateAvailableRoom() {
   }
 }
 
-function startCountdown(room) {
-  const roomData = io.sockets.adapter.rooms.get(room);
+// function startCountdown(room) {
+//   const roomData = io.sockets.adapter.rooms.get(room);
 
-  if (!roomData.countdownStarted) {
-    roomData.countdownStarted = true;
+//   if (!roomData.countdownStarted) {
+//     roomData.countdownStarted = true;
 
-    botAdded[room] = false;
+//     botAdded[room] = false;
 
-    let countdown = COUNTDOWN_SECONDS;
-    roomData.countdownInterval = setInterval(() => {
-      console.log(`Countdown di ruangan ${room}: ${countdown} detik`);
+//     let countdown = COUNTDOWN_SECONDS;
+//     roomData.countdownInterval = setInterval(() => {
+//       console.log(`Countdown di ruangan ${room}: ${countdown} detik`);
 
-      const roomSize = io.sockets.adapter.rooms.get(room).size;
+//       const roomSize = io.sockets.adapter.rooms.get(room).size;
 
-      const botCount = Array.from(roomData).filter((userId) =>
-        userId.startsWith("Bot-")
-      ).length;
+//       const botCount = Array.from(roomData).filter((userId) =>
+//         userId.startsWith("Bot-")
+//       ).length;
 
-      const actualRoomSize = roomSize - botCount;
+//       const actualRoomSize = roomSize - botCount;
 
-      if (countdown === 0) {
-        clearInterval(roomData.countdownInterval);
+//       if (countdown === 0) {
+//         clearInterval(roomData.countdownInterval);
 
-        if (actualRoomSize >= 1) {
-          if (roomSize === 1) {
-            console.log("Game start!");
-            // console.log('Game start! With 1 Bot');
-            // setTimeout(() => {
-            //     addBotToRoom(room);
-            // }, 0);
-          } else {
-            console.log("Game start!");
-          }
+//         if (actualRoomSize >= 1) {
+//           if (roomSize === 1) {
+//             console.log("Game start!");
+//             // console.log('Game start! With 1 Bot');
+//             // setTimeout(() => {
+//             //     addBotToRoom(room);
+//             // }, 0);
+//           } else {
+//             console.log("Game start!");
+//           }
 
-          // setTimeout(() => {
-          //     disconnectAllUsers(room);
-          // }, 150000);
-        }
-        //  else {
-        //     console.log('Gagal memulai game');
-        //     io.in(room).emit('message', { user: 'System', text: 'Gagal memulai game karena kurang pemain' });
-        //     disconnectAllUsers(room);
-        // }
-      }
-      countdown--;
+//           // setTimeout(() => {
+//           //     disconnectAllUsers(room);
+//           // }, 150000);
+//         }
+//         //  else {
+//         //     console.log('Gagal memulai game');
+//         //     io.in(room).emit('message', { user: 'System', text: 'Gagal memulai game karena kurang pemain' });
+//         //     disconnectAllUsers(room);
+//         // }
+//       }
+//       countdown--;
 
-      if (countdown < 0) {
-        clearInterval(roomData.countdownInterval);
-      }
-    }, 1000);
-  }
-}
+//       if (countdown < 0) {
+//         clearInterval(roomData.countdownInterval);
+//       }
+//     }, 1000);
+//   }
+// }
 
 function disconnectAllUsers(room) {
   const roomData = io.sockets.adapter.rooms.get(room);

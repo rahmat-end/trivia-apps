@@ -6,7 +6,7 @@ import { useAppSelector } from '../../Redux/hooks'
 import { RootState } from '../../Redux/store'
 
 type SettingModalProps = {
-    setIsOpen : ()=>void
+    setIsOpen : any
     navigation: any
 }
 
@@ -25,7 +25,9 @@ const SettingModal = ({setIsOpen, navigation}:SettingModalProps) => {
     <View style={styles.overlay}>
     <View style={styles.container}>
         <Text style={styles.text}>Setting</Text>
-        <TouchableOpacity style={styles.buttonmenu}>
+        <TouchableOpacity 
+        onPress={() => navigation.navigate("Start Game")}
+        style={styles.buttonmenu}>
             <Image 
             style={styles.imagemenu}
             source={require("../../../assets/LogoAction/profile-user-svgrepo-com.png")} />

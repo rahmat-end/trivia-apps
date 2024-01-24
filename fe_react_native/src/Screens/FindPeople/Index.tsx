@@ -23,7 +23,7 @@ import { RootState } from "../../Redux/store";
 import { socket } from "../../Components/libs/socket";
 
 
-const FindPeople = ({ navigation, route }: { navigation: any, route: any }) => {
+const FindPeople = ({ navigation}: { navigation: any }) => {
   const [Timer, setTimer] = useState(15);
   const [visibleSatu, setVisibleSatu] = useState(false);
   const [visibleDua, setVisibleDua] = useState(false);
@@ -32,7 +32,6 @@ const FindPeople = ({ navigation, route }: { navigation: any, route: any }) => {
   const { userlogin } = useUser();
   const [move, setMove] = useState(false);
   const { idRoom } = useAppSelector((state: RootState) => state.idRoom);
-  const {newSocket}= route.params;
   const [dataPlayer, setDataPlayer] = useState([]);
  
 
@@ -53,31 +52,31 @@ const FindPeople = ({ navigation, route }: { navigation: any, route: any }) => {
     console.log(Timer)
   },[])
 
-  // useEffect(() => {
-  //   socket.on("dataUser", (data: any) => {
-  //     console.log("data user", data);
-  //     setDataPlayer(data);
-  //   })
-  // },[])
+  useEffect(() => {
+    socket.on(`dataUser${idRoom}`, (data: any) => {
+      console.log("data user", data);
+      setDataPlayer(data);
+    })
+  },[])
 
  
 
-  const { data: getDataPlayers } = useQuery("dataPlayer", async () => {
-    try {
-      const res = await apinodejs.get(`/getDataArray/${idRoom}`);
-      return res.data.users;
-    } catch (error) {
-      console.log(error);
-    }
-  });
+  // const { data: getDataPlayers } = useQuery("dataPlayer", async () => {
+  //   try {
+  //     const res = await apinodejs.get(`/getDataArray/${idRoom}`);
+  //     return res.data.users;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // });
 
-  useEffect(() => {
-    console.log("ini data players",getDataPlayers );
-  })
+  // useEffect(() => {
+  //   console.log("ini data players",dataPlayer );
+  // })
 
   useEffect(() => {
     if (move) {
-      navigation.navigate("Let's Play", { newSocket: newSocket });
+      navigation.navigate("Let's Play");
     }
   }, [move]);
 
@@ -115,7 +114,7 @@ const FindPeople = ({ navigation, route }: { navigation: any, route: any }) => {
           00:{Timer < 10 ? `0${Timer}` : Timer}
         </Text>
         <Text style={styles.textTitle}>Finding Opponent...</Text>
-        {getDataPlayers?.map((item: any, index: number) => {
+        {dataPlayer?.map((item: any, index: number) => {
           return (
             <View
               key={index}

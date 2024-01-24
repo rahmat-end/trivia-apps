@@ -16,7 +16,6 @@ import StartGame from "../Screens/StartGame/Index";
 import FindPeople from "../Screens/FindPeople/Index";
 import LetsPlay from "../Screens/LetsPlay/Index";
 import ResultMatch from "../Screens/Result/Index";
-import TestWebView from "../Screens/MidtransWebView";
 import MidtransWebView from "../Screens/MidtransWebView";
 import PaymentDetail from "../Screens/PaymentDetail/Index";
 import { StatusBar } from "expo-status-bar";
@@ -147,7 +146,7 @@ export default function Navigation() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="SplashScreen">
+      <Stack.Navigator initialRouteName="SpalashScreen">
         <Stack.Screen
           options={{ headerShown: false }}
           name="SplashScreen"

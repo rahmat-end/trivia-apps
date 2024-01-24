@@ -6,6 +6,7 @@ import dataUserGolangReducer from './dataUserGolangSlice'
 import diamondReducer from './diamondSlice'
 import dataPlayerReducer from './dataPlayerSlice'
 import idRoomReducer from './IdRoomSlice'
+import resultScoreReducer from './resultScoreSlice'
 
 export const store = configureStore({
   reducer: {
@@ -15,7 +16,8 @@ export const store = configureStore({
     dataUserGolang: dataUserGolangReducer,
     diamond: diamondReducer,
     dataplayer: dataPlayerReducer,
-    idRoom: idRoomReducer
+    idRoom: idRoomReducer,
+    resultScore : resultScoreReducer
   
   },
 })

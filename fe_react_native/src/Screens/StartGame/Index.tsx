@@ -35,17 +35,14 @@ const StartGame = ({ navigation }: { navigation: any }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenModalDiamond, setIsOpenModalDiamond] = useState(false);
   const [editAvatarVisible, setEditAvatarVisible] = useState(false);
-  const { dataUser } = useAppSelector((state: RootState) => state.dataUser);
   const { userlogin, isLoadingUserLogin } = useUser();
   const { handleLogout } = useLogin();
   const { loginGolang } = useGetGolangToken();
   const { user } = useAppSelector((state: RootState) => state.user);
   const { idRoom } = useAppSelector((state: RootState) => state.idRoom);
   const dispatch = useAppDispatch();
-  const [dataPlayer, setDataPlayer] = useState([]);
-  const [newSocket, setNewSocket] = useState(null);
 
-  const [availableRooms, setAvailableRooms] = useState();
+
 
   // const handleCreateRoom = async () => {
 
@@ -91,7 +88,7 @@ const StartGame = ({ navigation }: { navigation: any }) => {
 
   useEffect(() => {
     if (idRoom) {
-      navigation.navigate("Find People",{newSocket:newSocket});
+      navigation.navigate("Find People");
     }
   }, [idRoom]);
 

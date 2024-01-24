@@ -18,12 +18,12 @@ import {
 import useQuestion from "../../hooks/useQuestion";
 import useUser from "../../hooks/useUser";
 import { socket } from "../../Components/libs/socket";
-import { useAppSelector } from "../../Redux/hooks";
+import { useAppSelector, useAppDispatch } from "../../Redux/hooks";
 import { RootState } from "../../Redux/store";
-import { useQuery } from "react-query";
-import { apinodejs } from "../../Components/libs/api";
+import PopUpResult from "../../Components/PopUpResult/Index";
+import { SAVE_RESULT_SCORE, SAVE_WINNER_VALUE } from "../../Redux/resultScoreSlice";
 
-const LetsPlay = ({ route }: { route: any }) => {
+const LetsPlay = ({ navigation }: { navigation: any }) => {
   const { dataQuestion } = useQuestion();
   const [countDown, setCountDown] = useState(0);
   const [clientAnswer, setClientAnswer] = useState(-1);
@@ -33,43 +33,37 @@ const LetsPlay = ({ route }: { route: any }) => {
   const [score, setScore] = useState(0);
   const { userlogin } = useUser();
   const [playerAnswersVisible, setPlayerAnswersVisible] = useState(false);
-  const { newSocket } = route.params;
   const [dataAnswer, setDataAnswer] = useState([]);
   const [limitTimer, setlimitTimer] = useState(0);
-const {idRoom}= useAppSelector((state: RootState) => state.idRoom);
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     if (countDown > 0) {
-  //       setCountDown(countDown - 1);
-  //     }
-  //   }, 1000);
-  //   return () => clearInterval(interval);
-  // }, [countDown]);
+  const { idRoom } = useAppSelector((state: RootState) => state.idRoom);
+  const [resultGame, setResultGame] = useState([]);
+  const [winner, setWinner] = useState(false);
+  const [endpopUp, setEndpopUp] = useState(false);
+  const dispatch = useAppDispatch();
+  
 
   const handleAnswer = (index: number) => {
     setClientAnswer(index);
+    setPlayerAnswersVisible(true);
     const answer = {
       email: userlogin?.email,
       name: userlogin?.name,
       avatar: userlogin?.avatar,
       answer: index,
     };
-    socket.emit(`answer`, answer);
+    socket.emit(`answer${idRoom}`, answer);
   };
 
   useEffect(() => {
-    socket.on("collectAnswer", (data: any) => {
-      console.log("data answer", data);
+    socket.on(`collectAnswer${idRoom}`, (data: any) => {
       setDataAnswer(data);
     });
-    socket.on("timer", (data: any) => {
-      console.log("data timer", data);
+    socket.on(`timer${idRoom}`, (data: any) => {
       setCountDown(data);
     });
-    socket.on("limitTimer", (data: any) => {
-      console.log("data limitTimer", data);
+    socket.on(`limitTimer${idRoom}`, (data: any) => {
       setlimitTimer(data);
-    })
+    });
   }, []);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -88,9 +82,8 @@ const {idRoom}= useAppSelector((state: RootState) => state.idRoom);
           }
         });
       });
-      setPlayerAnswersVisible(true);
-    } else if(countDown === 0){
-       if (currentPage < Math.ceil(dataQuestion?.length / ITEM_PERPAGE)) {
+    } else if (countDown === 0) {
+      if (currentPage < Math.ceil(dataQuestion?.length / ITEM_PERPAGE)) {
         setCurrentPage(currentPage + 1);
         setBackground("#89CFF0");
         setBgClientAnswer("#008080");
@@ -101,20 +94,25 @@ const {idRoom}= useAppSelector((state: RootState) => state.idRoom);
     }
   }, [countDown]);
 
-
-  useEffect (() => {
+  useEffect(() => {
     const user = {
       email: userlogin?.email,
       name: userlogin?.name,
       avatar: userlogin?.avatar,
-      score: score
+      userId: userlogin?.user_id,
+      score: score,
     };
-    if (limitTimer === 1 ){
-      Alert.alert("Game Finish", `Your Score is ${score}`)
-      newSocket?.emit("finishGame", user);
-    }
-  },[currentPage, limitTimer])
-
+    if (limitTimer === 4) {
+      socket.emit(`finishGame${idRoom}`, user);
+      console.log("finish", user);
+    } else if (limitTimer === 3) {
+      socket.on(`usersScore${idRoom}`, (data: any) => {
+        console.log("data finish", data);
+        setResultGame(data);
+      });
+    } 
+  
+  }, [currentPage, limitTimer]);
 
   useEffect(() => {
     if (clientAnswer === rightAnswer) {
@@ -126,6 +124,34 @@ const {idRoom}= useAppSelector((state: RootState) => state.idRoom);
       setBgClientAnswer("red");
     }
   }, [rightAnswer]);
+
+  const  sortedResult = resultGame.sort((a, b) => b.score - a.score);
+  const newDataResult = sortedResult.map((item:any, index:number)=>{
+    return{
+      ...item,
+      rank: index+1
+    }
+  })
+
+  const userLoginStatus = newDataResult.filter((item:any)=>{
+    if(item.email === userlogin?.email){
+      return item
+    }
+  })
+  useEffect(() => {
+    console.log("data result", newDataResult);
+    console.log("user login", userLoginStatus);
+    dispatch(SAVE_RESULT_SCORE(newDataResult))
+    if(userLoginStatus[0]?.rank === 1){
+      setEndpopUp(true);
+      setWinner(true)
+      dispatch(SAVE_WINNER_VALUE(true))
+    }else if(userLoginStatus[0]?.rank > 1){
+      setEndpopUp(true);
+      setWinner(false)
+      dispatch(SAVE_WINNER_VALUE(false))
+    }
+  },[userLoginStatus, newDataResult])
 
   return (
     <ImageBackground
@@ -147,7 +173,7 @@ const {idRoom}= useAppSelector((state: RootState) => state.idRoom);
                 }}
               />
 
-              <Text style={styles.text}>{item.the_question}</Text>
+              {/* <Text style={styles.text}>{item.the_question}</Text> */}
               {item.answers?.map((item: any, index: number) => {
                 const active = clientAnswer === index;
                 const right = rightAnswer === index;
@@ -229,27 +255,6 @@ const {idRoom}= useAppSelector((state: RootState) => state.idRoom);
           );
         })}
 
-        {/* <TouchableOpacity
-            style={[
-              styles.button,
-              {
-                backgroundColor: background,
-              },
-            ]}
-          >
-            <Text style={styles.textAnswer}>Vekasana</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              {
-                backgroundColor: background,
-              },
-            ]}
-          >
-            <Text style={styles.textAnswer}>Kari</Text>
-          </TouchableOpacity> */}
-
         <View style={styles.footer}>
           <View style={styles.footerTextContainer}>
             <Text style={styles.footerText}>
@@ -263,6 +268,11 @@ const {idRoom}= useAppSelector((state: RootState) => state.idRoom);
           </View>
         </View>
       </View>
+      {endpopUp && (
+        <View style={styles.overlay}>
+          <PopUpResult navigation={navigation} isWinner={winner} />
+        </View>
+      )}
     </ImageBackground>
   );
 };
@@ -283,10 +293,13 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: "rgba(0,0,0,0.7)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   imageQuestion: {
     width: horizontalScale(300),
     height: verticalScale(200),
+    marginBottom: verticalScale(30),
     resizeMode: "cover",
     borderRadius: moderateScale(15),
   },
@@ -352,5 +365,43 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: horizontalScale(0),
     bottom: verticalScale(0),
+  },
+  containerpopUp: {
+    width: horizontalScale(300),
+    height: verticalScale(250),
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: moderateScale(15),
+  },
+  textpopUp: {
+    fontWeight: "bold",
+    fontSize: moderateScale(17),
+    textAlign: "center",
+    marginTop: verticalScale(10),
+  },
+  caption: {
+    fontWeight: "bold",
+    fontSize: moderateScale(20),
+    textAlign: "center",
+    textTransform: "capitalize",
+  },
+  lottie: {
+    width: horizontalScale(200),
+    height: verticalScale(100),
+  },
+  buttonpopUp: {
+    width: horizontalScale(200),
+    height: verticalScale(40),
+    backgroundColor: "#AFE1AF",
+    borderRadius: moderateScale(10),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textbutton: {
+    fontSize: moderateScale(15),
+    fontWeight: "bold",
+    color: "white",
+    textTransform: "capitalize",
   },
 });
