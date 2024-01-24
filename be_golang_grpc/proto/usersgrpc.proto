@@ -1,0 +1,55 @@
+syntax = "proto3";
+package protogrpc;
+
+option go_package = "pb/protogrpc";
+
+import "google/api/annotations.proto";
+
+message RequestUser {
+  int32 id = 1;
+  string name = 2;
+  string email = 3;
+  string email_verified_at = 4;
+  string password = 5;
+  string profile = 6;
+  string username = 7;
+  string role = 8;
+  int32 diamond = 9;
+  int32 throphy = 10;
+  string avatar = 11;
+  string remember_token = 12;
+  string created_at = 13;
+  string updated_at = 14;
+}
+
+message ResponseUsers {
+  int32 code = 1;
+  repeated RequestUser data = 2;
+}
+
+message ResponseOneUser {
+  int32 code = 1;
+  RequestUser data = 2;
+}
+
+message IdUsers { int32 id = 1; }
+
+message EmptyRequest {}
+
+service UsersService {
+  rpc GetUsers(EmptyRequest) returns (ResponseUsers) {
+    option (google.api.http) = {
+      get : "/api/users"
+    };
+  };
+  rpc GetOneUsers(IdUsers) returns (ResponseOneUser) {
+    option (google.api.http) = {
+      get : "/api/user/{id}"
+    };
+  };
+  rpc PutOneUsers(IdUsers) returns (ResponseOneUser) {
+    option (google.api.http) = {
+      put : "/api/updateUser/{id}"
+    };
+  };
+}

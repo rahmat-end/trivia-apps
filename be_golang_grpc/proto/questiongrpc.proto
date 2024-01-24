@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package protogrpc;
+
+option go_package = "pb/protogrpc";
+
+import "google/api/annotations.proto";
+
+message Request {
+  int32 id = 1;
+  string the_question = 2;
+  string profile = 3;
+  string answers = 4;
+  string created_at = 5;
+  string updated_at = 6;
+}
+
+message ResponseOne {
+  int32 code = 1;
+  Request data = 2;
+}
+
+message Response {
+  int32 code = 1;
+  repeated Request data = 2;
+}
+
+message Id { int32 id = 1; }
+
+message Empty {}
+
+service QuestionsGrpc {
+  rpc GetQuestions(Empty) returns (Response) {
+    option (google.api.http) = {
+      get : "/api/questions"
+    };
+  };
+  rpc GetQuestion(Id) returns (ResponseOne) {
+    option (google.api.http) = {
+      get : "/api/question/{id}"
+    };
+  };
+}
